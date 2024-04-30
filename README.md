@@ -40,6 +40,7 @@
 * The models with '_t' in their names are slightly tweaked for TI MCUs with Hardware NPU (Eg: F28P55).
   * It is compulsory to use '_t' version models for F28P55 
   * On other devices, there is no significant advantage if you use '_t' models or not.
+  * If you are confused, please use the '_t' variants.
 * TimeSeries_Generic_*_3k are just exact copies of TimeSeries_Generic_3k created for GUI purposes. No difference in performance or parameters
   * Same applies for TimeSeries_Generic_*_7k models
 ---

@@ -14,7 +14,6 @@
 | ArcFault_model_700_t    | Arc Fault Classification           | GUI               | 844              | 0.03           | <0.01            | 0.05                      |
 | MotorFault_model_1_t    | Motor Bearing Fault Classification | GUI               | 588              | 0.01           | <0.01            | 0.02                      |
 | MotorFault_model_2_t    | Motor Bearing Fault Classification | GUI               | 4032             | 0.47           | 0.02             | 0.31                      |
-| MotorFault_model_3_t    | Motor Bearing Fault Classification | GUI               | 3700             | 0.59           | 0.01             | 0.35                      |
 
 ---
 #### Note:
@@ -31,7 +30,7 @@
   * Same applies for TimeSeries_Generic_*_7k models
 ---
 
-### Disbanded models as of May 2024: 
+### Disbanded models as of 1 May 2024: 
 * (Could be supported at a later point of time)
 
 | Model Name                 | Suited for                         | Availability           | Model Parameters | Model MACs (M) | Params Size (MB) | Estimated Total Size (MB) |
@@ -50,3 +49,4 @@
 | MotorFault_model_1         | Motor Bearing Fault Classification | GUI                    | 586              | 0.01           | <0.01            | 0.02                      |
 | MotorFault_model_2         | Motor Bearing Fault Classification | GUI                    | 4030             | 0.47           | 0.02             | 0.30                      |
 | MotorFault_model_3         | Motor Bearing Fault Classification | GUI                    | 3698             | 0.59           | 0.01             | 0.35                      |
+| MotorFault_model_3_t       | Motor Bearing Fault Classification | GUI                    | 3700             | 0.59           | 0.01             | 0.35                      |

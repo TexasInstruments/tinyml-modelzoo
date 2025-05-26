@@ -328,19 +328,19 @@ TINIE (TI Neural Inference Engine) is a framework to run small, efficient neural
   <tr>
     <td align="center">
       <img src="./graphs/memory_usage_vs_cycles_plots/Arc_fault_models.jpg" alt="Arc_fault_models" width="800"/>
-      <br><b>Arc Fault Classification GUI Models</b>
+      <br><b align="center">Arc Fault Classification GUI Models</b>
     </td>
   </tr>
   <tr>
     <td align="center">
       <img src="./graphs/memory_usage_vs_cycles_plots/Motor_fault_models.jpg" alt="Motor_fault_models" width="800"/>
-      <br><b>Motor Fault Classification GUI Models</b>
+      <br><b align="center">Motor Fault Classification GUI Models</b>
     </td>
   </tr>
   <tr>
     <td align="center">
       <img src="./graphs/memory_usage_vs_cycles_plots/Generic_models.jpg" alt="Generic_models" width="800"/>
-      <br><b>Generic Timeseries Classification Models</b>
+      <br><b align="center">Generic Timeseries Classification Models</b>
     </td>
   </tr>
 </table>

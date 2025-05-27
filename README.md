@@ -2,14 +2,142 @@
 
 Welcome to the **Model Zoo**! 
 
-This repository provides a curated collection of neural network models optimized for **embedded systems** and **low-power microcontrollers**. These models are designed for tasks such as **Classification**, **Regression**, and **Anomaly Detection**. All models are lightweight, efficient, and tailored to run smoothly on resource constrained devices. Select a task category to find models, their performance details, and use cases.
+This repository provides a curated collection of neural network models optimized for **embedded systems** and **low-power microcontrollers**. These models are designed for tasks such as **Classification**, **Regression**, and **Anomaly Detection**. All models are lightweight, efficient, and tailored to run smoothly on resource constrained devices.
+
+### Target Devices and TINIE Overview
+
+To ensure compatibility and efficiency, the models in this repository are designed to run on a variety of target devices. These devices leverage the **TI Neural Inference Engine (TINIE)**, a framework that enables small, efficient neural networks to run on TI microcontrollers much faster. TINIE uses integer math and, when available, hardware acceleration to minimize power consumption and memory usage.
+
+#### Supported TINIE Targets
+
+The table below lists the supported TINIE targets:
+
+| **Target Name**          | **Platform**                                                                   | 
+|--------------------------|--------------------------------------------------------------------------------|
+| `m0_soft_int_in_int_out` | Optimized libraries and aggressive quantization on Arm M0-core                 |
+| `m0_hard_int_in_int_out` | Arm M0-core + loosely coupled TINIE accelerator                                |
+| `c28_soft_int_in_int_out`| Optimized libraries and aggressive quantization on TI C28x DSP                 |
+| `c28_hard_int_in_int_out`| TI C28x DSP + loosely coupled TINIE accelerator                                |
+| `c29_soft_int_in_int_out`| Optimized libraries and aggressive quantization on TI C29x DSP                 |
+| `m33_soft_int_in_int_out`| Optimized libraries and aggressive quantization on Arm M33-core                |
+| `m33_cde_int_in_int_out` | Arm M33-core+ TI custom instructions using Arm Custom Datapath Extension (CDE) |
+
+Now select a task category below to explore the available models, their performance details, and use cases:
 
 <details>
 <summary><b>Classification</b></summary>
+<br>
 
-## Quick Comparison Table
+Our toolchain currently supports the following classification problems. Select a classification problem to see available models:-
 
-Here's a quick side-by-side comparison of our available classification models based on their **target application**, **resource usage**, and **availability**:
+<details style="margin-left: 20px;">
+<summary><b>Generic Time Series Classification</b></summary>
+<a name="generic-time-series-classification"></a>
+<br>
+
+The Generic Time Series Classification Models are versatile models designed to handle **any type of time series classification task**. These models are optimized for embedded systems and are available in the **tinyml-modelmaker**.
+
+## Available models
+
+| **Model**                  | **Total Parameters** | **Total MACs (M)** |
+|----------------------------|----------------------|--------------------|
+| TimeSeries_Generic_1k      | 970                  | 0.3                |
+| TimeSeries_Generic_1k_t    | 972                  | 0.3                |
+| TimeSeries_Generic_4k      | 3,682                | 0.14               |
+| TimeSeries_Generic_4k_t    | 3,684                | 0.14               |
+| TimeSeries_Generic_6k      | 5,186                | 0.78               |
+| TimeSeries_Generic_6k_t    | 5,188                | 0.78               |
+| TimeSeries_Generic_13k     | 12,978               | 0.67               |
+| TimeSeries_Generic_13k_t   | 12,980               | 0.67               |
+
+*(The performance metrics above are measured for an input shape of **(N=1, C=1, H=512, W=1)**.)*
+
+Some metrics are provided to help you understand the computational requirements of these models:
+
+- **Total Parameters**: This refers to the total number of tunable weights in the model, including weights and biases of all layers. A higher number of parameters generally indicates a more complex model with greater capacity to learn intricate patterns in the data. However, it also means the model requires more memory and computational resources.
+
+- **Total MACs**: Multiply-Accumulate operations performed during a single forward pass of the model. This metric measures the computational complexity of the model and directly correlates with the processing power required to run it.
+
+### Note:
+
+For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
+
+## Resource Usage Comparison Across TINIE Targets
+
+This section compares the resource usage of different models across various TINIE targets. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
+
+### **Metrics Used for Comparison**
+
+| Metric              | Description                                                                                      |
+|---------------------|--------------------------------------------------------------------------------------------------|
+| **Cycles**          | Number of processor cycles required to run inference. Lower is better for performance.          |
+| **Code Size (bytes)**| Memory occupied by executable code.                                                             |
+| **RO Data (bytes)** | Read-only data size, including constants and weights stored in flash memory.                     |
+| **RW Data (bytes)** | Read-write data size, memory used during execution.                                              |
+| **Total Bytes**     | Sum of code, RO data, and RW data, representing the overall memory footprint.                    |
+| **Flash Usage**     | Sum of code and RO data, representing non-volatile memory usage.                                 |
+| **SRAM Usage**      | RW data size, representing volatile memory used during runtime.                                  |
+
+### **Resource Usage Table**
+
+The table below shows the resource usage for each model across different TINIE targets:
+
+| **Model**              | **TINIE Target**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
+|-------------------------|-----------------------------|------------|------------------|---------------------|---------------------|-----------------|-------------------|------------------|
+| TimeSeries_Generic_1k_t | m0_soft_int_in_int_out      | 3725652    | 2082             | 1776                | 12320               | 16178           | 3858              | 12320            |
+| TimeSeries_Generic_1k_t | m0_hard_int_in_int_out      | 349653     | 1598             | 3732                | 10416               | 15746           | 5330              | 10416            |
+| TimeSeries_Generic_1k_t | c28_soft_int_in_int_out     | 1725188    | 1962             | 1280                | 12320               | 15562           | 3242              | 12320            |
+| TimeSeries_Generic_1k_t | c28_hard_int_in_int_out     | 195676     | 1368             | 1972                | 6250                | 9590            | 3340              | 6250             |
+| TimeSeries_Generic_1k_t | c29_soft_int_in_int_out     | 669310     | 7824             | 1776                | 12320               | 21920           | 9600              | 12320            |
+| TimeSeries_Generic_1k_t | m33_soft_int_in_int_out     | 1300325    | 6114             | 1776                | 12320               | 20210           | 7890              | 12320            |
+| TimeSeries_Generic_1k_t | m33_cde_int_in_int_out      | 883383     | 9228             | 2512                | 10384               | 22124           | 11740             | 10384            |
+| TimeSeries_Generic_4k_t | m0_soft_int_in_int_out      | 1473033    | 2338             | 5184                | 2976                | 10498           | 7522              | 2976             |
+| TimeSeries_Generic_4k_t | m0_hard_int_in_int_out      | 195162     | 1658             | 7724                | 2736                | 12118           | 9382              | 2736             |
+| TimeSeries_Generic_4k_t | c28_soft_int_in_int_out     | 752342     | 2193             | 4240                | 1936                | 8369            | 6433              | 1936             |
+| TimeSeries_Generic_4k_t | c28_hard_int_in_int_out     | 117686     | 1414             | 3986                | 1690                | 7090            | 5400              | 1690             |
+| TimeSeries_Generic_4k_t | c29_soft_int_in_int_out     | 277084     | 7424             | 5184                | 2976                | 15584           | 12608             | 2976             |
+| TimeSeries_Generic_4k_t | m33_soft_int_in_int_out     | 596086     | 8628             | 5184                | 2976                | 16788           | 13812             | 2976             |
+| TimeSeries_Generic_4k_t | m33_cde_int_in_int_out      | 420317     | 7728             | 8432                | 3488                | 19648           | 16160             | 3488             |
+| TimeSeries_Generic_6k_t | m0_soft_int_in_int_out      | 9343020    | 2666             | 6960                | 16416               | 26042           | 9626              | 16416            |
+| TimeSeries_Generic_6k_t | m0_hard_int_in_int_out      | 408087     | 1798             | 9832                | 8436                | 20066           | 11630             | 8436             |
+| TimeSeries_Generic_6k_t | c28_soft_int_in_int_out     | 3828374    | 2462             | 5840                | 16416               | 24718           | 8302              | 16416            |
+| TimeSeries_Generic_6k_t | c28_hard_int_in_int_out     | 348174     | 1524             | 5058                | 8364                | 14946           | 6582              | 8364             |
+| TimeSeries_Generic_6k_t | c29_soft_int_in_int_out     | 1693785    | 6918             | 6960                | 16416               | 30294           | 13878             | 16416            |
+| TimeSeries_Generic_6k_t | m33_soft_int_in_int_out     | 3186844    | 6186             | 6960                | 16416               | 29562           | 13146             | 16416            |
+| TimeSeries_Generic_6k_t | m33_cde_int_in_int_out      | 2579155    | 11110            | 11648               | 12512               | 35270           | 22758             | 12512            |
+| TimeSeries_Generic_13k_t | m0_soft_int_in_int_out     | 7405900    | 3652             | 16704               | 5408                | 25764           | 20356             | 5408             |
+| TimeSeries_Generic_13k_t | m0_hard_int_in_int_out     | 432214     | 2044             | 18480               | 5376                | 25900           | 20524             | 5376             |
+| TimeSeries_Generic_13k_t | c28_soft_int_in_int_out    | 2847296    | 2991             | 14352               | 4160                | 21503           | 17343             | 4160             |
+| TimeSeries_Generic_13k_t | c28_hard_int_in_int_out    | 328913     | 1512             | 9454                | 3218                | 14184           | 10966             | 3218             |
+| TimeSeries_Generic_13k_t | c29_soft_int_in_int_out    | 1508205    | 18942            | 16704               | 5408                | 41054           | 35646             | 5408             |
+| TimeSeries_Generic_13k_t | m33_soft_int_in_int_out    | 2887600    | 9658             | 16704               | 5408                | 31770           | 26362             | 5408             |
+| TimeSeries_Generic_13k_t | m33_cde_int_in_int_out     | 2045094    | 21776            | 28656               | 6720                | 57152           | 50432             | 6720             |
+
+### Graphical Insights for Model Selection
+
+1. **Cycles vs. Total Memory Usage**
+
+   A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. So ideal models would be the ones that balance both speed and memory efficiency, ideally those near the bottom-left corner of the plot (low cycles and low memory usage).
+
+  <img style="margin-left: 20px;" src="./graphs/memory_usage_vs_cycles_plots/generic_timeseries_classification_models.jpg" alt="generic_timeseries_classification_models" width="800"/>
+
+---
+2. **Flash Usage vs. SRAM Usage**
+
+   Below plot helps to identify models that balance Flash and SRAM usage based on your specific requirements.
+
+<img style="margin-left: 20px;" src="./graphs/flash_vs_sram_plots/generic_timeseries_classification_models.jpg" alt="generic_timeseries_classification_models" width="800"/>
+</details>
+
+---
+<details style="margin-left: 20px;">
+<summary><b>Motor Bearing Fault Classification</b></summary>
+<br>
+
+Motor bearing fault classification is a specialized task where models are designed to detect and classify faults in motor bearings. While you can use the **[Generic Time Series Classification](#generic-time-series-classification)** models for this task, we also provide models specifically tailored for motor fault detection. These models are optimized for this application and are **TI proprietary models** and are available only in the **GUI version**. *(They are also available on **tinyml-modelmaker**, and their model definitions are exposed, meaning they can be tweaked by the user.)*
+
+## Available Models
+
 
 | **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs (M)** |
 |----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|
@@ -21,56 +149,38 @@ Here's a quick side-by-side comparison of our available classification models ba
 | TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 0.78               |
 | TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 0.67               |
 | TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 0.67               |
-| ArcFault_model_200_t       | Arc Fault Classification              | GUI                   | 296                   | 0.01               |
-| ArcFault_model_300_t       | Arc Fault Classification              | GUI                   | 388                   | 0.02               |
-| ArcFault_model_700_t       | Arc Fault Classification              | GUI                   | 844                   | 0.03               |
-| ArcFault_model_1400_t      | Arc Fault Classification              | GUI                   | 0                     | 0                  |
 | MotorFault_model_1_t       | Motor Bearing Fault Classification    | GUI                   | 588                   | 0.01               |
 | MotorFault_model_2_t       | Motor Bearing Fault Classification    | GUI                   | 4,032                 | 0.47               |
 | MotorFault_model_3_t       | Motor Bearing Fault Classification    | GUI                   | 0                     | 0                  |
----
 
-### Notes:
+*(The performance metrics above are measured for an input shape of **(N=1, C=1, H=512, W=1)**.)*
 
-- **Suited For**: It indicates the application the model was originally created for. However, you can use these models for other applications as well.
+Some metrics are provided to help you understand the computational requirements of these models:
 
-- **Availability**: 
+- **Total Parameters**: This refers to the total number of tunable weights in the model, including the weights and biases of all layers. A higher number of parameters generally indicates a more complex model with greater capacity to learn intricate patterns in the data. However, it also means the model requires more memory and computational resources.
 
-  - **Generic Models**: These models are versatile and can be used for any type of time series classification task.  
-  *They are available in the **tinyml-modelmaker**.*
+- **Total MACs**: This metric represents the number of multiply-accumulate operations performed during a single forward pass of the model. It is a measure of the model's computational complexity and directly correlates with the processing power required to run the model.
 
-  - **GUI-Specific Models**: These models are tailored for specific applications like **arc fault detection** and **motor fault classification**.  
-  *They are TI proprietary models and are available only in the **GUI version**. They are also available on **tinyml-modelmaker**, and their model definitions are exposed, meaning they can be tweaked by the user.*
+### Note:
 
-- **Total MACs**: This tells you how many multiply-accumulate operations the model performs during a single forward pass.
+For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
 
-- The numbers in the table have all been measured for an input dimension of N,C,H,W of (1,1,512,1)
+## Model Accuracy Comparison Across Different Feature Extraction Presets
 
-- The models with '_t' in their names are slightly tweaked for TI MCUs with Hardware NPU (Eg: F28P55). It is compulsory to use '_t' version models for F28P55. On other devices, there is no significant advantage if you use '_t' models or not.
+To evaluate the performance of generic models for motor fault classification, we use the **Motor Fault Dataset** ([Dataset Link](http://software-dl.ti.com/C2000/esd/mcu_ai/01_00_00/datasets/motor_fault_classification_dsk.zip)). The dataset is processed using four different feature extraction presets, and the models are trained on the extracted features.  
 
----
-
-## Comparing Models on Real World Datasets
-
-### I. Accuracy Comparison
-
-To help you compare models and have model complexity v/s accuracy comparison, we used two real-world datasets to test the models:
-
-1. **Motor Fault Dataset** ([Dataset Link](http://software-dl.ti.com/C2000/esd/mcu_ai/01_00_00/datasets/motor_fault_classification_dsk.zip)) 
-2. **Arc Fault Dataset**  ([Dataset Link](http://software-dl.ti.com/C2000/esd/mcu_ai/01_00_00/datasets/arc_fault_classification_dsi.zip))  
-
-### Motor Fault Dataset
-
-For the **Motor Fault Dataset**, we evaluate all **generic models** using four different feature extraction presets available for **motor fault bearing classification**. These presets are:
+### Feature Extraction Presets 
 
 1. **MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D**
 2. **MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1**
 3. **MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1**
 4. **MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1**
 
-*You can read more about the definitions of these presets in this [example readme](link_here).*
+*You can read more about the definitions of these presets [here](https://github.com/TexasInstruments/tinyml-tensorlab/tree/main/tinyml-modelmaker/examples/data_processing_and_feature_extraction#predefined-feature-extraction-presets).*
 
-The table below shows the accuracies (float train, quant train, and test evaluation) for each model under each preset:
+### Accuracy Results
+
+The table below shows the float train accuracy, quant train accuracy, and test evaluation accuracy for each model under each preset:
 
 <table>
   <tr>
@@ -161,6 +271,8 @@ The table below shows the accuracies (float train, quant train, and test evaluat
 </tr>
 </table>
 
+### Visualizing Accuracy
+
 To help you visualize the above information, bar graphs are provided below for each preset. Each graph compares the **Float Train Accuracy**, **Quant Train Accuracy**, and **Test Evaluation Accuracy** for all models under the respective preset.
 
 | **Preset 1**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D | **Preset 2**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1 |
@@ -173,7 +285,7 @@ To help you visualize the above information, bar graphs are provided below for e
 
 ---
 
-#### Key Insights:
+### Key Insights:
 
 - Presets 1, 2, and 3 involve FFT-based feature extraction, which simplifies the learning process for models and generally results in higher accuracy. Preset 4, on the other hand, uses raw feature extraction, making it a more realistic benchmark for model performance.
 
@@ -181,62 +293,25 @@ To help you visualize the above information, bar graphs are provided below for e
 
 - Since Preset 4 is our benchmark, the `TimeSeries_Generic_6k_t` model stands out as the better choice overall compared to other models for this particular classification problem.
 
----
+## Resource Usage Comparison Across TINIE Targets
 
-### Arc Fault Dataset
+This section compares the resource usage of different models across various TINIE targets. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
 
-For the **Arc Fault Dataset**, we follow a similar approach. The models are evaluated using the four feature extraction presets Arc Fault Classification has. The presets are:
-
-1. preset1
-2. preset 2
-3. preset 3
-4. preset 4
-
-(.........)
-
----
-
-### II. Performance and Resource Utilization
-
-### Overview of TINIE
-
-TINIE (TI Neural Inference Engine) is a framework to run small, efficient neural networks on TI microcontrollers. It uses integer math and, when available, hardware acceleration to save power and memory.
-
-#### TINIE Execution Types
-
-| **Type**              | **Meaning**                                      |
-|-----------------------|--------------------------------------------------|
-| **Software TINIE**    | Runs on CPU using integer operations.            |
-| **Hardware TINIE**    | Uses a special accelerator or CDE                |
-
----
-
-#### Supported TINIE Targets
-
-| **Target Name**          | **Platform**           | **Type**       |
-|--------------------------|------------------------|----------------|
-| `m0_soft_int_in_int_out` | Arm Cortex-M0          | Software       |
-| `m0_hard_int_in_int_out` | Cortex-M0 + Accelerator| Hardware       |
-| `c28_soft_int_in_int_out`| TI C28x DSP            | Software       |
-| `c28_hard_int_in_int_out`| C28x + Accelerator     | Hardware       |
-| `c29_soft_int_in_int_out`| TI C29x DSP            | Software       |
-| `m33_soft_int_in_int_out`| Arm Cortex-M33         | Software       |
-| `m33_cde_int_in_int_out` | Cortex-M33 + CDE       | Hardware       |
-
-### Metrics Used for Comparison
+### **Metrics Used for Comparison**
 
 | Metric              | Description                                                                                      |
 |---------------------|--------------------------------------------------------------------------------------------------|
 | **Cycles**          | Number of processor cycles required to run inference. Lower is better for performance.          |
-| **Code Size (bytes)**| Memory occupied by executable code.                                              |
-| **RO Data (bytes)** | Read only data size, including constants and weights stored in flash memory.                     |
-| **RW Data (bytes)** | Read write data size, memory used during execution.                                      |
-| **Total Bytes**     | Sum of code, RO data, and RW data , overall memory footprint.                                   |
-| **Flash Usage**     | Sum of code and RO data , non-volatile memory usage.                                            |
-| **SRAM Usage**      | RW data size , volatile memory used during runtime.                                             |
+| **Code Size (bytes)**| Memory occupied by executable code.                                                             |
+| **RO Data (bytes)** | Read-only data size, including constants and weights stored in flash memory.                     |
+| **RW Data (bytes)** | Read-write data size, memory used during execution.                                              |
+| **Total Bytes**     | Sum of code, RO data, and RW data, representing the overall memory footprint.                    |
+| **Flash Usage**     | Sum of code and RO data, representing non-volatile memory usage.                                 |
+| **SRAM Usage**      | RW data size, representing volatile memory used during runtime.                                  |
 
+### **Resource Usage Table**
 
-### Model Performance and Resource Table
+The table below shows the resource usage for each model across different TINIE targets:
 
 | **Model**              | **TINIE Target**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
 |-------------------------|-----------------------------|------------|------------------|---------------------|---------------------|-----------------|-------------------|------------------|
@@ -261,6 +336,86 @@ TINIE (TI Neural Inference Engine) is a framework to run small, efficient neural
 | MotorFault_model_3_t    | c29_soft_int_in_int_out     | 37994      | 8486             | 1952                | 672                 | 11110           | 10438             | 672              |
 | MotorFault_model_3_t    | m33_soft_int_in_int_out     | 78771      | 6236             | 1952                | 672                 | 8860            | 8188              | 672              |
 | MotorFault_model_3_t    | m33_cde_int_in_int_out      | 106876     | 7232             | 3104                | 1408                | 11744           | 10336             | 1408             |
+
+(*To see the resourge usage table of generic models, check under Generic Time Series Classification*)
+
+### Graphical Insights for Model Selection
+
+1. **Cycles vs. Total Memory Usage**
+
+   A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. So ideal models would be the ones that balance both speed and memory efficiency, ideally those near the bottom-left corner of the plot (low cycles and low memory usage).
+
+  <img style="margin-left: 20px;" src="./graphs/memory_usage_vs_cycles_plots/motor_bearing_fault_classification_models.jpg" alt="motor_bearing_fault_classification_models" width="800"/>
+
+---
+2. **Flash Usage vs. SRAM Usage**
+
+   Below plot helps to identify models that balance Flash and SRAM usage based on your specific requirements.
+  
+<img style="margin-left: 20px;" src="./graphs/flash_vs_sram_plots/motor_bearing_fault_classification_models.jpg" alt="motor_bearing_fault_classification_models" width="800"/>
+
+</details>
+
+---
+<details style="margin-left: 20px;">
+<summary><b>Arc Fault Classification</b></summary>
+<br>
+
+Arc fault classification models are designed to detect and classify electrical arc faults, which are critical for ensuring the safety and reliability of electrical systems. These models are optimized for embedded systems and are tailored for real-time fault detection.
+
+While you can use the **[Generic Time Series Classification](#generic-time-series-classification)** models for arc fault detection, we provide specialized models specifically designed for this task. These models are optimized for this application and are **TI proprietary models** and are available only in the **GUI version**. *(They are also available on **tinyml-modelmaker**, and their model definitions are exposed, meaning they can be tweaked by the user.)*
+
+## Available Models
+
+| **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs (M)** |
+|----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|
+| TimeSeries_Generic_1k      | Generic Time series tasks             | tinyml-modelmaker     | 970                   | 0.3                |
+| TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 0.3                |
+| TimeSeries_Generic_4k      | Generic Time series tasks             | tinyml-modelmaker     | 3,682                 | 0.14               |
+| TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 0.14               |
+| TimeSeries_Generic_6k      | Generic Time series tasks             | tinyml-modelmaker     | 5,186                 | 0.78               |
+| TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 0.78               |
+| TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 0.67               |
+| TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 0.67               |
+| ArcFault_model_200_t       | Arc Fault Classification              | GUI                   | 296                   | 0.01               |
+| ArcFault_model_300_t       | Arc Fault Classification              | GUI                   | 388                   | 0.02               |
+| ArcFault_model_700_t       | Arc Fault Classification              | GUI                   | 844                   | 0.03               |
+| ArcFault_model_1400_t      | Arc Fault Classification              | GUI                   | 0                     | 0                  |
+
+*The performance metrics above are measured for an input dimension of **(N=1, C=1, H=512, W=1)**.*
+
+Some metrics are provided to help you understand the computational requirements of these models:
+
+- **Total Parameters**: This refers to the total number of tunable weights in the model, including the weights and biases of all layers. A higher number of parameters generally indicates a more complex model with greater capacity to learn intricate patterns in the data. However, it also means the model requires more memory and computational resources.
+
+- **Total MACs**: This metric represents the number of multiply-accumulate operations performed during a single forward pass of the model. It is a measure of the computational complexity and directly correlates with the processing power required to run the model.
+
+### Note:
+
+For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
+
+## Resource Usage Comparison Across TINIE Targets
+
+This section compares the resource usage of different models across various TINIE targets. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
+
+### **Metrics Used for Comparison**
+
+| Metric              | Description                                                                                      |
+|---------------------|--------------------------------------------------------------------------------------------------|
+| **Cycles**          | Number of processor cycles required to run inference. Lower is better for performance.          |
+| **Code Size (bytes)**| Memory occupied by executable code.                                                             |
+| **RO Data (bytes)** | Read-only data size, including constants and weights stored in flash memory.                     |
+| **RW Data (bytes)** | Read-write data size, memory used during execution.                                              |
+| **Total Bytes**     | Sum of code, RO data, and RW data, representing the overall memory footprint.                    |
+| **Flash Usage**     | Sum of code and RO data, representing non-volatile memory usage.                                 |
+| **SRAM Usage**      | RW data size, representing volatile memory used during runtime.                                  |
+
+### **Resource Usage Table**
+
+The table below shows the resource usage for each model across different TINIE targets:
+
+| **Model**              | **TINIE Target**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
+|-------------------------|-----------------------------|------------|------------------|---------------------|---------------------|-----------------|-------------------|------------------|
 | ArcFault_model_200_t    | m0_soft_int_in_int_out      | 130223     | 1780             | 432                 | 1040                | 3252            | 2212              | 1040             |
 | ArcFault_model_200_t    | m0_hard_int_in_int_out      | 16650      | 1338             | 2268                | 900                 | 4506            | 3606              | 900              |
 | ArcFault_model_200_t    | c28_soft_int_in_int_out     | 51799      | 1184             | 435                 | 1026                | 2645            | 1619              | 1026             |
@@ -289,67 +444,28 @@ TINIE (TI Neural Inference Engine) is a framework to run small, efficient neural
 | ArcFault_model_1400_t   | c29_soft_int_in_int_out     | 147500     | 15138            | 1936                | 2280                | 19354           | 17074             | 2280             |
 | ArcFault_model_1400_t   | m33_soft_int_in_int_out     | 288124     | 7228             | 1936                | 2280                | 11444           | 9164              | 2280             |
 | ArcFault_model_1400_t   | m33_cde_int_in_int_out      | 170529     | 10508            | 3136                | 2280                | 15924           | 13644             | 2280             |
-| TimeSeries_Generic_1k_t | m0_soft_int_in_int_out      | 3725652    | 2082             | 1776                | 12320               | 16178           | 3858              | 12320            |
-| TimeSeries_Generic_1k_t | m0_hard_int_in_int_out      | 349653     | 1598             | 3732                | 10416               | 15746           | 5330              | 10416            |
-| TimeSeries_Generic_1k_t | c28_soft_int_in_int_out     | 1725188    | 1962             | 1280                | 12320               | 15562           | 3242              | 12320            |
-| TimeSeries_Generic_1k_t | c28_hard_int_in_int_out     | 195676     | 1368             | 1972                | 6250                | 9590            | 3340              | 6250             |
-| TimeSeries_Generic_1k_t | c29_soft_int_in_int_out     | 669310     | 7824             | 1776                | 12320               | 21920           | 9600              | 12320            |
-| TimeSeries_Generic_1k_t | m33_soft_int_in_int_out     | 1300325    | 6114             | 1776                | 12320               | 20210           | 7890              | 12320            |
-| TimeSeries_Generic_1k_t | m33_cde_int_in_int_out      | 883383     | 9228             | 2512                | 10384               | 22124           | 11740             | 10384            |
-| TimeSeries_Generic_4k_t | m0_soft_int_in_int_out      | 1473033    | 2338             | 5184                | 2976                | 10498           | 7522              | 2976             |
-| TimeSeries_Generic_4k_t | m0_hard_int_in_int_out      | 195162     | 1658             | 7724                | 2736                | 12118           | 9382              | 2736             |
-| TimeSeries_Generic_4k_t | c28_soft_int_in_int_out     | 752342     | 2193             | 4240                | 1936                | 8369            | 6433              | 1936             |
-| TimeSeries_Generic_4k_t | c28_hard_int_in_int_out     | 117686     | 1414             | 3986                | 1690                | 7090            | 5400              | 1690             |
-| TimeSeries_Generic_4k_t | c29_soft_int_in_int_out     | 277084     | 7424             | 5184                | 2976                | 15584           | 12608             | 2976             |
-| TimeSeries_Generic_4k_t | m33_soft_int_in_int_out     | 596086     | 8628             | 5184                | 2976                | 16788           | 13812             | 2976             |
-| TimeSeries_Generic_4k_t | m33_cde_int_in_int_out      | 420317     | 7728             | 8432                | 3488                | 19648           | 16160             | 3488             |
-| TimeSeries_Generic_6k_t | m0_soft_int_in_int_out      | 9343020    | 2666             | 6960                | 16416               | 26042           | 9626              | 16416            |
-| TimeSeries_Generic_6k_t | m0_hard_int_in_int_out      | 408087     | 1798             | 9832                | 8436                | 20066           | 11630             | 8436             |
-| TimeSeries_Generic_6k_t | c28_soft_int_in_int_out     | 3828374    | 2462             | 5840                | 16416               | 24718           | 8302              | 16416            |
-| TimeSeries_Generic_6k_t | c28_hard_int_in_int_out     | 348174     | 1524             | 5058                | 8364                | 14946           | 6582              | 8364             |
-| TimeSeries_Generic_6k_t | c29_soft_int_in_int_out     | 1693785    | 6918             | 6960                | 16416               | 30294           | 13878             | 16416            |
-| TimeSeries_Generic_6k_t | m33_soft_int_in_int_out     | 3186844    | 6186             | 6960                | 16416               | 29562           | 13146             | 16416            |
-| TimeSeries_Generic_6k_t | m33_cde_int_in_int_out      | 2579155    | 11110            | 11648               | 12512               | 35270           | 22758             | 12512            |
-| TimeSeries_Generic_13k_t | m0_soft_int_in_int_out     | 7405900    | 3652             | 16704               | 5408                | 25764           | 20356             | 5408             |
-| TimeSeries_Generic_13k_t | m0_hard_int_in_int_out     | 432214     | 2044             | 18480               | 5376                | 25900           | 20524             | 5376             |
-| TimeSeries_Generic_13k_t | c28_soft_int_in_int_out    | 2847296    | 2991             | 14352               | 4160                | 21503           | 17343             | 4160             |
-| TimeSeries_Generic_13k_t | c28_hard_int_in_int_out    | 328913     | 1512             | 9454                | 3218                | 14184           | 10966             | 3218             |
-| TimeSeries_Generic_13k_t | c29_soft_int_in_int_out    | 1508205    | 18942            | 16704               | 5408                | 41054           | 35646             | 5408             |
-| TimeSeries_Generic_13k_t | m33_soft_int_in_int_out    | 2887600    | 9658             | 16704               | 5408                | 31770           | 26362             | 5408             |
-| TimeSeries_Generic_13k_t | m33_cde_int_in_int_out     | 2045094    | 21776            | 28656               | 6720                | 57152           | 50432             | 6720             |
 
+(*To see the resourge usage table of generic models, check under Generic Time Series Classification*)
 
 ### Graphical Insights for Model Selection
 
-1. **Trade-off: Cycles and Total Memory Usage**
-   This plot visualizes the trade-off between computational speed (cycles) and total memory footprint. A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. So our goal is to identify models that balance both speed and memory efficiency, ideally those near the bottom-left corner of the plot (low cycles and low memory usage).
+1. **Cycles vs. Total Memory Usage**
 
-<table align="center">
-  <tr>
-    <td align="center">
-      <img src="./graphs/memory_usage_vs_cycles_plots/Arc_fault_models.jpg" alt="Arc_fault_models" width="800"/>
-      <br><b align="center">Arc Fault Classification GUI Models</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="./graphs/memory_usage_vs_cycles_plots/Motor_fault_models.jpg" alt="Motor_fault_models" width="800"/>
-      <br><b align="center">Motor Fault Classification GUI Models</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="./graphs/memory_usage_vs_cycles_plots/Generic_models.jpg" alt="Generic_models" width="800"/>
-      <br><b align="center">Generic Timeseries Classification Models</b>
-    </td>
-  </tr>
-</table>
+   A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. So ideal models would be the ones that balance both speed and memory efficiency, ideally those near the bottom-left corner of the plot (low cycles and low memory usage).
 
-2. **Flash and SRAM Usage by Model** 
-   The graph shows how memory is allocated between flash and SRAM for each model.
+  <img style="margin-left: 20px;" src="./graphs/memory_usage_vs_cycles_plots/arc_fault_classification_models.jpg" alt="arc_fault_classification_models" width="800"/>
+
+---
+2. **Flash Usage vs. SRAM Usage**
+
+   Below plot helps to identify models that balance Flash and SRAM usage based on your specific requirements.
+  
+<img style="margin-left: 20px;" src="./graphs/flash_vs_sram_plots/arc_fault_classification_models.jpg" alt="arc_fault_classification_models" width="800"/>
 
 </details>
+</details>
 
+---
 <details>
 <summary><b>Regression</b></summary>
 
@@ -357,6 +473,7 @@ TINIE (TI Neural Inference Engine) is a framework to run small, efficient neural
 
 </details>
 
+---
 <details>
 <summary><b>Anomaly Detection</b></summary>
 

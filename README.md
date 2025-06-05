@@ -4,23 +4,23 @@ Welcome to the **Model Zoo**!
 
 This repository provides a curated collection of neural network models optimized for **embedded systems** and **low-power microcontrollers**. These models are designed for tasks such as **Classification**, **Regression**, and **Anomaly Detection**. All models are lightweight, efficient, and tailored to run smoothly on resource constrained devices.
 
-### Target Devices and TINIE Overview
+### Target Devices and TINPU Overview
 
-To ensure compatibility and efficiency, the models in this repository are designed to run on a variety of target devices. These devices leverage the **TI Neural Inference Engine (TINIE)**, a framework that enables small, efficient neural networks to run on TI microcontrollers much faster. TINIE uses integer math and, when available, hardware acceleration to minimize power consumption and memory usage.
+To ensure compatibility and efficiency, the models in this repository are designed to run on a variety of target devices. These devices leverage the **TINPU**, a hardware accelerator that enables small, efficient neural networks to run on TI microcontrollers much faster. The TINPU uses integer math and, when available, hardware acceleration to minimize power consumption and memory usage.
 
-#### Supported TINIE Targets
+#### Supported Target Devices
 
-The table below lists the supported TINIE targets:
+The table below lists the supported Target Devices. Devices marked as `soft` operate in CPU-only mode, while those marked as `hard` utilize both the CPU and hardware NPU (if available on the device).
 
 | **Target Name**          | **Platform**                                                                   | 
 |--------------------------|--------------------------------------------------------------------------------|
 | `m0_soft_int_in_int_out` | Optimized libraries and aggressive quantization on Arm M0-core                 |
-| `m0_hard_int_in_int_out` | Arm M0-core + loosely coupled TINIE accelerator                                |
+| `m0_hard_int_in_int_out` | Arm M0-core + TINPU                                                           |
 | `c28_soft_int_in_int_out`| Optimized libraries and aggressive quantization on TI C28x DSP                 |
-| `c28_hard_int_in_int_out`| TI C28x DSP + loosely coupled TINIE accelerator                                |
+| `c28_hard_int_in_int_out`| TI C28x DSP + TINPU                                                           |
 | `c29_soft_int_in_int_out`| Optimized libraries and aggressive quantization on TI C29x DSP                 |
 | `m33_soft_int_in_int_out`| Optimized libraries and aggressive quantization on Arm M33-core                |
-| `m33_cde_int_in_int_out` | Arm M33-core+ TI custom instructions using Arm Custom Datapath Extension (CDE) |
+| `m33_cde_int_in_int_out` | Arm M33-core + TI custom instructions using Arm Custom Datapath Extension (CDE) |
 
 Now select a task category below to explore the available models, their performance details, and use cases:
 
@@ -39,16 +39,17 @@ The Generic Time Series Classification Models are versatile models designed to h
 
 ## Available models
 
-| **Model**                  | **Total Parameters** | **Total MACs (M)** |
+| **Model**                  | **Total Parameters** | **Total MACs** |
 |----------------------------|----------------------|--------------------|
-| TimeSeries_Generic_1k      | 970                  | 0.3                |
-| TimeSeries_Generic_1k_t    | 972                  | 0.3                |
-| TimeSeries_Generic_4k      | 3,682                | 0.14               |
-| TimeSeries_Generic_4k_t    | 3,684                | 0.14               |
-| TimeSeries_Generic_6k      | 5,186                | 0.78               |
-| TimeSeries_Generic_6k_t    | 5,188                | 0.78               |
-| TimeSeries_Generic_13k     | 12,978               | 0.67               |
-| TimeSeries_Generic_13k_t   | 12,980               | 0.67               |
+| TimeSeries_Generic_1k      | 970                  | 2,95,106                |
+| TimeSeries_Generic_1k_t    | 972                  | 2,95,108                |
+| TimeSeries_Generic_4k      | 3,682                | 1,41,682               |
+| TimeSeries_Generic_4k_t    | 3,684                | 1,41,684              |
+| TimeSeries_Generic_6k      | 5,186                | 7,82,754               |
+| TimeSeries_Generic_6k_t    | 5,188                | 7,82,756              |
+| TimeSeries_Generic_13k     | 12,978               | 6,66,450               |
+| TimeSeries_Generic_13k_t   | 12,980               | 6,66,452               |
+
 
 *(The performance metrics above are measured for an input shape of **(N=1, C=1, H=512, W=1)**.)*
 
@@ -58,13 +59,91 @@ Some metrics are provided to help you understand the computational requirements 
 
 - **Total MACs**: Multiply-Accumulate operations performed during a single forward pass of the model. This metric measures the computational complexity of the model and directly correlates with the processing power required to run it.
 
+Additionally, the models were tested with multiple input combinations, varying the **channel (C)** and **height (H)** dimensions. Below is a summary of the tested combinations:
+
+<details>
+<summary><b>Click to view detailed metrics</b></summary>
+
+## Detailed Metrics for Time Series Models
+
+Below is the detailed table of metrics for various models tested with different input shapes. The table includes the **Shape**, **MACs**, and **Parameters** for each model.
+
+| **Model**               | **Shape (N, C, H, W)** | **MACs**   | **Parameters** |
+|--------------------------|------------------------|------------|----------------|
+| TimeSeries_Generic_1k    | 1, 1, 128, 1          | 73922      | 970            |
+| TimeSeries_Generic_1k    | 1, 1, 256, 1          | 147650     | 970            |
+| TimeSeries_Generic_1k    | 1, 1, 512, 1          | 295106     | 970            |
+| TimeSeries_Generic_1k    | 1, 1, 1024, 1         | 590018     | 970            |
+| TimeSeries_Generic_1k    | 1, 3, 128, 1          | 84422      | 1310           |
+| TimeSeries_Generic_1k    | 1, 3, 256, 1          | 168390     | 1310           |
+| TimeSeries_Generic_1k    | 1, 3, 512, 1          | 336326     | 1310           |
+| TimeSeries_Generic_1k    | 1, 3, 1024, 1         | 672198     | 1310           |
+| TimeSeries_Generic_1k_t  | 1, 1, 128, 1          | 73924      | 972            |
+| TimeSeries_Generic_1k_t  | 1, 1, 256, 1          | 147652     | 972            |
+| TimeSeries_Generic_1k_t  | 1, 1, 512, 1          | 295108     | 972            |
+| TimeSeries_Generic_1k_t  | 1, 1, 1024, 1         | 590020     | 972            |
+| TimeSeries_Generic_1k_t  | 1, 3, 128, 1          | 84428      | 1316           |
+| TimeSeries_Generic_1k_t  | 1, 3, 256, 1          | 168396     | 1316           |
+| TimeSeries_Generic_1k_t  | 1, 3, 512, 1          | 336332     | 1316           |
+| TimeSeries_Generic_1k_t  | 1, 3, 1024, 1         | 672204     | 1316           |
+| TimeSeries_Generic_4k    | 1, 1, 128, 1          | 35698      | 3682           |
+| TimeSeries_Generic_4k    | 1, 1, 256, 1          | 71026      | 3682           |
+| TimeSeries_Generic_4k    | 1, 1, 512, 1          | 141682     | 3682           |
+| TimeSeries_Generic_4k    | 1, 1, 1024, 1         | 282994     | 3682           |
+| TimeSeries_Generic_4k    | 1, 3, 128, 1          | 43382      | 4310           |
+| TimeSeries_Generic_4k    | 1, 3, 256, 1          | 85878      | 4310           |
+| TimeSeries_Generic_4k    | 1, 3, 512, 1          | 170870     | 4310           |
+| TimeSeries_Generic_4k    | 1, 3, 1024, 1         | 340854     | 4310           |
+| TimeSeries_Generic_4k_t  | 1, 1, 128, 1          | 35700      | 3684           |
+| TimeSeries_Generic_4k_t  | 1, 1, 256, 1          | 71028      | 3684           |
+| TimeSeries_Generic_4k_t  | 1, 1, 512, 1          | 141684     | 3684           |
+| TimeSeries_Generic_4k_t  | 1, 1, 1024, 1         | 282996     | 3684           |
+| TimeSeries_Generic_4k_t  | 1, 3, 128, 1          | 43388      | 4316           |
+| TimeSeries_Generic_4k_t  | 1, 3, 256, 1          | 85884      | 4316           |
+| TimeSeries_Generic_4k_t  | 1, 3, 512, 1          | 170876     | 4316           |
+| TimeSeries_Generic_4k_t  | 1, 3, 1024, 1         | 340860     | 4316           |
+| TimeSeries_Generic_6k    | 1, 1, 128, 1          | 196002     | 5186           |
+| TimeSeries_Generic_6k    | 1, 1, 256, 1          | 391586     | 5186           |
+| TimeSeries_Generic_6k    | 1, 1, 512, 1          | 782754     | 5186           |
+| TimeSeries_Generic_6k    | 1, 1, 1024, 1         | 1565090    | 5186           |
+| TimeSeries_Generic_6k    | 1, 3, 128, 1          | 216998     | 5862           |
+| TimeSeries_Generic_6k    | 1, 3, 256, 1          | 433062     | 5862           |
+| TimeSeries_Generic_6k    | 1, 3, 512, 1          | 865190     | 5862           |
+| TimeSeries_Generic_6k    | 1, 3, 1024, 1         | 1729446    | 5862           |
+| TimeSeries_Generic_6k_t  | 1, 1, 128, 1          | 196004     | 5188           |
+| TimeSeries_Generic_6k_t  | 1, 1, 256, 1          | 391588     | 5188           |
+| TimeSeries_Generic_6k_t  | 1, 1, 512, 1          | 782756     | 5188           |
+| TimeSeries_Generic_6k_t  | 1, 1, 1024, 1         | 1565092    | 5188           |
+| TimeSeries_Generic_6k_t  | 1, 3, 128, 1          | 217004     | 5868           |
+| TimeSeries_Generic_6k_t  | 1, 3, 256, 1          | 433068     | 5868           |
+| TimeSeries_Generic_6k_t  | 1, 3, 512, 1          | 865196     | 5868           |
+| TimeSeries_Generic_6k_t  | 1, 3, 1024, 1         | 1729452    | 5868           |
+| TimeSeries_Generic_13k   | 1, 1, 128, 1          | 167250     | 12978          |
+| TimeSeries_Generic_13k   | 1, 1, 256, 1          | 333650     | 12978          |
+| TimeSeries_Generic_13k   | 1, 1, 512, 1          | 666450     | 12978          |
+| TimeSeries_Generic_13k   | 1, 1, 1024, 1         | 1332050    | 12978          |
+| TimeSeries_Generic_13k   | 1, 3, 128, 1          | 175446     | 14118          |
+| TimeSeries_Generic_13k   | 1, 3, 256, 1          | 349014     | 14118          |
+| TimeSeries_Generic_13k   | 1, 3, 512, 1          | 696150     | 14118          |
+| TimeSeries_Generic_13k   | 1, 3, 1024, 1         | 1390422    | 14118          |
+| TimeSeries_Generic_13k_t | 1, 1, 128, 1          | 167252     | 12980          |
+| TimeSeries_Generic_13k_t | 1, 1, 256, 1          | 333652     | 12980          |
+| TimeSeries_Generic_13k_t | 1, 1, 512, 1          | 666452     | 12980          |
+| TimeSeries_Generic_13k_t | 1, 1, 1024, 1         | 1332052    | 12980          |
+| TimeSeries_Generic_13k_t | 1, 3, 128, 1          | 175452     | 14124          |
+| TimeSeries_Generic_13k_t | 1, 3, 256, 1          | 349020     | 14124          |
+| TimeSeries_Generic_13k_t | 1, 3, 512, 1          | 696156     | 14124          |
+| TimeSeries_Generic_13k_t | 1, 3, 1024, 1         | 1390428    | 14124          |
+
+</details>
+
 ### Note:
 
 For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
 
-## Resource Usage Comparison Across TINIE Targets
+## Resource Usage Comparison Across Target Devices
 
-This section compares the resource usage of different models across various TINIE targets. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
+This section compares the resource usage of different models across various target devices. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
 
 ### **Metrics Used for Comparison**
 
@@ -80,9 +159,9 @@ This section compares the resource usage of different models across various TINI
 
 ### **Resource Usage Table**
 
-The table below shows the resource usage for each model across different TINIE targets:
+The table below summarizes the resource usage for each model across various target devices. The metrics are calculated using an input shape of **(1, 1, 256, 1)** and with the number of classes set to **2**.
 
-| **Model**              | **TINIE Target**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
+| **Model**              | **Target Device**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
 |-------------------------|-----------------------------|------------|------------------|---------------------|---------------------|-----------------|-------------------|------------------|
 | TimeSeries_Generic_1k_t | m0_soft_int_in_int_out      | 3725652    | 2082             | 1776                | 12320               | 16178           | 3858              | 12320            |
 | TimeSeries_Generic_1k_t | m0_hard_int_in_int_out      | 349653     | 1598             | 3732                | 10416               | 15746           | 5330              | 10416            |
@@ -115,18 +194,20 @@ The table below shows the resource usage for each model across different TINIE t
 
 ### Graphical Insights for Model Selection
 
-1. **Cycles vs. Total Memory Usage**
-
-   A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. So ideal models would be the ones that balance both speed and memory efficiency, ideally those near the bottom-left corner of the plot (low cycles and low memory usage).
-
-  <img style="margin-left: 20px;" src="./graphs/memory_usage_vs_cycles_plots/generic_timeseries_classification_models.jpg" alt="generic_timeseries_classification_models" width="800"/>
-
----
-2. **Flash Usage vs. SRAM Usage**
-
-   Below plot helps to identify models that balance Flash and SRAM usage based on your specific requirements.
-
-<img style="margin-left: 20px;" src="./graphs/flash_vs_sram_plots/generic_timeseries_classification_models.jpg" alt="generic_timeseries_classification_models" width="800"/>
+<div style="text-align: left; max-width: 80vw; margin: 0 auto;">
+  <h3>1. Cycles vs. Total Memory Usage</h3>
+  <p>
+    A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. The ideal models are those that balance both speed and memory efficiency, typically located near the bottom-left corner of the plot (low cycles and low memory usage).
+  </p>
+  <p>
+    Below is the <b>Cycles vs. Total Memory Usage</b> plot for all generic models across <b>C28 (soft and hard)</b>:
+  </p>
+  <img src="./graphs/cycles_vs_memory_usage_plots/generic_c28_total_memory_vs_cycles.png" alt="generic_c28_total_memory_vs_cycles" style="width: 80vw;">
+  <p>
+  <br>
+    <b> If you need similar graphs for other target devices, you can click this link here: <a href="https://software-dl.ti.com/C2000/esd/mcu_ai/01_00_00/misc/generic_cycles_vs_mem_usage.html">Cycles vs. Total Memory Usage of Generic Models Across All Target Devices</a></b>
+  </p>
+</div>
 </details>
 
 ---
@@ -139,19 +220,19 @@ Motor bearing fault classification is a specialized task where models are design
 ## Available Models
 
 
-| **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs (M)** |
+| **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs** |
 |----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|
-| TimeSeries_Generic_1k      | Generic Time series tasks             | tinyml-modelmaker     | 970                   | 0.3                |
-| TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 0.3                |
-| TimeSeries_Generic_4k      | Generic Time series tasks             | tinyml-modelmaker     | 3,682                 | 0.14               |
-| TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 0.14               |
-| TimeSeries_Generic_6k      | Generic Time series tasks             | tinyml-modelmaker     | 5,186                 | 0.78               |
-| TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 0.78               |
-| TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 0.67               |
-| TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 0.67               |
-| MotorFault_model_1_t       | Motor Bearing Fault Classification    | GUI                   | 588                   | 0.01               |
-| MotorFault_model_2_t       | Motor Bearing Fault Classification    | GUI                   | 4,032                 | 0.47               |
-| MotorFault_model_3_t       | Motor Bearing Fault Classification    | GUI                   | 0                     | 0                  |
+| TimeSeries_Generic_1k      | Generic Time series tasks             | tinyml-modelmaker     | 970                   | 2,95,106                |
+| TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 2,95,108                |
+| TimeSeries_Generic_4k      | Generic Time series tasks             | tinyml-modelmaker     | 3,682                 | 1,41,682               |
+| TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 1,41,684               |
+| TimeSeries_Generic_6k      | Generic Time series tasks             | tinyml-modelmaker     | 5,186                 | 7,82,754               |
+| TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 7,82,756               |
+| TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 6,66,450               |
+| TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 6,66,452               |
+| MotorFault_model_1_t       | Motor Bearing Fault Classification    | GUI                   | 588                   | 9,660               |
+| MotorFault_model_2_t       | Motor Bearing Fault Classification    | GUI                   | 2808                 | 4,38,912               |
+| MotorFault_model_3_t       | Motor Bearing Fault Classification    | GUI                   | 996                     | 17,988                  |
 
 *(The performance metrics above are measured for an input shape of **(N=1, C=1, H=512, W=1)**.)*
 
@@ -208,66 +289,66 @@ The table below shows the float train accuracy, quant train accuracy, and test e
   <tr>
     <td style="text-align:center;">TimeSeries_Generic_1k_t</td>
     <td style="text-align:center;">1k</td>
-    <td style="text-align:center;">99.853%</td>
-    <td style="text-align:center;">99.858%</td>
-    <td style="text-align:center;">99.76%</td>
-    <td style="text-align:center;">99.985%</td>
-    <td style="text-align:center;">99.975%</td>
-    <td style="text-align:center;">99.92%</td>
-    <td style="text-align:center;">93.466%</td>
-    <td style="text-align:center;">94.074%</td>
-    <td style="text-align:center;">94.44%</td>
-    <td style="text-align:center;">93.051%</td>
-    <td style="text-align:center;">89.151%</td>
-    <td style="text-align:center;">89.97%</td>
+    <td style="text-align:center;">99.97%</td>
+    <td style="text-align:center;">99.97%</td>
+    <td style="text-align:center;">99.82%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">96.28%</td>
+    <td style="text-align:center;">96.28%</td>
+    <td style="text-align:center;">96.94%</td>
+    <td style="text-align:center;">95.76%</td>
+    <td style="text-align:center;">89.95%</td>
+    <td style="text-align:center;">84.12%</td>
 </tr>
 <tr>
     <td style="text-align:center;">TimeSeries_Generic_4k_t</td>
     <td style="text-align:center;">4k</td>
-    <td style="text-align:center;">99.970%</td>
-    <td style="text-align:center;">99.980%</td>
+    <td style="text-align:center;">99.99%</td>
+    <td style="text-align:center;">99.99%</td>
     <td style="text-align:center;">100.00%</td>
-    <td style="text-align:center;">99.995%</td>
-    <td style="text-align:center;">99.995%</td>
-    <td style="text-align:center;">99.97%</td>
-    <td style="text-align:center;">98.077%</td>
-    <td style="text-align:center;">98.166%</td>
-    <td style="text-align:center;">98.36%</td>
-    <td style="text-align:center;">91.254%</td>
-    <td style="text-align:center;">87.769%</td>
-    <td style="text-align:center;">86.38%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">99.13%</td>
+    <td style="text-align:center;">99.12%</td>
+    <td style="text-align:center;">99.36%</td>
+    <td style="text-align:center;">93.93%</td>
+    <td style="text-align:center;">90.11%</td>
+    <td style="text-align:center;">84.51%</td>
 </tr>
 <tr>
     <td style="text-align:center;">TimeSeries_Generic_6k_t</td>
     <td style="text-align:center;">6k</td>
-    <td style="text-align:center;">100.000%</td>
-    <td style="text-align:center;">99.995%</td>
-    <td style="text-align:center;">99.94%</td>
-    <td style="text-align:center;">100.000%</td>
-    <td style="text-align:center;">100.000%</td>
     <td style="text-align:center;">100.00%</td>
-    <td style="text-align:center;">97.791%</td>
-    <td style="text-align:center;">97.899%</td>
-    <td style="text-align:center;">98.10%</td>
-    <td style="text-align:center;">96.283%</td>
-    <td style="text-align:center;">92.299%</td>
-    <td style="text-align:center;">93.82%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">98.87%</td>
+    <td style="text-align:center;">98.85%</td>
+    <td style="text-align:center;">99.06%</td>
+    <td style="text-align:center;">98.35%</td>
+    <td style="text-align:center;">93.68%</td>
+    <td style="text-align:center;">92.35%</td>
 </tr>
 <tr>
     <td style="text-align:center;">TimeSeries_Generic_13k_t</td>
     <td style="text-align:center;">14k</td>
-    <td style="text-align:center;">100.000%</td>
-    <td style="text-align:center;">100.000%</td>
     <td style="text-align:center;">100.00%</td>
-    <td style="text-align:center;">99.985%</td>
-    <td style="text-align:center;">99.985%</td>
-    <td style="text-align:center;">99.97%</td>
-    <td style="text-align:center;">98.542%</td>
-    <td style="text-align:center;">98.567%</td>
-    <td style="text-align:center;">98.60%</td>
-    <td style="text-align:center;">94.543%</td>
-    <td style="text-align:center;">91.810%</td>
-    <td style="text-align:center;">89.88%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">99.08%</td>
+    <td style="text-align:center;">99.09%</td>
+    <td style="text-align:center;">99.19%</td>
+    <td style="text-align:center;">96.96%</td>
+    <td style="text-align:center;">93.49%</td>
+    <td style="text-align:center;">93.90%</td>
 </tr>
 </table>
 
@@ -277,11 +358,11 @@ To help you visualize the above information, bar graphs are provided below for e
 
 | **Preset 1**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D | **Preset 2**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1 |
 |-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| ![Preset 1 Bar Graph](./graphs/FEP_vs_accuracy_plots/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D_accuracy_comparison.png)                                    | ![Preset 2 Bar Graph](./graphs/FEP_vs_accuracy_plots/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
+| ![Preset 1 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D_accuracy_comparison.png)                                    | ![Preset 2 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
 
 | **Preset 3**: MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1  | **Preset 4**: MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1  |
 |-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| ![Preset 3 Bar Graph](./graphs/FEP_vs_accuracy_plots/MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    | ![Preset 4 Bar Graph](./graphs/FEP_vs_accuracy_plots/MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
+| ![Preset 3 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    | ![Preset 4 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
 
 ---
 
@@ -289,13 +370,22 @@ To help you visualize the above information, bar graphs are provided below for e
 
 - Presets 1, 2, and 3 involve FFT-based feature extraction, which simplifies the learning process for models and generally results in higher accuracy. Preset 4, on the other hand, uses raw feature extraction, making it a more realistic benchmark for model performance.
 
-- Observing the 4th graph, we see that the `TimeSeries_Generic_6k_t` model achieves the highest accuracy under Preset 4, surpassing even the larger `TimeSeries_Generic_13k_t` model. Additionally, when using the 2nd feature extraction preset, the 6k model achieves 100% accuracy across all three metrics: float train, quant train, and test evaluation accuracy.
+- In the 4th preset, we observe an increasing accuracy trend across all four models (1k, 4k, 6k, and 13k parameter models). This is because, as the number of parameters increases, the model has a greater capacity to learn more complex patterns, resulting in higher accuracy. However, this improvement comes with a trade-off: models with more parameters require more memory and computational resources, which can make them less efficient for deployment on resource-constrained devices.
 
-- Since Preset 4 is our benchmark, the `TimeSeries_Generic_6k_t` model stands out as the better choice overall compared to other models for this particular classification problem.
+- For the 4th preset, the accuracy values for the models are as follows:
 
-## Resource Usage Comparison Across TINIE Targets
+  - 1k: 84.12%
+  - 4k: 84.51%
+  - 6k: 92.35%
+  - 13k: 93.90%
 
-This section compares the resource usage of different models across various TINIE targets. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
+  Considering this trade-off between accuracy and the number of parameters, the `TimeSeries_Generic_6k_t` model stands out as the best choice. It achieves a high accuracy of 92.35% while maintaining a relatively lower parameter count compared to the 13k_t model, making it a balanced option for this classification problem.
+
+- Furthermore, when using the 2nd feature extraction preset (FFT-based), the `TimeSeries_Generic_6k_t` model achieves 100% accuracy across all three metrics: float train, quant train, and test evaluation accuracy. This demonstrates the model's ability to perform exceptionally well under optimized feature extraction conditions.
+
+## Resource Usage Comparison Across Target Devices
+
+This section compares the resource usage of different models across various target devices. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms. 
 
 ### **Metrics Used for Comparison**
 
@@ -311,9 +401,9 @@ This section compares the resource usage of different models across various TINI
 
 ### **Resource Usage Table**
 
-The table below shows the resource usage for each model across different TINIE targets:
+The table below summarizes the resource usage for each model across various target devices. The metrics are calculated using an input shape of **(1, 1, 256, 1)** and with the number of classes set to **2**.
 
-| **Model**              | **TINIE Target**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
+| **Model**              | **Target Device**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
 |-------------------------|-----------------------------|------------|------------------|---------------------|---------------------|-----------------|-------------------|------------------|
 | MotorFault_model_1_t    | m0_soft_int_in_int_out      | 142067     | 952              | 752                 | 1024                | 2728            | 1704              | 1024             |
 | MotorFault_model_1_t    | m0_hard_int_in_int_out      | 16831      | 1010             | 2236                | 916                 | 4162            | 3246              | 916              |
@@ -341,18 +431,20 @@ The table below shows the resource usage for each model across different TINIE t
 
 ### Graphical Insights for Model Selection
 
-1. **Cycles vs. Total Memory Usage**
-
-   A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. So ideal models would be the ones that balance both speed and memory efficiency, ideally those near the bottom-left corner of the plot (low cycles and low memory usage).
-
-  <img style="margin-left: 20px;" src="./graphs/memory_usage_vs_cycles_plots/motor_bearing_fault_classification_models.jpg" alt="motor_bearing_fault_classification_models" width="800"/>
-
----
-2. **Flash Usage vs. SRAM Usage**
-
-   Below plot helps to identify models that balance Flash and SRAM usage based on your specific requirements.
-  
-<img style="margin-left: 20px;" src="./graphs/flash_vs_sram_plots/motor_bearing_fault_classification_models.jpg" alt="motor_bearing_fault_classification_models" width="800"/>
+<div style="text-align: left; max-width: 80vw; margin: 0 auto;">
+  <h3>1. Cycles vs. Total Memory Usage</h3>
+  <p>
+    A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. The ideal models are those that balance both speed and memory efficiency, typically located near the bottom-left corner of the plot (low cycles and low memory usage).
+  </p>
+  <p>
+    Below is the <b>Cycles vs. Total Memory Usage</b> plot for all generic models across <b>C28 (soft and hard)</b>:
+  </p>
+  <img src="./graphs/cycles_vs_memory_usage_plots/motorfault_c28_total_memory_vs_cycles.png" alt="motorfault_c28_total_memory_vs_cycles" style="width: 80vw;">
+  <p>
+  <br>
+    <b> If you need similar graphs for other target devices, you can click this link here: <a href="https://software-dl.ti.com/C2000/esd/mcu_ai/01_00_00/misc/motor_fault_cycles_vs_mem_usage.html">Cycles vs. Total Memory Usage of Motor Fault GUI Models Across All Target Devices</a></b>
+  </p>
+</div>
 
 </details>
 
@@ -367,20 +459,20 @@ While you can use the **[Generic Time Series Classification](#generic-time-serie
 
 ## Available Models
 
-| **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs (M)** |
+| **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs** |
 |----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|
-| TimeSeries_Generic_1k      | Generic Time series tasks             | tinyml-modelmaker     | 970                   | 0.3                |
-| TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 0.3                |
-| TimeSeries_Generic_4k      | Generic Time series tasks             | tinyml-modelmaker     | 3,682                 | 0.14               |
-| TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 0.14               |
-| TimeSeries_Generic_6k      | Generic Time series tasks             | tinyml-modelmaker     | 5,186                 | 0.78               |
-| TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 0.78               |
-| TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 0.67               |
-| TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 0.67               |
-| ArcFault_model_200_t       | Arc Fault Classification              | GUI                   | 296                   | 0.01               |
-| ArcFault_model_300_t       | Arc Fault Classification              | GUI                   | 388                   | 0.02               |
-| ArcFault_model_700_t       | Arc Fault Classification              | GUI                   | 844                   | 0.03               |
-| ArcFault_model_1400_t      | Arc Fault Classification              | GUI                   | 0                     | 0                  |
+| TimeSeries_Generic_1k      | Generic Time series tasks             | tinyml-modelmaker     | 970                   | 2,95,106                |
+| TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 2,95,108                |
+| TimeSeries_Generic_4k      | Generic Time series tasks             | tinyml-modelmaker     | 3,682                 | 1,41,682               |
+| TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 1,41,684               |
+| TimeSeries_Generic_6k      | Generic Time series tasks             | tinyml-modelmaker     | 5,186                 | 7,82,754               |
+| TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 7,82,756               |
+| TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 6,66,450               |
+| TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 6,66,452               |
+| ArcFault_model_200_t       | Arc Fault Classification              | GUI                   | 296                   | 10,408               |
+| ArcFault_model_300_t       | Arc Fault Classification              | GUI                   | 388                   | 19,484               |
+| ArcFault_model_700_t       | Arc Fault Classification              | GUI                   | 844                   | 30,540               |
+| ArcFault_model_1400_t      | Arc Fault Classification              | GUI                   | 1,648                     | 60,400                  |
 
 *The performance metrics above are measured for an input dimension of **(N=1, C=1, H=512, W=1)**.*
 
@@ -394,9 +486,9 @@ Some metrics are provided to help you understand the computational requirements 
 
 For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
 
-## Resource Usage Comparison Across TINIE Targets
+## Resource Usage Comparison Across Target Devices
 
-This section compares the resource usage of different models across various TINIE targets. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
+This section compares the resource usage of different models across various target devices. The metrics below provide insights into the computational and memory requirements of each model when deployed on specific hardware platforms.
 
 ### **Metrics Used for Comparison**
 
@@ -412,9 +504,9 @@ This section compares the resource usage of different models across various TINI
 
 ### **Resource Usage Table**
 
-The table below shows the resource usage for each model across different TINIE targets:
+The table below summarizes the resource usage for each model across various target devices. The metrics are calculated using an input shape of **(1, 1, 256, 1)** and with the number of classes set to **2**.
 
-| **Model**              | **TINIE Target**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
+| **Model**              | **Target Device**            | **Cycles** | **Code (bytes)** | **RO Data (bytes)** | **RW Data (bytes)** | **Total Bytes** | **Flash (bytes)** | **SRAM (bytes)** |
 |-------------------------|-----------------------------|------------|------------------|---------------------|---------------------|-----------------|-------------------|------------------|
 | ArcFault_model_200_t    | m0_soft_int_in_int_out      | 130223     | 1780             | 432                 | 1040                | 3252            | 2212              | 1040             |
 | ArcFault_model_200_t    | m0_hard_int_in_int_out      | 16650      | 1338             | 2268                | 900                 | 4506            | 3606              | 900              |
@@ -449,18 +541,20 @@ The table below shows the resource usage for each model across different TINIE t
 
 ### Graphical Insights for Model Selection
 
-1. **Cycles vs. Total Memory Usage**
-
-   A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. So ideal models would be the ones that balance both speed and memory efficiency, ideally those near the bottom-left corner of the plot (low cycles and low memory usage).
-
-  <img style="margin-left: 20px;" src="./graphs/memory_usage_vs_cycles_plots/arc_fault_classification_models.jpg" alt="arc_fault_classification_models" width="800"/>
-
----
-2. **Flash Usage vs. SRAM Usage**
-
-   Below plot helps to identify models that balance Flash and SRAM usage based on your specific requirements.
-  
-<img style="margin-left: 20px;" src="./graphs/flash_vs_sram_plots/arc_fault_classification_models.jpg" alt="arc_fault_classification_models" width="800"/>
+<div style="text-align: left; max-width: 80vw; margin: 0 auto;">
+  <h3>1. Cycles vs. Total Memory Usage</h3>
+  <p>
+    A model with low cycles is faster but might use more memory. A model with low memory usage is more memory-efficient but might be slower. The ideal models are those that balance both speed and memory efficiency, typically located near the bottom-left corner of the plot (low cycles and low memory usage).
+  </p>
+  <p>
+    Below is the <b>Cycles vs. Total Memory Usage</b> plot for all generic models across <b>C28 (soft and hard)</b>:
+  </p>
+  <img src="./graphs/cycles_vs_memory_usage_plots/arcFault_c28_total_memory_vs_cycles.png" alt="arcFault_c28_total_memory_vs_cycles" style="width: 80vw;">
+  <p>
+  <br>
+    <b> If you need similar graphs for other target devices, you can click this link here: <a href="https://software-dl.ti.com/C2000/esd/mcu_ai/01_00_00/misc/arc_fault_cycles_vs_mem_usage.html">Cycles vs. Total Memory Usage of Arc Fault GUI Models Across All Target Devices</a></b>
+  </p>
+</div>
 
 </details>
 </details>

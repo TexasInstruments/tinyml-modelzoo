@@ -41,13 +41,9 @@ The Generic Time Series Classification Models are versatile models designed to h
 
 | **Model**                  | **Total Parameters** | **Total MACs** |
 |----------------------------|----------------------|--------------------|
-| TimeSeries_Generic_1k      | 970                  | 2,95,106                |
 | TimeSeries_Generic_1k_t    | 972                  | 2,95,108                |
-| TimeSeries_Generic_4k      | 3,682                | 1,41,682               |
 | TimeSeries_Generic_4k_t    | 3,684                | 1,41,684              |
-| TimeSeries_Generic_6k      | 5,186                | 7,82,754               |
 | TimeSeries_Generic_6k_t    | 5,188                | 7,82,756              |
-| TimeSeries_Generic_13k     | 12,978               | 6,66,450               |
 | TimeSeries_Generic_13k_t   | 12,980               | 6,66,452               |
 
 
@@ -70,14 +66,6 @@ Below is the detailed table of metrics for various models tested with different 
 
 | **Model**               | **Shape (N, C, H, W)** | **MACs**   | **Parameters** |
 |--------------------------|------------------------|------------|----------------|
-| TimeSeries_Generic_1k    | 1, 1, 128, 1          | 73922      | 970            |
-| TimeSeries_Generic_1k    | 1, 1, 256, 1          | 147650     | 970            |
-| TimeSeries_Generic_1k    | 1, 1, 512, 1          | 295106     | 970            |
-| TimeSeries_Generic_1k    | 1, 1, 1024, 1         | 590018     | 970            |
-| TimeSeries_Generic_1k    | 1, 3, 128, 1          | 84422      | 1310           |
-| TimeSeries_Generic_1k    | 1, 3, 256, 1          | 168390     | 1310           |
-| TimeSeries_Generic_1k    | 1, 3, 512, 1          | 336326     | 1310           |
-| TimeSeries_Generic_1k    | 1, 3, 1024, 1         | 672198     | 1310           |
 | TimeSeries_Generic_1k_t  | 1, 1, 128, 1          | 73924      | 972            |
 | TimeSeries_Generic_1k_t  | 1, 1, 256, 1          | 147652     | 972            |
 | TimeSeries_Generic_1k_t  | 1, 1, 512, 1          | 295108     | 972            |
@@ -86,14 +74,6 @@ Below is the detailed table of metrics for various models tested with different 
 | TimeSeries_Generic_1k_t  | 1, 3, 256, 1          | 168396     | 1316           |
 | TimeSeries_Generic_1k_t  | 1, 3, 512, 1          | 336332     | 1316           |
 | TimeSeries_Generic_1k_t  | 1, 3, 1024, 1         | 672204     | 1316           |
-| TimeSeries_Generic_4k    | 1, 1, 128, 1          | 35698      | 3682           |
-| TimeSeries_Generic_4k    | 1, 1, 256, 1          | 71026      | 3682           |
-| TimeSeries_Generic_4k    | 1, 1, 512, 1          | 141682     | 3682           |
-| TimeSeries_Generic_4k    | 1, 1, 1024, 1         | 282994     | 3682           |
-| TimeSeries_Generic_4k    | 1, 3, 128, 1          | 43382      | 4310           |
-| TimeSeries_Generic_4k    | 1, 3, 256, 1          | 85878      | 4310           |
-| TimeSeries_Generic_4k    | 1, 3, 512, 1          | 170870     | 4310           |
-| TimeSeries_Generic_4k    | 1, 3, 1024, 1         | 340854     | 4310           |
 | TimeSeries_Generic_4k_t  | 1, 1, 128, 1          | 35700      | 3684           |
 | TimeSeries_Generic_4k_t  | 1, 1, 256, 1          | 71028      | 3684           |
 | TimeSeries_Generic_4k_t  | 1, 1, 512, 1          | 141684     | 3684           |
@@ -102,14 +82,6 @@ Below is the detailed table of metrics for various models tested with different 
 | TimeSeries_Generic_4k_t  | 1, 3, 256, 1          | 85884      | 4316           |
 | TimeSeries_Generic_4k_t  | 1, 3, 512, 1          | 170876     | 4316           |
 | TimeSeries_Generic_4k_t  | 1, 3, 1024, 1         | 340860     | 4316           |
-| TimeSeries_Generic_6k    | 1, 1, 128, 1          | 196002     | 5186           |
-| TimeSeries_Generic_6k    | 1, 1, 256, 1          | 391586     | 5186           |
-| TimeSeries_Generic_6k    | 1, 1, 512, 1          | 782754     | 5186           |
-| TimeSeries_Generic_6k    | 1, 1, 1024, 1         | 1565090    | 5186           |
-| TimeSeries_Generic_6k    | 1, 3, 128, 1          | 216998     | 5862           |
-| TimeSeries_Generic_6k    | 1, 3, 256, 1          | 433062     | 5862           |
-| TimeSeries_Generic_6k    | 1, 3, 512, 1          | 865190     | 5862           |
-| TimeSeries_Generic_6k    | 1, 3, 1024, 1         | 1729446    | 5862           |
 | TimeSeries_Generic_6k_t  | 1, 1, 128, 1          | 196004     | 5188           |
 | TimeSeries_Generic_6k_t  | 1, 1, 256, 1          | 391588     | 5188           |
 | TimeSeries_Generic_6k_t  | 1, 1, 512, 1          | 782756     | 5188           |
@@ -118,14 +90,6 @@ Below is the detailed table of metrics for various models tested with different 
 | TimeSeries_Generic_6k_t  | 1, 3, 256, 1          | 433068     | 5868           |
 | TimeSeries_Generic_6k_t  | 1, 3, 512, 1          | 865196     | 5868           |
 | TimeSeries_Generic_6k_t  | 1, 3, 1024, 1         | 1729452    | 5868           |
-| TimeSeries_Generic_13k   | 1, 1, 128, 1          | 167250     | 12978          |
-| TimeSeries_Generic_13k   | 1, 1, 256, 1          | 333650     | 12978          |
-| TimeSeries_Generic_13k   | 1, 1, 512, 1          | 666450     | 12978          |
-| TimeSeries_Generic_13k   | 1, 1, 1024, 1         | 1332050    | 12978          |
-| TimeSeries_Generic_13k   | 1, 3, 128, 1          | 175446     | 14118          |
-| TimeSeries_Generic_13k   | 1, 3, 256, 1          | 349014     | 14118          |
-| TimeSeries_Generic_13k   | 1, 3, 512, 1          | 696150     | 14118          |
-| TimeSeries_Generic_13k   | 1, 3, 1024, 1         | 1390422    | 14118          |
 | TimeSeries_Generic_13k_t | 1, 1, 128, 1          | 167252     | 12980          |
 | TimeSeries_Generic_13k_t | 1, 1, 256, 1          | 333652     | 12980          |
 | TimeSeries_Generic_13k_t | 1, 1, 512, 1          | 666452     | 12980          |
@@ -136,10 +100,6 @@ Below is the detailed table of metrics for various models tested with different 
 | TimeSeries_Generic_13k_t | 1, 3, 1024, 1         | 1390428    | 14124          |
 
 </details>
-
-### Note:
-
-For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
 
 ## Resource Usage Comparison Across Target Devices
 
@@ -221,14 +181,10 @@ Motor bearing fault classification is a specialized task where models are design
 
 
 | **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs** |
-|----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|
-| TimeSeries_Generic_1k      | Generic Time series tasks             | tinyml-modelmaker     | 970                   | 2,95,106                |
+|----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|               |
 | TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 2,95,108                |
-| TimeSeries_Generic_4k      | Generic Time series tasks             | tinyml-modelmaker     | 3,682                 | 1,41,682               |
 | TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 1,41,684               |
-| TimeSeries_Generic_6k      | Generic Time series tasks             | tinyml-modelmaker     | 5,186                 | 7,82,754               |
 | TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 7,82,756               |
-| TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 6,66,450               |
 | TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 6,66,452               |
 | MotorFault_model_1_t       | Motor Bearing Fault Classification    | GUI                   | 588                   | 9,660               |
 | MotorFault_model_2_t       | Motor Bearing Fault Classification    | GUI                   | 2808                 | 4,38,912               |
@@ -461,13 +417,9 @@ While you can use the **[Generic Time Series Classification](#generic-time-serie
 
 | **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs** |
 |----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|
-| TimeSeries_Generic_1k      | Generic Time series tasks             | tinyml-modelmaker     | 970                   | 2,95,106                |
 | TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 2,95,108                |
-| TimeSeries_Generic_4k      | Generic Time series tasks             | tinyml-modelmaker     | 3,682                 | 1,41,682               |
 | TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 1,41,684               |
-| TimeSeries_Generic_6k      | Generic Time series tasks             | tinyml-modelmaker     | 5,186                 | 7,82,754               |
 | TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 7,82,756               |
-| TimeSeries_Generic_13k     | Generic Time series tasks             | tinyml-modelmaker     | 12,978                | 6,66,450               |
 | TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 6,66,452               |
 | ArcFault_model_200_t       | Arc Fault Classification              | GUI                   | 296                   | 10,408               |
 | ArcFault_model_300_t       | Arc Fault Classification              | GUI                   | 388                   | 19,484               |

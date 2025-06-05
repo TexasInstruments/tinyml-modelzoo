@@ -179,16 +179,15 @@ Motor bearing fault classification is a specialized task where models are design
 
 ## Available Models
 
-
-| **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs** |
-|----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|               |
-| TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 2,95,108                |
-| TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 1,41,684               |
-| TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 7,82,756               |
-| TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 6,66,452               |
-| MotorFault_model_1_t       | Motor Bearing Fault Classification    | GUI                   | 588                   | 9,660               |
-| MotorFault_model_2_t       | Motor Bearing Fault Classification    | GUI                   | 2808                 | 4,38,912               |
-| MotorFault_model_3_t       | Motor Bearing Fault Classification    | GUI                   | 996                     | 17,988                  |
+| **Model**                  | **Suited For**                        | **Availability**      | **Total Parameters** | **Total MACs**     |
+|----------------------------|----------------------------------------|-----------------------|-----------------------|--------------------|
+| TimeSeries_Generic_1k_t    | Generic Time series tasks             | tinyml-modelmaker     | 972                   | 2,95,108           |
+| TimeSeries_Generic_4k_t    | Generic Time series tasks             | tinyml-modelmaker     | 3,684                 | 1,41,684           |
+| TimeSeries_Generic_6k_t    | Generic Time series tasks             | tinyml-modelmaker     | 5,188                 | 7,82,756           |
+| TimeSeries_Generic_13k_t   | Generic Time series tasks             | tinyml-modelmaker     | 12,980                | 6,66,452           |
+| MotorFault_model_1_t       | Motor Bearing Fault Classification    | GUI                   | 588                   | 9,660              |
+| MotorFault_model_2_t       | Motor Bearing Fault Classification    | GUI                   | 2,808                 | 4,38,912           |
+| MotorFault_model_3_t       | Motor Bearing Fault Classification    | GUI                   | 996                   | 17,988             |
 
 *(The performance metrics above are measured for an input shape of **(N=1, C=1, H=512, W=1)**.)*
 
@@ -197,10 +196,6 @@ Some metrics are provided to help you understand the computational requirements 
 - **Total Parameters**: This refers to the total number of tunable weights in the model, including the weights and biases of all layers. A higher number of parameters generally indicates a more complex model with greater capacity to learn intricate patterns in the data. However, it also means the model requires more memory and computational resources.
 
 - **Total MACs**: This metric represents the number of multiply-accumulate operations performed during a single forward pass of the model. It is a measure of the model's computational complexity and directly correlates with the processing power required to run the model.
-
-### Note:
-
-For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
 
 ## Model Accuracy Comparison Across Different Feature Extraction Presets
 
@@ -326,14 +321,14 @@ To help you visualize the above information, bar graphs are provided below for e
 
 - Presets 1, 2, and 3 involve FFT-based feature extraction, which simplifies the learning process for models and generally results in higher accuracy. Preset 4, on the other hand, uses raw feature extraction, making it a more realistic benchmark for model performance.
 
-- In the 4th preset, we observe an increasing accuracy trend across all four models (1k, 4k, 6k, and 13k parameter models). This is because, as the number of parameters increases, the model has a greater capacity to learn more complex patterns, resulting in higher accuracy. However, this improvement comes with a trade-off: models with more parameters require more memory and computational resources, which can make them less efficient for deployment on resource-constrained devices.
+- In the 4th preset, we observe an increasing accuracy trend across all four models (1k_t, 4k_t, 6k_t, and 13k_t parameter models). This is because, as the number of parameters increases, the model has a greater capacity to learn more complex patterns, resulting in higher accuracy. However, this improvement comes with a trade-off: models with more parameters require more memory and computational resources, which can make them less efficient for deployment on resource-constrained devices.
 
 - For the 4th preset, the accuracy values for the models are as follows:
 
-  - 1k: 84.12%
-  - 4k: 84.51%
-  - 6k: 92.35%
-  - 13k: 93.90%
+  - 1k_t: 84.12%
+  - 4k_t: 84.51%
+  - 6k_t: 92.35%
+  - 13k_t: 93.90%
 
   Considering this trade-off between accuracy and the number of parameters, the `TimeSeries_Generic_6k_t` model stands out as the best choice. It achieves a high accuracy of 92.35% while maintaining a relatively lower parameter count compared to the 13k_t model, making it a balanced option for this classification problem.
 
@@ -433,10 +428,6 @@ Some metrics are provided to help you understand the computational requirements 
 - **Total Parameters**: This refers to the total number of tunable weights in the model, including the weights and biases of all layers. A higher number of parameters generally indicates a more complex model with greater capacity to learn intricate patterns in the data. However, it also means the model requires more memory and computational resources.
 
 - **Total MACs**: This metric represents the number of multiply-accumulate operations performed during a single forward pass of the model. It is a measure of the computational complexity and directly correlates with the processing power required to run the model.
-
-### Note:
-
-For devices with **TI MCUs that have a Hardware NPU** (like the F28P55), models with `_t` in their names are specially optimized to use the hardware acceleration. You must use `_t` models on F28P55 devices for the best performance. On other devices, `_t` models don’t offer much benefit, so you can choose either the standard or `_t` versions based on your needs.
 
 ## Resource Usage Comparison Across Target Devices
 

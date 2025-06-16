@@ -47,7 +47,7 @@ The Generic Time Series Classification Models are versatile models designed to h
 | TimeSeries_Generic_13k_t   | 12,980               | 6,66,452               |
 
 
-*(The performance metrics above are measured for an input shape of **(N=1, C=1, H=512, W=1)**.)*
+*(The performance metrics above are measured for an input shape of **(N=1, C=1, H=512, W=1)**. 1k, 4k ,6k and 13k in the model names represent approximate number of total parameters in each respective model.)*
 
 Some metrics are provided to help you understand the computational requirements of these models:
 
@@ -305,15 +305,15 @@ The table below shows the float train accuracy, quant train accuracy, and test e
 
 ### Visualizing Accuracy
 
-To help you visualize the above information, bar graphs are provided below for each preset. Each graph compares the **Float Train Accuracy**, **Quant Train Accuracy**, and **Test Evaluation Accuracy** for all models under the respective preset.
+To help you visualize the above information, bar graphs are provided below for each preset. Each graph compares the **Test Evaluation Accuracy** for all models under the respective preset.
 
 | **Preset 1**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D | **Preset 2**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1 |
 |-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| ![Preset 1 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D_accuracy_comparison.png)                                    | ![Preset 2 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
+| ![Preset 1 Bar Graph](./graphs/model_vs_accuracy_plots/generic_models/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D_accuracy_comparison.png)                                    | ![Preset 2 Bar Graph](./graphs/model_vs_accuracy_plots/generic_models/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
 
 | **Preset 3**: MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1  | **Preset 4**: MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1  |
 |-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| ![Preset 3 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    | ![Preset 4 Bar Graph](./graphs/model_vs_accuracy_plots/MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
+| ![Preset 3 Bar Graph](./graphs/model_vs_accuracy_plots/generic_models/MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    | ![Preset 4 Bar Graph](./graphs/model_vs_accuracy_plots/generic_models/MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
 
 ---
 
@@ -333,6 +333,113 @@ To help you visualize the above information, bar graphs are provided below for e
   Considering this trade-off between accuracy and the number of parameters, the `TimeSeries_Generic_6k_t` model stands out as the best choice. It achieves a high accuracy of 92.35% while maintaining a relatively lower parameter count compared to the 13k_t model, making it a balanced option for this classification problem.
 
 - Furthermore, when using the 2nd feature extraction preset (FFT-based), the `TimeSeries_Generic_6k_t` model achieves 100% accuracy across all three metrics: float train, quant train, and test evaluation accuracy. This demonstrates the model's ability to perform exceptionally well under optimized feature extraction conditions.
+
+---
+
+Just like we visualized the accuracy of generic models, **we now compare the performance of Motor Fault GUI models trained using the same four feature extraction presets**.
+
+### Accuracy Results
+
+The table below shows the float train accuracy, quant train accuracy, and test evaluation accuracy for three different Motor Fault GUI models across all presets:
+
+<table>
+  <tr>
+    <th rowspan="2" style="text-align:center;">Model</th>
+    <th rowspan="2" style="text-align:center;">Parameters</th>
+    <th colspan="3" style="text-align:center;">MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D</th>
+    <th colspan="3" style="text-align:center;">MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1</th>
+    <th colspan="3" style="text-align:center;">MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1</th>
+    <th colspan="3" style="text-align:center;">MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1</th>
+  </tr>
+  <tr>
+    <th>Float Train Accuracy</th>
+    <th>Quant Train Accuracy</th>
+    <th>Test Evaluation Accuracy</th>
+    <th>Float Train Accuracy</th>
+    <th>Quant Train Accuracy</th>
+    <th>Test Evaluation Accuracy</th>
+    <th>Float Train Accuracy</th>
+    <th>Quant Train Accuracy</th>
+    <th>Test Evaluation Accuracy</th>
+    <th>Float Train Accuracy</th>
+    <th>Quant Train Accuracy</th>
+    <th>Test Evaluation Accuracy</th>
+  </tr>
+  <tr>
+    <td style="text-align:center;">MotorFault_model_1_t</td>
+    <td style="text-align:center;">564</td>
+    <td style="text-align:center;">99.858%</td>
+    <td style="text-align:center;">99.838%</td>
+    <td style="text-align:center;">99.89%</td>
+    <td style="text-align:center;">99.939%</td>
+    <td style="text-align:center;">99.939%</td>
+    <td style="text-align:center;">99.71%</td>
+    <td style="text-align:center;">92.369%</td>
+    <td style="text-align:center;">92.245%</td>
+    <td style="text-align:center;">92.13%</td>
+    <td style="text-align:center;">80.022%</td>
+    <td style="text-align:center;">73.989%</td>
+    <td style="text-align:center;">74.15%</td>
+  </tr>
+  <tr>
+    <td style="text-align:center;">MotorFault_model_2_t</td>
+    <td style="text-align:center;">3456</td>
+    <td style="text-align:center;">99.975%</td>
+    <td style="text-align:center;">99.980%</td>
+    <td style="text-align:center;">99.95%</td>
+    <td style="text-align:center;">99.990%</td>
+    <td style="text-align:center;">99.990%</td>
+    <td style="text-align:center;">99.97%</td>
+    <td style="text-align:center;">97.751%</td>
+    <td style="text-align:center;">97.687%</td>
+    <td style="text-align:center;">97.94%</td>
+    <td style="text-align:center;">95.930%</td>
+    <td style="text-align:center;">89.942%</td>
+    <td style="text-align:center;">92.42%</td>
+  </tr>
+  <tr>
+    <td style="text-align:center;">MotorFault_model_3_t</td>
+    <td style="text-align:center;">1196</td>
+    <td style="text-align:center;">99.975%</td>
+    <td style="text-align:center;">99.959%</td>
+    <td style="text-align:center;">99.82%</td>
+    <td style="text-align:center;">100.000%</td>
+    <td style="text-align:center;">100.000%</td>
+    <td style="text-align:center;">100.00%</td>
+    <td style="text-align:center;">93.980%</td>
+    <td style="text-align:center;">94.005%</td>
+    <td style="text-align:center;">94.44%</td>
+    <td style="text-align:center;">86.502%</td>
+    <td style="text-align:center;">81.418%</td>
+    <td style="text-align:center;">82.55%</td>
+  </tr>
+</table>
+
+### Visualizing accuracy
+
+To help you visualize the above information, bar graphs are provided below for each preset. Each graph compares the **Test Evaluation Accuracy** for all models under the respective preset.
+
+| **Preset 1**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D | **Preset 2**: MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1 |
+|-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| ![Preset 1 Bar Graph](./graphs/model_vs_accuracy_plots/motor_fault_gui_models/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_1D_accuracy_comparison.png)                                    | ![Preset 2 Bar Graph](./graphs/model_vs_accuracy_plots/motor_fault_gui_models/MotorFault_256Input_FFTBIN_16Feature_8Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
+
+| **Preset 3**: MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1  | **Preset 4**: MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1  |
+|-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| ![Preset 3 Bar Graph](./graphs/model_vs_accuracy_plots/motor_fault_gui_models/MotorFault_256Input_FFT_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    | ![Preset 4 Bar Graph](./graphs/model_vs_accuracy_plots/motor_fault_gui_models/MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1_accuracy_comparison.png)                                    |
+
+### Key Insights:
+
+- The `MotorFault_model_2_t` has the highest number of parameters (3456), followed by `MotorFault_model_3_t` (1196) and `MotorFault_model_1_t` (564).
+
+- Higher parameter models generally perform better, especially on raw data (Preset 4). This shows that more complex models can learn better, but they also need more memory. Among all presets, Preset 4 uses raw input features, making it a good benchmark for testing real world performance. Here, we see a clear accuracy vs. model size trade-off:
+
+  - `MotorFault_model_1_t` (564 params): 74.15% test accuracy
+
+  - `MotorFault_model_3_t` (1196 params): 82.55% test accuracy
+
+  - `MotorFault_model_2_t` (3456 params): 92.42% test accuracy
+
+  So, if you want a balance between model size and accuracy, `MotorFault_model_3_t` gives a decent trade-off. But for maximum accuracy, `MotorFault_model_2_t` is the best choice if memory and compute are not a concern.
 
 ## Resource Usage Comparison Across Target Devices
 

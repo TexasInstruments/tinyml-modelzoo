@@ -295,6 +295,20 @@ x = torch.randn(1, 1, 128, 1)
 torch.onnx.export(model, x, "my_model.onnx", opset_version=11)
 ```
 
+### Full Training Test
+
+To test your model with an actual training run, use the training wrapper:
+
+```bash
+# Linux
+./run_training.sh examples/hello_world/config.yaml
+
+# Windows
+run_training.bat examples\hello_world\config.yaml
+```
+
+You can modify an example config to use your new model by changing the `model_training_id` field.
+
 ## Troubleshooting
 
 ### Model not appearing in `model_dict`

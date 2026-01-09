@@ -12,7 +12,7 @@ data_processing_feature_extraction:
   variables: 10
   scale: 0.00390625   # 1/256
 training:
-  model_name: TimeSeries_Generic_1k_t
+  model_name: CLS_1k_NPU
   num_gpus: 0
   epochs: 20
   output_int: true

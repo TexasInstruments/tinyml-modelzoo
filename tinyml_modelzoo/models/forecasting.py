@@ -102,9 +102,254 @@ class LSTM8_TS_GEN_BASE(GenericModelWithSpec):
         return model_spec
 
 
+# NPU-Optimized Forecasting Models
+# These models follow TI NPU constraints:
+# - All channels are multiples of 4 (m4)
+# - GCONV kernel heights <= 7
+# - FC input features >= 16
+
+class FC_CNN_TS_GEN_BASE_500_NPU(GenericModelWithSpec):
+    """NPU-optimized ~500 param forecasting model.
+
+    Architecture: BN -> Conv(4ch) -> Conv(8ch) -> AvgPool -> FC
+    NPU Compliance: m4 channels, kH<=7, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=3):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=4, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'2': dict(type='ConvBNReLULayer', in_channels=4, out_channels=8, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'3': dict(type='AdaptiveAvgPoolLayer', output_size=(2,1))}
+        layers += {'4': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'5': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
+class FC_CNN_TS_GEN_BASE_1K_NPU(GenericModelWithSpec):
+    """NPU-optimized ~1K param forecasting model.
+
+    Architecture: BN -> Conv(8ch) -> Conv(16ch) -> AvgPool -> FC
+    NPU Compliance: m4 channels, kH<=7, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=3):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=8, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'2': dict(type='ConvBNReLULayer', in_channels=8, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'3': dict(type='AdaptiveAvgPoolLayer', output_size=(1,1))}
+        layers += {'4': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'5': dict(type='LinearLayer', in_features=None, out_features=self.num_classes * 8)}
+        layers += {'6': dict(type='ReluLayer')}
+        layers += {'7': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
+class FC_CNN_TS_GEN_BASE_2K_NPU(GenericModelWithSpec):
+    """NPU-optimized ~2K param forecasting model.
+
+    Architecture: BN -> Conv(8ch) -> Conv(16ch) -> Conv(16ch) -> AvgPool -> FC
+    NPU Compliance: m4 channels, kH<=7, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=3):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=8, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'2': dict(type='ConvBNReLULayer', in_channels=8, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'3': dict(type='ConvBNReLULayer', in_channels=16, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'4': dict(type='AdaptiveAvgPoolLayer', output_size=(2,1))}
+        layers += {'5': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'6': dict(type='LinearLayer', in_features=None, out_features=self.num_classes * 8)}
+        layers += {'7': dict(type='ReluLayer')}
+        layers += {'8': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
+class FC_CNN_TS_GEN_BASE_4K_NPU(GenericModelWithSpec):
+    """NPU-optimized ~4K param forecasting model.
+
+    Architecture: BN -> Conv(8ch) -> Conv(16ch) -> Conv(32ch) -> AvgPool -> FC
+    NPU Compliance: m4 channels, kH<=7, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=3):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=8, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'2': dict(type='ConvBNReLULayer', in_channels=8, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'3': dict(type='ConvBNReLULayer', in_channels=16, out_channels=32, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'4': dict(type='AdaptiveAvgPoolLayer', output_size=(2,1))}
+        layers += {'5': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'6': dict(type='LinearLayer', in_features=None, out_features=self.num_classes * 32)}
+        layers += {'7': dict(type='ReluLayer')}
+        layers += {'8': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
+class FC_CNN_TS_GEN_BASE_6K_NPU(GenericModelWithSpec):
+    """NPU-optimized ~6K param forecasting model using depthwise separable convolutions.
+
+    Architecture: BN -> Conv -> (DWCONV+PWCONV)x2 -> AvgPool -> FC
+    NPU Compliance: m4 channels, DWCONV kW<=7, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=5):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        # Initial conv to get to m4 channels
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=8, kernel_size=(self.kernel,1), stride=(2,1), padding=(2,0))}
+        # Depthwise separable block 1
+        layers += {'2': dict(type='ConvBNReLULayer', in_channels=8, out_channels=8, kernel_size=(self.kernel,1), stride=(2,1), padding=(2,0), groups=8)}
+        layers += {'3': dict(type='ConvBNReLULayer', in_channels=8, out_channels=16, kernel_size=(1,1), stride=(1,1), padding=(0,0))}
+        # Depthwise separable block 2
+        layers += {'4': dict(type='ConvBNReLULayer', in_channels=16, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(2,0), groups=16)}
+        layers += {'5': dict(type='ConvBNReLULayer', in_channels=16, out_channels=32, kernel_size=(1,1), stride=(1,1), padding=(0,0))}
+        layers += {'6': dict(type='AdaptiveAvgPoolLayer', output_size=(2,1))}
+        layers += {'7': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'8': dict(type='LinearLayer', in_features=None, out_features=self.num_classes * 32)}
+        layers += {'9': dict(type='ReluLayer')}
+        layers += {'10': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
+class FC_CNN_TS_GEN_BASE_8K_NPU(GenericModelWithSpec):
+    """NPU-optimized ~8K param forecasting model.
+
+    Architecture: BN -> Conv(8ch) -> Conv(16ch) -> Conv(32ch) -> Conv(32ch) -> AvgPool -> FC
+    NPU Compliance: m4 channels, kH<=7, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=3):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=8, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'2': dict(type='ConvBNReLULayer', in_channels=8, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'3': dict(type='ConvBNReLULayer', in_channels=16, out_channels=32, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'4': dict(type='ConvBNReLULayer', in_channels=32, out_channels=32, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'5': dict(type='AdaptiveAvgPoolLayer', output_size=(2,1))}
+        layers += {'6': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'7': dict(type='LinearLayer', in_features=None, out_features=self.num_classes * 32)}
+        layers += {'8': dict(type='ReluLayer')}
+        layers += {'9': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
+class FC_CNN_TS_GEN_BASE_10K_NPU(GenericModelWithSpec):
+    """NPU-optimized ~10K param forecasting model.
+
+    Architecture: BN -> Conv(16ch) -> Conv(32ch) -> Conv(32ch) -> AvgPool -> FC
+    NPU Compliance: m4 channels, kH<=7, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=3):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'2': dict(type='ConvBNReLULayer', in_channels=16, out_channels=32, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'3': dict(type='ConvBNReLULayer', in_channels=32, out_channels=32, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'4': dict(type='AdaptiveAvgPoolLayer', output_size=(2,1))}
+        layers += {'5': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'6': dict(type='LinearLayer', in_features=None, out_features=self.num_classes * 64)}
+        layers += {'7': dict(type='ReluLayer')}
+        layers += {'8': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
+class FC_CNN_TS_GEN_BASE_20K_NPU(GenericModelWithSpec):
+    """NPU-optimized ~20K param forecasting model.
+
+    Architecture: BN -> Conv(16ch) -> MaxPool -> Conv(32ch) -> MaxPool -> Conv(64ch) -> Conv(64ch) -> AvgPool -> FC
+    NPU Compliance: m4 channels, kH<=7, MaxPool<=4, FC input>=16
+    """
+    def __init__(self, config, input_features=16, variables=4, num_classes=1, kernel=3):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, kernel=kernel)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=16, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'2': dict(type='MaxPoolLayer', kernel_size=(2,1))}
+        layers += {'3': dict(type='ConvBNReLULayer', in_channels=16, out_channels=32, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'4': dict(type='MaxPoolLayer', kernel_size=(2,1))}
+        layers += {'5': dict(type='ConvBNReLULayer', in_channels=32, out_channels=64, kernel_size=(self.kernel,1), stride=(2,1), padding=(1,0))}
+        layers += {'6': dict(type='ConvBNReLULayer', in_channels=64, out_channels=64, kernel_size=(self.kernel,1), stride=(1,1), padding=(1,0))}
+        layers += {'7': dict(type='AdaptiveAvgPoolLayer', output_size=(2,1))}
+        layers += {'8': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'9': dict(type='LinearLayer', in_features=None, out_features=self.num_classes * 64)}
+        layers += {'10': dict(type='ReluLayer')}
+        layers += {'11': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        model_spec = dict(model_spec=layers)
+        return model_spec
+
+
 # Export all forecasting models
 __all__ = [
+    # Existing models
     'FC_CNN_TS_GEN_BASE_13K',
     'LSTM10_TS_GEN_BASE',
     'LSTM8_TS_GEN_BASE',
+    # NPU-Optimized gap-filling models
+    'FC_CNN_TS_GEN_BASE_500_NPU',
+    'FC_CNN_TS_GEN_BASE_1K_NPU',
+    'FC_CNN_TS_GEN_BASE_2K_NPU',
+    'FC_CNN_TS_GEN_BASE_4K_NPU',
+    'FC_CNN_TS_GEN_BASE_6K_NPU',
+    'FC_CNN_TS_GEN_BASE_8K_NPU',
+    'FC_CNN_TS_GEN_BASE_10K_NPU',
+    'FC_CNN_TS_GEN_BASE_20K_NPU',
 ]

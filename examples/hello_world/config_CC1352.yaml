@@ -28,8 +28,8 @@ data_processing_feature_extraction:
 training:
     # enable/disable training
     enable: True #False
-    # F28x generic timeseries model names: TimeSeries_Generic_1k_t, TimeSeries_Generic_4k_t, TimeSeries_Generic_6k_t, TimeSeries_Generic_13k_t
-    model_name: 'TimeSeries_Generic_1k_t'
+    # F28x generic timeseries model names: CLS_1k_NPU, CLS_4k_NPU, CLS_6k_NPU, CLS_13k_NPU
+    model_name: 'CLS_1k_NPU'
 #    model_spec: ''
     batch_size: 256
     training_epochs: 20

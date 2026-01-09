@@ -64,7 +64,7 @@ training:
     output_int: False # True (default)
 ```
 
-Furthermore, you can visualize the outputs realized from models in test_vector.c PATH=*data/projects/gas_sensor/run/<date>-<time>/TimeSeries_Generic_1k_t/training/quantization/golden_vectors/test_vector.c*
+Furthermore, you can visualize the outputs realized from models in test_vector.c PATH=*data/projects/gas_sensor/run/<date>-<time>/CLS_1k_NPU/training/quantization/golden_vectors/test_vector.c*
 
 The **test_vector.c** file consists of many test cases to verify the outputs of converted model w.r.t qdq quantized model. Let's see the effect of output_int on these test_vectors. For output_int set to:
 
@@ -88,7 +88,7 @@ This will match the output from Generic Quantization and TINPU Quantization.
 
 ## Performance on device
 
-We benchmarked the performance of the `TimeSeries_Generic_1k_t` model in both the cases. The device used is F28P55x which comes with a HW accelearator (TINPU) to give low latency performance on ML models. Numbers are provided for running the model on CPU and NPU.
+We benchmarked the performance of the `CLS_1k_NPU` model in both the cases. The device used is F28P55x which comes with a HW accelearator (TINPU) to give low latency performance on ML models. Numbers are provided for running the model on CPU and NPU.
 
 |        Configuration         | AI Model Cycles | Inference Time (us) | Flash Usage (B) | SRAM Usage (B) |
 |------------------------------|-----------------|---------------------|-----------------|----------------|

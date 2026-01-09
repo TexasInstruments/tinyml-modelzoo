@@ -16,7 +16,7 @@ data_processing_feature_extraction:
   num_frame_concat: 4
   stride_size: 0.5
 training:
-  model_name: TimeSeries_Generic_AD_17k_t
+  model_name: AD_17k
   model_config: ''
   batch_size: 64
   training_epochs: 200

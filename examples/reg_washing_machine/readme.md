@@ -96,14 +96,14 @@ variables: 6
 In the training section
 
 ``` 
-model_name: 'TimeSeries_Generic_Regr_13k_t'
+model_name: 'REGR_13k'
 batch_size: 128
 training_epochs: 500
 num_gpus: 1
 quantization: 0
 ``` 
 
-* 'TimeSeries_Generic_Regr_13k_t' is the model_name which consists of 12477 trainable parameters, TimeSeries_Generic_Regr_4k_t can also be used, it contains 4093 trainable parameters 
+* 'REGR_13k' is the model_name which consists of 12477 trainable parameters, REGR_4k can also be used, it contains 4093 trainable parameters 
 * Batch size can be tuned, 128 is used in this example. 
 * Quantization set to 0 is float float, and quantization set to 2 can be used for partially quantized model. 
 * In regression currently the first input batch norm layer, first conv/linear layer and the last linear layer are not quantized i.e. kept in float rest all other layers are quantized to int8
@@ -121,7 +121,7 @@ Train - Val - Test split of (70% : 14% : 16%)
 ## Results
 RMSE values obtained for both the models and different frame sizes on the test set
 
-| Frame Size | TimeSeries_Generic_Regr_4k_t | TimeSeries_Generic_Regr_13k_t | Partially Quantized TimeSeries_Generic_Regr_4k_t | Partially Quantized TimeSeries_Generic_Regr_13k_t |
+| Frame Size | REGR_4k | REGR_13k | Partially Quantized REGR_4k | Partially Quantized REGR_13k |
 |----------|-------------|-------------|-------------|-------------|
 | 256 | 63.00 | 35.77 | 62.32 | 33.37 |
 | 512 | 46.91 | 32.58 | 52.42 | 31.23 |

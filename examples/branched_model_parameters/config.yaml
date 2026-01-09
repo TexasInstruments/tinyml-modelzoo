@@ -11,7 +11,7 @@ data_processing_feature_extraction:
   stride_size: 0.01
   variables: 3
 training:
-  model_name: Res_Cat_TimeSeries_Generic_3k_t
+  model_name: CLS_ResCat_3k
   model_config: examples/branched_model_parameters/residual_network_config.yaml
   batch_size: 32
   training_epochs: 10

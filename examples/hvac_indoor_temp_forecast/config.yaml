@@ -14,7 +14,7 @@ data_processing_feature_extraction:
   target_variables:  # Other format for `target_variables` specification: ['pm','torque'] or  [7,11] or ['7','11',]. If numbers which represent indices, are provided in list, assign column number 0 to the first non time column and continue numbering from there
   - 2
 training:
-  model_name: TimeSeries_Generic_Forecasting_LSTM10
+  model_name: FCST_LSTM10
   model_config: ''
   batch_size: 6
   training_epochs: 10

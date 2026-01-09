@@ -21,7 +21,7 @@ Models are organized by task type in `tinyml_modelzoo/models/`:
 
 | Task Type                  | File                    | Examples                                   |
 |----------------------------|-------------------------|--------------------------------------------|
-| Time series classification | `classification.py`     | CNN_TS_GEN_BASE_1K, HAR_TINIE_CNN_2K       |
+| Time series classification | `classification.py`     | CNN_TS_GEN_BASE_1K_NPU, HAR_TINIE_CNN_2K       |
 | Time series regression     | `regression.py`         | REG_TS_GEN_BASE_1K, REG_TS_CNN_13K         |
 | Anomaly detection          | `anomalydetection.py`   | AE_CNN_TS_GEN_BASE_4K, AD_CNN_TS_17K       |
 | Time series forecasting    | `forecasting.py`        | FC_CNN_TS_GEN_BASE_13K, LSTM10_TS_GEN_BASE |
@@ -149,7 +149,7 @@ At the bottom of the model file, add your class name to the `__all__` list:
 # Export all classification models
 __all__ = [
     'CNN_TS_GEN_BASE_100',
-    'CNN_TS_GEN_BASE_1K',
+    'CNN_TS_GEN_BASE_1K_NPU',
     # ... existing models ...
     'MY_NEW_MODEL_2K',  # <-- Add your model here
 ]
@@ -284,13 +284,13 @@ For spec-based models, you can use these layer types in `gen_model_spec()`:
 ## Naming Conventions
 
 - **Class names** (in `models/`): Use SCREAMING_SNAKE_CASE with model type and parameter count
-  - Classification: `CNN_TS_GEN_BASE_1K`, `RES_ADD_CNN_TS_GEN_BASE_3K`
+  - Classification: `CNN_TS_GEN_BASE_1K_NPU`, `RES_ADD_CNN_TS_GEN_BASE_3K`
   - Regression: `REG_TS_GEN_BASE_1K`, `REG_TS_CNN_13K`
   - Anomaly Detection: `AE_CNN_TS_GEN_BASE_4K`, `AD_CNN_TS_17K`
   - Forecasting: `FC_CNN_TS_GEN_BASE_13K`, `LSTM10_TS_GEN_BASE`
 
-- **GUI names** (in `model_descriptions/`): Use `TimeSeries_Generic_Xk_t` pattern
-  - `TimeSeries_Generic_1k_t`, `TimeSeries_Generic_Regr_10k_t`, `TimeSeries_Generic_AD_4k_t`
+- **GUI names** (in `model_descriptions/`): Use `TimeSeries_Generic_Xk_t` or `TimeSeries_Generic_Xk_NPU_t` pattern
+  - `TimeSeries_Generic_1k_NPU_t`, `TimeSeries_Generic_Regr_10k_t`, `TimeSeries_Generic_AD_4k_t`
 
 ## Testing Your Model
 

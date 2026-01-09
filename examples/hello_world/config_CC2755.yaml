@@ -17,7 +17,7 @@ data_processing_feature_extraction:
 # q15_scale_factor: 5
 # normalize_bin: True
 training:
-  model_name: TimeSeries_Generic_1k_t
+  model_name: CLS_1k_NPU
   batch_size: 256
   training_epochs: 20
   num_gpus: 0

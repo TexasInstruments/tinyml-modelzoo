@@ -13,7 +13,7 @@ data_processing_feature_extraction:
   new_sr: 1
   variables: 1
 training:
-  model_name: TimeSeries_Generic_AD_17k_t
+  model_name: AD_17k
   model_config: ''
   batch_size: 256
   training_epochs: 100

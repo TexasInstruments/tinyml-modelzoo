@@ -60,14 +60,14 @@ The `config.yaml` file is used to configure the parameters for data_processing_f
 The following example of wisdm dataset is provided to 
 - **Showcase the support for residual connections in ml model**
     - tinyml-tinyverse/tinyml_tinyverse/common/models/generic_models.py: `RES_CAT_CNN_TS_GEN_BASE_3K`
-    - RES_CAT_CNN_TS_GEN_BASE_3K is the class name present in generic_models.py and can be called using the model_name Res_Cat_TimeSeries_Generic_3k_t in yaml configuration.
+    - RES_CAT_CNN_TS_GEN_BASE_3K is the class name present in generic_models.py and can be called using the model_name CLS_ResCat_3k in yaml configuration.
 - **Using model_config to change model parameters**
     - model_config: 'examples/branched_model_parameters/residual_network_config.yaml'
     - It can be used to configure parameters related to model
 
 ## Model & Configuration
 
-### Res_Cat_TimeSeries_Generic_3k_t Model
+### CLS_ResCat_3k Model
 <p align="center">  
     <img src="readme/model_onnx.png" width="180" alt="Residual Connections ONNX Model">
 </p>
@@ -79,8 +79,8 @@ The initial branch consists of three convolution layers with (input_channel, out
 ### Configurable Model Params
 
 - `model_name`: Select the ml model to be used during training
-    - model_name = [ `TimeSeries_Generic_1k_t`, `Res_Cat_TimeSeries_Generic_3k_t`, `TimeSeries_Generic_13k_t` ]
-- `model_config`: Configure the model parameters for `Res_Cat_TimeSeries_Generic_3k_t` using the yaml file `residual_network_config.yaml`
+    - model_name = [ `CLS_1k_NPU`, `CLS_ResCat_3k`, `CLS_13k_NPU` ]
+- `model_config`: Configure the model parameters for `CLS_ResCat_3k` using the yaml file `residual_network_config.yaml`
     - `out_channel_layer1`: out features of the first convolution layer 
     - `out_channel_layer2`: out features of the second convolution layer
     - `out_channel_layer3`: out features of the third convolution layer
@@ -95,11 +95,11 @@ run_tinyml_modelmaker.sh examples/branched_model_parameters/config.yaml
 
 | model_name                        | # Parameters  | Accuracy  | AUC-ROC-Score |
 | :---                              | :----------:  | :----:    | :-----------: |
-| TimeSeries_Generic_1k_t           | 1,316         | 94.92%    |    0.995      |
-| Res_Cat_TimeSeries_Generic_3k_t   | 3,132         | 93.84%    |    0.965      |
-| TimeSeries_Generic_13k_t          | 14,124        | 94.45%    |    0.987      |
+| CLS_1k_NPU           | 1,316         | 94.92%    |    0.995      |
+| CLS_ResCat_3k   | 3,132         | 93.84%    |    0.965      |
+| CLS_13k_NPU          | 14,124        | 94.45%    |    0.987      |
 
-** The purpose of this example is to demonstrate the support for residual connections and not to showcase that the Res_Cat_TimeSeries_Generic_3k_t model is better than the rest.
+** The purpose of this example is to demonstrate the support for residual connections and not to showcase that the CLS_ResCat_3k model is better than the rest.
 
 
 <hr>

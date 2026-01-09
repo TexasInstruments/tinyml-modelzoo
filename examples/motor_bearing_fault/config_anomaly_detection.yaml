@@ -9,7 +9,7 @@ data_processing_feature_extraction:
   variables: 3
   feature_size_per_frame: 4
 training:
-  model_name: TimeSeries_Generic_Linear_AD
+  model_name: AD_Linear
   model_config: ''
   batch_size: 50
   learning_rate: 0.001

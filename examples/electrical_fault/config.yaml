@@ -21,7 +21,7 @@ data_processing_feature_extraction:
 #feature_size_per_frame: 32
 #num_frame_concat: 4
 training:
-  model_name: Res_Cat_TimeSeries_Generic_3k_t
+  model_name: CLS_ResCat_3k
   num_gpus: 0
 testing:
   skip_train: false

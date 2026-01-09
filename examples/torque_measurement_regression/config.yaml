@@ -11,7 +11,7 @@ data_processing_feature_extraction:
   frame_size: 128
   stride_size: 0.25
 training:
-  model_name: TimeSeries_Generic_Regr_10k_t
+  model_name: REGR_10k
   batch_size: 512
   training_epochs: 50
   num_gpus: 0

@@ -290,7 +290,7 @@ Configures model architecture and training parameters:
 ```yaml
 training:
     enable: True
-    model_name: 'TimeSeries_Generic_AD_17k_t'
+    model_name: 'AD_17k'
     model_config: ''
     batch_size: 64
     training_epochs: 200
@@ -301,7 +301,7 @@ training:
 ```
 
 **Key parameters:**
-- **`model_name`**: `'TimeSeries_Generic_AD_17k_t'` (autoencoder with ~17,000 parameters)
+- **`model_name`**: `'AD_17k'` (autoencoder with ~17,000 parameters)
 - **`training_epochs`**: 200 epochs (model converges around epoch 150-200)
 - **`quantization`**:
   - `0` = No quantization (float model)
@@ -452,7 +452,7 @@ ModelMaker generates a CSV file with metrics for different threshold values (k =
 
 **Location:** 
 ```
-data/projects/fan_blade_fault/run/{date-time}/TimeSeries_Generic_AD_17k_t/training/quantization/post_training_analysis/threshold_performance.csv
+data/projects/fan_blade_fault/run/{date-time}/AD_17k/training/quantization/post_training_analysis/threshold_performance.csv
 ```
 
 **Complete table:**
@@ -481,7 +481,7 @@ ModelMaker generates histogram plots showing the distribution of reconstruction 
 
 **Location:**
 ```
-data/projects/fan_blade_fault/run/{date-time}/TimeSeries_Generic_AD_17k_t/training/quantization/post_training_analysis/
+data/projects/fan_blade_fault/run/{date-time}/AD_17k/training/quantization/post_training_analysis/
 ```
 
 ![](assets/reconstruction_error_log_scale.png)
@@ -490,7 +490,7 @@ data/projects/fan_blade_fault/run/{date-time}/TimeSeries_Generic_AD_17k_t/traini
 After training completes, all results are stored in:
 
 ```
-data/projects/fan_blade_fault/run/{date-time}/TimeSeries_Generic_AD_17k_t/
+data/projects/fan_blade_fault/run/{date-time}/AD_17k/
 ```
 
 ### **Key Output Directories**

@@ -194,7 +194,7 @@ def test_model_imports():
         print(f"  ✓ {model_count} models registered in model_dict")
 
         # Test instantiation of a few models
-        test_models = ['CNN_TS_GEN_BASE_1K', 'REG_TS_GEN_BASE_1K', 'AE_CNN_TS_GEN_BASE_1K']
+        test_models = ['CNN_TS_GEN_BASE_1K_NPU', 'REG_TS_GEN_BASE_1K', 'AE_CNN_TS_GEN_BASE_1K']
         for model_name in test_models:
             if model_name in model_dict:
                 try:

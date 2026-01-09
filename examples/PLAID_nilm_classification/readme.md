@@ -82,7 +82,7 @@ data_processing_feature_extraction:
 ```yaml
 training:
     enable: True
-    model_name: 'TimeSeries_Generic_13k_t'
+    model_name: 'CLS_13k_NPU'
     model_config: ''
     batch_size: 256
     training_epochs: 30
@@ -98,7 +98,7 @@ compilation:
     keep_libc_files: True
 ```
 
-In this configuration, we have used the `TimeSeries_Generic_13k_t` model, which is a generic classification model available in our model zoo with approximately 13k parameters. This model consists of 6 Conv+BatchNorm+ReLU layers followed by a Linear layer.
+In this configuration, we have used the `CLS_13k_NPU` model, which is a generic classification model available in our model zoo with approximately 13k parameters. This model consists of 6 Conv+BatchNorm+ReLU layers followed by a Linear layer.
 
 We have configured other training parameters, such as an appropriate learning rate (0.04), batch size (256), and the number of training epochs (30). The quantization is set to 2, which means the model uses TI-NPU quantized operations for efficient inference on TI hardware.
 

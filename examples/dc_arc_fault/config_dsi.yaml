@@ -21,7 +21,7 @@ data_processing_feature_extraction:
   variables: 1
   gof_test: false
 training:
-  model_name: TimeSeries_Generic_13k_t
+  model_name: CLS_13k_NPU
   model_config: ''
   batch_size: 2048
   training_epochs: 10

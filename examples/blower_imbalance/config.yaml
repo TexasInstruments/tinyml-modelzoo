@@ -24,7 +24,7 @@ data_processing_feature_extraction:
 #  log_threshold: 1e-100
   variables: 3
 training:
-  model_name: TimeSeries_Generic_1k_t
+  model_name: CLS_1k_NPU
   model_config: ''
   batch_size: 256
   training_epochs: 20

@@ -20,7 +20,7 @@ data_processing_feature_extraction:
 
 training:
     enable: True 
-    model_name: 'Ondevice_Trainable_TimeSeries_Generic_Linear_AD'
+    model_name: 'Ondevice_Trainable_AD_Linear'
     model_config: ''
     batch_size: 64
     training_epochs: 200

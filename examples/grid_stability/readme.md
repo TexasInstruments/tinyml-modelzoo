@@ -75,7 +75,7 @@ tinyml-modelmaker
                     |_ class1_unstable
             |_ run
                 |_ 20250226-132343  # (date-time)
-                    |_ Res_Slice_TimeSeries_Generic_3k_t    # (model_name)
+                    |_ CLS_ResSlice_3k    # (model_name)
                         |_ compilation
                         |_ training
                             |_ base
@@ -85,7 +85,7 @@ tinyml-modelmaker
 ```
 TinyML ModelMaker outputs extracted features, pca analysis of extracted features, model, compiled model, analysis of extracted features, test setup for testing model on device in `data/projects/grid_stability/run/date-time/model_name`. Let's look at this folder in depth.
 ```
-|_ Res_Slice_TimeSeries_Generic_3k_t (model_name)
+|_ CLS_ResSlice_3k (model_name)
     |_ compilation
         |_ artifacts
             |_ mod.a
@@ -144,7 +144,7 @@ These 4 files can be used in a CCS Project to perform AI on edge. [Refer here](.
 
 ## Performance on device
 
-We benchmarked the performance of the `Res_Cat_TimeSeries_Generic_3k_t` model. The device used is F28P55x which comes with a HW accelearator (TINPU) to give low latency performance on ML models. Numbers are provided for running the model on CPU and NPU.
+We benchmarked the performance of the `CLS_ResCat_3k` model. The device used is F28P55x which comes with a HW accelearator (TINPU) to give low latency performance on ML models. Numbers are provided for running the model on CPU and NPU.
 
 |              Configuration             | AI Model Cycles | Inference Time (us) | Flash Usage (B) | SRAM Usage (B) |
 |----------------------------------------|-----------------|---------------------|-----------------|----------------|

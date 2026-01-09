@@ -157,7 +157,7 @@ The first configuration employed individual frames (num_frame_concat: 1), while 
 
 ## Performance on device
 
-We benchmarked the performance of the `Res_Cat_TimeSeries_Generic_3k_t` model. The device used is F28P55x which comes with a HW accelearator (TINPU) to give low latency performance on ML models. Numbers are provided for running the model on NPU & CPU. Here both the configuration of Feature extraction produces the same architecture of model, so the model performance will be same. We clubbed the two configuration as 'with Feature Extraction'.
+We benchmarked the performance of the `CLS_ResCat_3k` model. The device used is F28P55x which comes with a HW accelearator (TINPU) to give low latency performance on ML models. Numbers are provided for running the model on NPU & CPU. Here both the configuration of Feature extraction produces the same architecture of model, so the model performance will be same. We clubbed the two configuration as 'with Feature Extraction'.
 
 |              Configuration             | AI Model Cycles | Inference Time (us) | Flash Usage (B) | SRAM Usage (B) |
 |----------------------------------------|-----------------|---------------------|-----------------|----------------|

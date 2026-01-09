@@ -31,7 +31,7 @@ data_processing_feature_extraction:
   # Format 3 (List of column names): Select columns by name (requires CSV header)
   # variables: ['accel_x', 'accel_y', 'accel_z']
 training:
-  model_name: TimeSeries_Generic_1k_t
+  model_name: CLS_1k_NPU
   model_config: ''
   batch_size: 256
   training_epochs: 20

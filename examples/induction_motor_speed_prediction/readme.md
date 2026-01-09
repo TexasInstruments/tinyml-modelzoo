@@ -67,9 +67,9 @@ run_tinyml_modelmaker.sh examples/induction_motor_speed_prediction/config.yaml
 1. `run_tinyml_modelmaker.sh` is the script to run modelmaker. It take two required arguments.
 2. `examples/induction_motor_speed_prediction/config.yaml` path of the yaml configuration to run
 
-The users can configure the yaml [configuration](config.yaml) to change parameters related to **data preprocessing, feature extraction**, training, testing, model and model compilation. In this example, we will configure the parameters of feature extraction. In this example we will be using TimeSeries_Generic_Regr_1k_t model.
+The users can configure the yaml [configuration](config.yaml) to change parameters related to **data preprocessing, feature extraction**, training, testing, model and model compilation. In this example, we will configure the parameters of feature extraction. In this example we will be using REGR_1k model.
 
-TimeSeries_Generic_Regr_1k_t is a regression model designed with keeping memory in consideration. It consists of 2 BatchNorm+Conv+Relu layer and 2 light Linear layers. This model is compatible to run on TINIE HW accelerator.
+REGR_1k is a regression model designed with keeping memory in consideration. It consists of 2 BatchNorm+Conv+Relu layer and 2 light Linear layers. This model is compatible to run on TINIE HW accelerator.
 
 ## Output of Running modelmaker
 

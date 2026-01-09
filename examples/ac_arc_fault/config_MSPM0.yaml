@@ -24,7 +24,7 @@ data_processing_feature_extraction:
   # gof_test: True
   store_feat_ext_data: false
 training:
-  model_name: TimeSeries_Generic_1k_t
+  model_name: CLS_1k_NPU
   model_config: ''
   batch_size: 30
   training_epochs: 30

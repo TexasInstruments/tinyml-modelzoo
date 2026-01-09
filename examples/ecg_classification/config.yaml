@@ -15,7 +15,7 @@ data_processing_feature_extraction:
   feat_ext_transform: []
   variables: 1
 training:
-  model_name: TimeSeries_Generic_4k_t
+  model_name: CLS_4k_NPU
   model_config: ''
   batch_size: 256
   training_epochs: 50

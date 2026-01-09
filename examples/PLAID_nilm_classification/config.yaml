@@ -19,7 +19,7 @@ data_processing_feature_extraction:
   num_frame_concat: 8
   variables: 2
 training:
-  model_name: TimeSeries_Generic_13k_t
+  model_name: CLS_13k_NPU
   model_config: ''
   batch_size: 256
   training_epochs: 30

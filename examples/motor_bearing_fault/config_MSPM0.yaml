@@ -15,7 +15,7 @@ data_processing_feature_extraction:
 #   store_feat_ext_data: False
 #   nn_for_feature_extraction: True
 training:
-  model_name: TimeSeries_Generic_1k_t
+  model_name: CLS_1k_NPU
   model_config: ''
   batch_size: 256
   training_epochs: 30

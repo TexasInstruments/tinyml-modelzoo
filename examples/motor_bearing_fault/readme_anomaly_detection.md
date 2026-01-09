@@ -275,7 +275,7 @@ Configures model architecture and training parameters:
 ```yaml
 training:
     enable: True
-    model_name: 'TimeSeries_Generic_Linear_AD'
+    model_name: 'AD_Linear'
     model_config: ''
     batch_size: 64
     learning_rate: 0.001
@@ -286,7 +286,7 @@ training:
 ```
 
 **Key parameters:**
-- **`model_name`**: `'TimeSeries_Generic_Linear_AD'` (lightweight linear autoencoder)
+- **`model_name`**: `'AD_Linear'` (lightweight linear autoencoder)
 - **`training_epochs`**: 200 epochs (model converged at epoch 182)
 - **`batch_size`**: 64
 - **`num_gpus`**: 1 (set to 0 for CPU-only training)
@@ -442,7 +442,7 @@ ModelMaker generates a CSV file with metrics for different threshold values (k =
 
 **Location:** 
 ```
-data/projects/motor_fault_example_dsk_ad/run/{date-time}/TimeSeries_Generic_Linear_AD/training/quantization/post_training_analysis/threshold_performance.csv
+data/projects/motor_fault_example_dsk_ad/run/{date-time}/AD_Linear/training/quantization/post_training_analysis/threshold_performance.csv
 ```
 
 
@@ -471,7 +471,7 @@ ModelMaker generates histogram plots showing the distribution of reconstruction 
 
 **Location:**
 ```
-data/projects/motor_fault_example_dsk_ad/run/{date-time}/TimeSeries_Generic_Linear_AD/training/quantization/post_training_analysis/
+data/projects/motor_fault_example_dsk_ad/run/{date-time}/AD_Linear/training/quantization/post_training_analysis/
 ```
 
 ![Reconstruction Error Histogram - Log Scale](assets/reconstruction_error_log_scale.png)
@@ -495,7 +495,7 @@ data/projects/motor_fault_example_dsk_ad/run/{date-time}/TimeSeries_Generic_Line
 After training completes, all results are stored in:
 
 ```
-data/projects/motor_fault_example_dsk_ad/run/{date-time}/TimeSeries_Generic_Linear_AD/
+data/projects/motor_fault_example_dsk_ad/run/{date-time}/AD_Linear/
 ```
 
 ### **Key Output Directories**

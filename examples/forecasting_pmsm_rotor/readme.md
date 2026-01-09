@@ -174,9 +174,9 @@ Here we are using an LSTM model with just 521 parameters.
 training:
     # enable/disable training
     enable: True #False
-    # F28x generic timeseries model names: TimeSeries_Generic_1k_t, TimeSeries_Generic_4k_t, TimeSeries_Generic_6k_t, TimeSeries_Generic_13k_t
+    # F28x generic timeseries model names: CLS_1k_NPU, CLS_4k_NPU, CLS_6k_NPU, CLS_13k_NPU
     # GUI only model names: ArcFault_model_200_t, ArcFault_model_300_t, ArcFault_model_700_t
-    model_name: 'TimeSeries_Generic_Forecasting_LSTM10'
+    model_name: 'FCST_LSTM10'
     # model_spec: '../tinyml-mlbackend/proprietary_models/cnn_af_3l.py'
     model_config: ''
     batch_size: 256

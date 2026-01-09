@@ -95,22 +95,22 @@ The following ready-to-use examples demonstrate various AI applications for MCUs
 
 ### Classification Examples
 
-| No. | Example | Data Type | Description |
-|-----|---------|-----------|-------------|
-| 1 | [hello_world](examples/hello_world/) | Univariate | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
-| 2 | [dc_arc_fault](examples/dc_arc_fault/) | Univariate | Detect DC arc faults from current waveforms for electrical safety. |
-| 3 | [ac_arc_fault](examples/ac_arc_fault/) | Univariate | Detect AC arc faults in electrical systems. |
-| 4 | [motor_bearing_fault](examples/motor_bearing_fault/) | Multivariate | Classify 5 bearing fault types + normal operation from vibration data. |
-| 5 | [blower_imbalance](examples/blower_imbalance/) | Multivariate | Detect blade imbalance in HVAC blowers using 3-phase motor currents. |
-| 6 | [fan_blade_fault_classification](examples/fan_blade_fault_classification/) | Multivariate | Detect faults in BLDC fans from accelerometer data. |
-| 7 | [electrical_fault](examples/electrical_fault/) | Multivariate | Classify transmission line faults using voltage and current. |
-| 8 | [grid_stability](examples/grid_stability/) | Multivariate | Predict power grid stability from node parameters. |
-| 9 | [gas_sensor](examples/gas_sensor/) | Multivariate | Identify gas type and concentration from sensor array data. |
-| 10 | [branched_model_parameters](examples/branched_model_parameters/) | Multivariate | Human Activity Recognition from accelerometer/gyroscope data. |
-| 11 | [ecg_classification](examples/ecg_classification/) | Multivariate | Classify normal vs anomalous heartbeats from ECG signals. |
-| 12 | [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Multivariate | Non-Intrusive Load Monitoring - identify active appliances. |
-| 13 | [PLAID_nilm_classification](examples/PLAID_nilm_classification/) | Multivariate | Appliance identification using the PLAID dataset. |
-| 14 | [pir_detection](examples/pir_detection/) | Multivariate | Detect presence/motion using PIR sensor data. |
+| No. | Example                                                                              | Data Type    | Description                                                                     |
+|-----|--------------------------------------------------------------------------------------|--------------|---------------------------------------------------------------------------------|
+| 1   | [hello_world](examples/hello_world/)                                                 | Univariate   | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
+| 2   | [dc_arc_fault](examples/dc_arc_fault/)                                               | Univariate   | Detect DC arc faults from current waveforms for electrical safety.              |
+| 3   | [ac_arc_fault](examples/ac_arc_fault/)                                               | Univariate   | Detect AC arc faults in electrical systems.                                     |
+| 4   | [motor_bearing_fault](examples/motor_bearing_fault/)                                 | Multivariate | Classify 5 bearing fault types + normal operation from vibration data.          |
+| 5   | [blower_imbalance](examples/blower_imbalance/)                                       | Multivariate | Detect blade imbalance in HVAC blowers using 3-phase motor currents.            |
+| 6   | [fan_blade_fault_classification](examples/fan_blade_fault_classification/)           | Multivariate | Detect faults in BLDC fans from accelerometer data.                             |
+| 7   | [electrical_fault](examples/electrical_fault/)                                       | Multivariate | Classify transmission line faults using voltage and current.                    |
+| 8   | [grid_stability](examples/grid_stability/)                                           | Multivariate | Predict power grid stability from node parameters.                              |
+| 9   | [gas_sensor](examples/gas_sensor/)                                                   | Multivariate | Identify gas type and concentration from sensor array data.                     |
+| 10  | [branched_model_parameters](examples/branched_model_parameters/)                     | Multivariate | Human Activity Recognition from accelerometer/gyroscope data.                   |
+| 11  | [ecg_classification](examples/ecg_classification/)                                   | Multivariate | Classify normal vs anomalous heartbeats from ECG signals.                       |
+| 12  | [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Multivariate | Non-Intrusive Load Monitoring - identify active appliances.                     |
+| 13  | [PLAID_nilm_classification](examples/PLAID_nilm_classification/)                     | Multivariate | Appliance identification using the PLAID dataset.                               |
+| 14  | [pir_detection](examples/pir_detection/)                                             | Multivariate | Detect presence/motion using PIR sensor data.                                   |
 
 ### Regression Examples
 
@@ -171,65 +171,107 @@ TinyML ModelZoo supports the following AI task categories:
 
 ## Available Models
 
+Models are organized by task type. The **NPU** column indicates hardware acceleration support on TI devices with NPU (F28P55, F28P65, F29H85, F29P58, F29P32).
+
+**NPU-optimized models** follow specific layer constraints for hardware acceleration:
+- All channels are multiples of 4 (m4)
+- Kernel heights ≤ 7 for GCONV layers
+- MaxPool kernels ≤ 4
+- FC layer inputs ≥ 16 features (8-bit) or ≥ 8 features (4-bit)
+
+For detailed guidelines, see [NPU Configuration Guidelines](docs/NPU_CONFIGURATION_GUIDELINES.md).
+
+**When to use NPU-optimized models:**
+- Target device has NPU (F28P55, F28P65, F29H85, etc.)
+- You need maximum inference speed
+- Standard models show "fallback to software" warnings during compilation
+
 ### Classification Models
 
-| Model Name | Parameters | Architecture | Description |
-|------------|------------|--------------|-------------|
-| `TimeSeries_Generic_100_t` | ~100 | CNN | Ultra-compact model for minimal MCUs |
-| `TimeSeries_Generic_1k_t` | ~1K | CNN | Lightweight 2-layer CNN |
-| `TimeSeries_Generic_4k_t` | ~4K | CNN | Balanced size/accuracy tradeoff |
-| `TimeSeries_Generic_6k_t` | ~6K | CNN | 3 Conv+BN+ReLU layers |
-| `TimeSeries_Generic_13k_t` | ~13K | CNN | Higher capacity for complex tasks |
-| `TimeSeries_Generic_55k_t` | ~55K | CNN | Maximum accuracy for edge devices |
-| `Res_Add_TimeSeries_Generic_3k_t` | ~3K | ResNet (Add) | Residual connections with addition |
-| `Res_Cat_TimeSeries_Generic_3k_t` | ~3K | ResNet (Cat) | Residual connections with concatenation |
-| `ArcFault_model_200_t` | ~200 | Specialized | Optimized for arc fault detection |
-| `ArcFault_model_300_t` | ~300 | Specialized | Arc fault with more capacity |
-| `ArcFault_model_700_t` | ~700 | Specialized | Arc fault medium model |
-| `ArcFault_model_1400_t` | ~1.4K | Specialized | Arc fault high accuracy |
-| `MotorFault_model_1_t` | Varies | Specialized | Motor bearing fault detection |
-| `MotorFault_model_2_t` | Varies | Specialized | Motor fault variant 2 |
-| `MotorFault_model_3_t` | Varies | Specialized | Motor fault variant 3 |
-| `FanImbalance_model_1_t` | Varies | Specialized | Fan blade imbalance detection |
-| `FanImbalance_model_2_t` | Varies | Specialized | Fan imbalance variant 2 |
-| `FanImbalance_model_3_t` | Varies | Specialized | Fan imbalance variant 3 |
-| `PIRDetection_model_1_t` | Varies | Specialized | PIR-based presence detection |
+| Model Name | Parameters | Architecture | NPU | Description |
+|------------|------------|--------------|-----|-------------|
+| `CLS_100_NPU` | ~100 | CNN | Yes | Ultra-compact model |
+| `CLS_500_NPU` | ~500 | CNN | Yes | Compact model |
+| `CLS_1k_NPU` | ~1K | CNN | Yes | Lightweight 2-layer CNN |
+| `CLS_2k_NPU` | ~2K | CNN | Yes | 2-layer model |
+| `CLS_ResAdd_3k` | ~3K | ResNet (Add) | No | Residual connections with addition |
+| `CLS_ResCat_3k` | ~3K | ResNet (Cat) | No | Residual connections with concatenation |
+| `CLS_4k_NPU` | ~4K | CNN | Yes | Balanced model |
+| `CLS_6k_NPU` | ~6K | CNN (DW-Sep) | Yes | Depthwise separable |
+| `CLS_8k_NPU` | ~8K | CNN (DW-Sep) | Yes | Depthwise separable |
+| `CLS_13k_NPU` | ~13K | CNN | Yes | Higher capacity |
+| `CLS_20k_NPU` | ~20K | CNN | Yes | High capacity |
+| `CLS_55k_NPU` | ~55K | CNN | Yes | Maximum accuracy |
+| `ArcFault_model_200_t` | ~200 | Specialized | No | Arc fault detection |
+| `ArcFault_model_300_t` | ~300 | Specialized | No | Arc fault with more capacity |
+| `ArcFault_model_700_t` | ~700 | Specialized | No | Arc fault medium model |
+| `ArcFault_model_1400_t` | ~1.4K | Specialized | No | Arc fault high accuracy |
+| `MotorFault_model_1_t` | Varies | Specialized | No | Motor bearing fault detection |
+| `MotorFault_model_2_t` | Varies | Specialized | No | Motor fault variant 2 |
+| `MotorFault_model_3_t` | Varies | Specialized | No | Motor fault variant 3 |
+| `FanImbalance_model_1_t` | Varies | Specialized | No | Fan blade imbalance detection |
+| `FanImbalance_model_2_t` | Varies | Specialized | No | Fan imbalance variant 2 |
+| `FanImbalance_model_3_t` | Varies | Specialized | No | Fan imbalance variant 3 |
+| `PIRDetection_model_1_t` | Varies | Specialized | No | PIR-based presence detection |
 
 ### Regression Models
 
-| Model Name | Parameters | Architecture | Description |
-|------------|------------|--------------|-------------|
-| `TimeSeries_Generic_Regr_1k_t` | ~1K | CNN | Lightweight regression model |
-| `TimeSeries_Generic_Regr_3k_t` | ~3K | MLP | 4-layer fully connected network |
-| `TimeSeries_Generic_Regr_4k_t` | ~4K | CNN | 2 Conv+BN+ReLU + Linear |
-| `TimeSeries_Generic_Regr_10k_t` | ~10K | CNN | 3 Conv+BN+ReLU + 2 Linear |
-| `TimeSeries_Generic_Regr_13k_t` | ~13K | CNN | High capacity regression |
+| Model Name | Parameters | Architecture | NPU | Description |
+|------------|------------|--------------|-----|-------------|
+| `REGR_500_NPU` | ~500 | CNN | Yes | Compact regression |
+| `REGR_1k` | ~1K | CNN | No | Lightweight regression model |
+| `REGR_2k_NPU` | ~2K | CNN | Yes | 2-layer model |
+| `REGR_3k` | ~3K | MLP | No | 4-layer fully connected network |
+| `REGR_4k` | ~4K | CNN | No | 2 Conv+BN+ReLU + Linear |
+| `REGR_6k_NPU` | ~6K | CNN (DW-Sep) | Yes | Depthwise separable convolutions |
+| `REGR_8k_NPU` | ~8K | CNN | Yes | 3-layer model |
+| `REGR_10k` | ~10K | CNN | No | 3 Conv+BN+ReLU + 2 Linear |
+| `REGR_13k` | ~13K | CNN | No | High capacity regression |
+| `REGR_20k_NPU` | ~20K | CNN | Yes | High capacity with MaxPool |
 
 ### Anomaly Detection Models
 
-| Model Name | Parameters | Architecture | Description |
-|------------|------------|--------------|-------------|
-| `TimeSeries_Generic_AD_1k_t` | ~1K | Autoencoder | Compact autoencoder |
-| `TimeSeries_Generic_AD_4k_t` | ~4K | Autoencoder | 3-layer CNN autoencoder |
-| `TimeSeries_Generic_AD_16k_t` | ~16K | Autoencoder | 4-layer CNN autoencoder |
-| `TimeSeries_Generic_AD_17k_t` | ~17K | Autoencoder | Fan blade anomaly detection |
-| `TimeSeries_Generic_Linear_AD` | Varies | Linear AE | 3-layer deep linear autoencoder |
-| `Ondevice_Trainable_TimeSeries_Generic_Linear_AD` | Varies | Linear AE | On-device trainable variant |
+Note: For NPU models, encoder convolutions are NPU-accelerated but decoder upsampling falls back to CPU.
+
+| Model Name | Parameters | Architecture | NPU | Description |
+|------------|------------|--------------|-----|-------------|
+| `AD_500_NPU` | ~500 | CNN AE | Yes | 2-layer autoencoder |
+| `AD_1k` | ~1K | Autoencoder | No | Compact autoencoder |
+| `AD_2k_NPU` | ~2K | CNN AE | Yes | 2-layer autoencoder |
+| `AD_4k` | ~4K | Autoencoder | No | 3-layer CNN autoencoder |
+| `AD_6k_NPU` | ~6K | CNN AE (DW-Sep) | Yes | Depthwise separable encoder |
+| `AD_8k_NPU` | ~8K | CNN AE | Yes | 3-layer autoencoder |
+| `AD_10k_NPU` | ~10K | CNN AE | Yes | 3-layer autoencoder |
+| `AD_16k` | ~16K | Autoencoder | No | 4-layer CNN autoencoder |
+| `AD_17k` | ~17K | Autoencoder | No | Fan blade anomaly detection |
+| `AD_20k_NPU` | ~20K | CNN AE | Yes | High capacity autoencoder |
+| `AD_Linear` | Varies | Linear AE | No | 3-layer deep linear autoencoder |
+| `Ondevice_Trainable_AD_Linear` | Varies | Linear AE | No | On-device trainable variant |
 
 ### Forecasting Models
 
-| Model Name | Parameters | Architecture | Description |
-|------------|------------|--------------|-------------|
-| `TimeSeries_Generic_Forecasting_3k_t` | ~3K | MLP | 4-layer fully connected |
-| `TimeSeries_Generic_Forecasting_13k_t` | ~13K | CNN | 2 Conv+BN+ReLU + Linear |
-| `TimeSeries_Generic_Forecasting_LSTM8` | Varies | LSTM | Single LSTM (hidden=8) + Linear |
-| `TimeSeries_Generic_Forecasting_LSTM10` | Varies | LSTM | Single LSTM (hidden=10) + Linear |
+Note: LSTM models are not NPU-supported.
+
+| Model Name | Parameters | Architecture | NPU | Description |
+|------------|------------|--------------|-----|-------------|
+| `FCST_500_NPU` | ~500 | CNN | Yes | Compact forecasting |
+| `FCST_1k_NPU` | ~1K | CNN | Yes | 2-layer model |
+| `FCST_2k_NPU` | ~2K | CNN | Yes | 2-layer model |
+| `FCST_3k` | ~3K | MLP | No | 4-layer fully connected |
+| `FCST_4k_NPU` | ~4K | CNN | Yes | 3-layer model |
+| `FCST_6k_NPU` | ~6K | CNN (DW-Sep) | Yes | Depthwise separable convolutions |
+| `FCST_8k_NPU` | ~8K | CNN | Yes | 3-layer model |
+| `FCST_10k_NPU` | ~10K | CNN | Yes | 3-layer model |
+| `FCST_13k` | ~13K | CNN | No | 2 Conv+BN+ReLU + Linear |
+| `FCST_20k_NPU` | ~20K | CNN | Yes | High capacity with MaxPool |
+| `FCST_LSTM8` | Varies | LSTM | No | Single LSTM (hidden=8) + Linear |
+| `FCST_LSTM10` | Varies | LSTM | No | Single LSTM (hidden=10) + Linear |
 
 ### Image Classification Models
 
-| Model Name | Parameters | Architecture | Description |
-|------------|------------|--------------|-------------|
-| `Lenet5` | ~60K | LeNet-5 | Classic CNN for image classification |
+| Model Name | Parameters | Architecture | NPU | Description |
+|------------|------------|--------------|-----|-------------|
+| `Lenet5` | ~60K | LeNet-5 | No | Classic CNN for image classification |
 
 ---
 
@@ -250,6 +292,7 @@ Key steps:
 ## Additional Resources
 
 - [TI's Neural Network Compiler Documentation](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/)
+- [NPU Configuration Guidelines](docs/NPU_CONFIGURATION_GUIDELINES.md) - Design models optimized for TI NPU acceleration
 - [Edge AI Studio Model Composer](https://dev.ti.com/modelcomposer/) - No-code GUI for model development
 - [Understanding the Config File](../tinyml-modelmaker/docs/UnderstandingConfigFile.md)
 - [Dataset Format Guide](../tinyml-modelmaker/docs/DatasetFormat_Timeseries_Classification.md)

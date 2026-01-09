@@ -88,10 +88,10 @@ For forecasting tasks, the SimpleWindow transform must be selected. Additionally
 training:
     # enable/disable training
     enable: True
-    # F28x generic timeseries model names: TimeSeries_Generic_1k_t, TimeSeries_Generic_4k_t, TimeSeries_Generic_6k_t, TimeSeries_Generic_13k_t
+    # F28x generic timeseries model names: CLS_1k_NPU, CLS_4k_NPU, CLS_6k_NPU, CLS_13k_NPU
     # GUI only model names: ArcFault_model_200_t, ArcFault_model_300_t, ArcFault_model_700_t
-    model_name: 'TimeSeries_Generic_Forecasting_LSTM10' #'TimeSeries_Generic_Forecasting_13k_t' #
-    #model_name: 'TimeSeries_Generic_Forecasting_13k_t'
+    model_name: 'FCST_LSTM10' #'FCST_13k' #
+    #model_name: 'FCST_13k'
     # model_spec: '../tinyml-mlbackend/proprietary_models/cnn_af_3l.py'
     model_config: ''
     batch_size: 6
@@ -112,7 +112,7 @@ compilation:
     enable: True # False
     keep_libc_files: True
 ```
-The data is then trained using `TimeSeries_Generic_Forecasting_LSTM10` model which is 611 paramters LSTM based model to learn indoor thermal dynamic. `quantization` is set to 2 which means we use TI NPU quantization. We are compiling this example using the ti-npu soft preset, which means the software emulation of the TI-NPU with some optimized operations.
+The data is then trained using `FCST_LSTM10` model which is 611 paramters LSTM based model to learn indoor thermal dynamic. `quantization` is set to 2 which means we use TI NPU quantization. We are compiling this example using the ti-npu soft preset, which means the software emulation of the TI-NPU with some optimized operations.
 
 
 

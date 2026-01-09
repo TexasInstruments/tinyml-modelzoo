@@ -9,9 +9,9 @@ To add a new model:
 1. Add your model class to the appropriate file in `tinyml_modelzoo/models/`
 2. Add the class name to that file's `__all__` list
 3. (Optional) Add device performance info to `device_info/run_info.py`
-4. (Optional) Add a model description in modelmaker for GUI integration
+4. (Optional) Add a model description to `model_descriptions/` for GUI integration
 
-That's it! The model is automatically registered and available everywhere.
+That's it! The model is automatically registered and available everywhere. **No changes are required in `tinyml-tinyverse` or `tinyml-modelmaker`.**
 
 ## Step-by-Step Guide
 
@@ -19,14 +19,14 @@ That's it! The model is automatically registered and available everywhere.
 
 Models are organized by task type in `tinyml_modelzoo/models/`:
 
-| Task Type | File | Examples |
-|-----------|------|----------|
-| Time series classification | `classification.py` | CNN_TS_GEN_BASE_1K, HAR_TINIE_CNN_2K |
-| Time series regression | `regression.py` | REG_TS_GEN_BASE_1K, REG_TS_CNN_13K |
-| Anomaly detection | `anomalydetection.py` | AE_CNN_TS_GEN_BASE_4K, AD_CNN_TS_17K |
-| Time series forecasting | `forecasting.py` | FC_CNN_TS_GEN_BASE_13K, LSTM10_TS_GEN_BASE |
-| Feature extraction | `feature_extraction.py` | FEModel, FEModelLinear |
-| Image classification | `image.py` | CNN_LENET5 |
+| Task Type                  | File                    | Examples                                   |
+|----------------------------|-------------------------|--------------------------------------------|
+| Time series classification | `classification.py`     | CNN_TS_GEN_BASE_1K, HAR_TINIE_CNN_2K       |
+| Time series regression     | `regression.py`         | REG_TS_GEN_BASE_1K, REG_TS_CNN_13K         |
+| Anomaly detection          | `anomalydetection.py`   | AE_CNN_TS_GEN_BASE_4K, AD_CNN_TS_17K       |
+| Time series forecasting    | `forecasting.py`        | FC_CNN_TS_GEN_BASE_13K, LSTM10_TS_GEN_BASE |
+| Feature extraction         | `feature_extraction.py` | FEModel, FEModelLinear                     |
+| Image classification       | `image.py`              | CNN_LENET5                                 |
 
 ### Step 2: Create Your Model Class
 
@@ -198,26 +198,42 @@ DEVICE_RUN_INFO = {
 
 ### Step 6 (Optional): Add GUI Model Description
 
-If you want the model to appear in the TinyML Studio GUI, add a description in modelmaker's `timeseries_*.py` file:
+If you want the model to appear in the TinyML Studio GUI, add a description to the appropriate file in `tinyml_modelzoo/model_descriptions/`:
+
+| Task Type | Description File |
+|-----------|------------------|
+| Time series classification | `model_descriptions/classification.py` |
+| Time series regression | `model_descriptions/regression.py` |
+| Anomaly detection | `model_descriptions/anomalydetection.py` |
+| Time series forecasting | `model_descriptions/forecasting.py` |
+
+Add your model to the `_model_descriptions` dict and `enabled_models_list`:
 
 ```python
-# In tinyml-modelmaker/.../timeseries_classification.py
+# In tinyml_modelzoo/model_descriptions/classification.py
+
+from tinyml_modelzoo import constants
+from tinyml_modelzoo.utils import deep_update_dict
+from tinyml_modelzoo.device_info import DEVICE_RUN_INFO
 
 _model_descriptions = {
     # ... existing models ...
 
-    'My_Model_Name_2k_t': utils.deep_update_dict(deepcopy(template_model_description), {
+    'My_Model_Name_2k_t': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='My new 2K model. 2 Conv+BN+ReLU layers.'
         ),
         'training': dict(
-            model_training_id='MY_NEW_MODEL_2K',  # Must match class name!
+            model_training_id='MY_NEW_MODEL_2K',  # Must match class name in models/!
             model_name='My_Model_Name_2k_t',
-            properties=[...],  # GUI properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py",
+                           name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,
             target_devices={
                 constants.TARGET_DEVICE_F28P55: dict(model_selection_factor=None) |
-                    (DEVICE_RUN_INFO['MyModelName_ForGUI'][constants.TARGET_DEVICE_F28P55]),
-                # ... other devices ...
+                    (DEVICE_RUN_INFO['My_Model_Name_2k_t'][constants.TARGET_DEVICE_F28P55]),
+                constants.TARGET_DEVICE_F28P65: dict(model_selection_factor=None) |
+                    (DEVICE_RUN_INFO['My_Model_Name_2k_t'][constants.TARGET_DEVICE_F28P65]),
+                # ... add other target devices ...
             },
         ),
     }),
@@ -227,6 +243,21 @@ enabled_models_list = [
     # ... existing models ...
     'My_Model_Name_2k_t',  # Add to enable in GUI
 ]
+```
+
+**Important fields:**
+- `model_training_id`: Must exactly match your model class name in `models/`
+- `model_name`: The display name shown in the GUI
+- `model_details`: Brief description of the model architecture
+- `target_devices`: Dict of supported devices with performance info from `DEVICE_RUN_INFO`
+- `properties`: GUI properties for training parameters (use the template)
+
+After adding, verify the description is generated correctly:
+
+```bash
+cd tinyml-modelmaker
+python scripts/run_generate_description.py
+# Check data/descriptions/description_timeseries.json for your model
 ```
 
 ## Available Layer Types
@@ -252,14 +283,14 @@ For spec-based models, you can use these layer types in `gen_model_spec()`:
 
 ## Naming Conventions
 
-- **Class names**: Use SCREAMING_SNAKE_CASE with model type and parameter count
+- **Class names** (in `models/`): Use SCREAMING_SNAKE_CASE with model type and parameter count
   - Classification: `CNN_TS_GEN_BASE_1K`, `RES_ADD_CNN_TS_GEN_BASE_3K`
   - Regression: `REG_TS_GEN_BASE_1K`, `REG_TS_CNN_13K`
   - Anomaly Detection: `AE_CNN_TS_GEN_BASE_4K`, `AD_CNN_TS_17K`
   - Forecasting: `FC_CNN_TS_GEN_BASE_13K`, `LSTM10_TS_GEN_BASE`
 
-- **GUI names** (in modelmaker): Use `TimeSeries_Generic_Xk_t` pattern
-  - `TimeSeries_Generic_1k_t`, `TimeSeries_Generic_Regr_10k_t`
+- **GUI names** (in `model_descriptions/`): Use `TimeSeries_Generic_Xk_t` pattern
+  - `TimeSeries_Generic_1k_t`, `TimeSeries_Generic_Regr_10k_t`, `TimeSeries_Generic_AD_4k_t`
 
 ## Testing Your Model
 
@@ -336,5 +367,6 @@ You can modify an example config to use your new model by changing the `model_tr
 - [ ] Class name added to file's `__all__` list
 - [ ] Model instantiates correctly via `get_model()`
 - [ ] Forward pass produces correct output shape
-- [ ] (Optional) Device performance info added to `run_info.py`
-- [ ] (Optional) GUI description added to modelmaker
+- [ ] (Optional) Device performance info added to `device_info/run_info.py`
+- [ ] (Optional) GUI description added to `model_descriptions/` and `enabled_models_list`
+- [ ] (Optional) Verified with `run_generate_description.py`

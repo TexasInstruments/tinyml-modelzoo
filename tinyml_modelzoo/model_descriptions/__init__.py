@@ -28,37 +28,33 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #################################################################################
 
+"""
+Model descriptions for TinyML models.
+"""
 
-class DictPlus(dict):
-    """Extended dictionary class with controlled update behavior."""
+from ._base import get_model_descriptions_filtered, get_model_description_by_name
 
-    def __init__(self, *args, force_update=False, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.force_update = force_update
+from .classification import get_model_descriptions as get_classification_model_descriptions
+from .classification import get_model_description as get_classification_model_description
 
-    def __iadd__(self, other):
-        if not self.force_update:
-            for key in other:
-                if key in self:
-                    raise RuntimeError(f'force_update is disabled and key={key} is already preset in the dictionary')
-        self.update(other)
-        return self
+from .regression import get_model_descriptions as get_regression_model_descriptions
+from .regression import get_model_description as get_regression_model_description
 
+from .anomalydetection import get_model_descriptions as get_anomalydetection_model_descriptions
+from .anomalydetection import get_model_description as get_anomalydetection_model_description
 
-def deep_update_dict(dict1, dict2):
-    """
-    Recursively update dict1 with values from dict2.
+from .forecasting import get_model_descriptions as get_forecasting_model_descriptions
+from .forecasting import get_model_description as get_forecasting_model_description
 
-    Args:
-        dict1: The dictionary to update (modified in place)
-        dict2: The dictionary with new values
-
-    Returns:
-        The updated dict1
-    """
-    for key, value in dict2.items():
-        if isinstance(value, dict) and key in dict1 and isinstance(dict1[key], dict):
-            deep_update_dict(dict1[key], value)
-        else:
-            dict1[key] = value
-    return dict1
+__all__ = [
+    "get_model_descriptions_filtered",
+    "get_model_description_by_name",
+    "get_classification_model_descriptions",
+    "get_classification_model_description",
+    "get_regression_model_descriptions",
+    "get_regression_model_description",
+    "get_anomalydetection_model_descriptions",
+    "get_anomalydetection_model_description",
+    "get_forecasting_model_descriptions",
+    "get_forecasting_model_description",
+]

@@ -28,37 +28,37 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #################################################################################
 
-
-class DictPlus(dict):
-    """Extended dictionary class with controlled update behavior."""
-
-    def __init__(self, *args, force_update=False, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.force_update = force_update
-
-    def __iadd__(self, other):
-        if not self.force_update:
-            for key in other:
-                if key in self:
-                    raise RuntimeError(f'force_update is disabled and key={key} is already preset in the dictionary')
-        self.update(other)
-        return self
+"""
+Base helper functions for model descriptions.
+"""
 
 
-def deep_update_dict(dict1, dict2):
+def get_model_descriptions_filtered(model_descriptions, enabled_models_list, task_type=None):
     """
-    Recursively update dict1 with values from dict2.
+    Filter model descriptions based on enabled models list.
 
     Args:
-        dict1: The dictionary to update (modified in place)
-        dict2: The dictionary with new values
+        model_descriptions: Dictionary of all model descriptions
+        enabled_models_list: List of enabled model names
+        task_type: Optional task type filter (not currently used but available for future)
 
     Returns:
-        The updated dict1
+        dict: Filtered model descriptions
     """
-    for key, value in dict2.items():
-        if isinstance(value, dict) and key in dict1 and isinstance(dict1[key], dict):
-            deep_update_dict(dict1[key], value)
-        else:
-            dict1[key] = value
-    return dict1
+    return {k: v for k, v in model_descriptions.items() if k in enabled_models_list}
+
+
+def get_model_description_by_name(model_descriptions, enabled_models_list, model_name):
+    """
+    Get a specific model description by name.
+
+    Args:
+        model_descriptions: Dictionary of all model descriptions
+        enabled_models_list: List of enabled model names
+        model_name: Name of the model to retrieve
+
+    Returns:
+        dict or None: Model description if found, None otherwise
+    """
+    filtered = get_model_descriptions_filtered(model_descriptions, enabled_models_list)
+    return filtered.get(model_name, None)

@@ -28,6 +28,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #################################################################################
 
-from .py_utils import DictPlus
+from .py_utils import DictPlus, deep_update_dict
 
-__all__ = ["DictPlus"]
+__all__ = ["DictPlus", "deep_update_dict"]

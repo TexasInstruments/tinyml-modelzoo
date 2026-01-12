@@ -332,10 +332,10 @@ To test your model with an actual training run, use the training wrapper:
 
 ```bash
 # Linux
-./run_training.sh examples/hello_world/config.yaml
+./run_tinyml_modelzoo.sh examples/hello_world/config.yaml
 
 # Windows
-run_training.bat examples\hello_world\config.yaml
+run_tinyml_modelzoo.bat examples\hello_world\config.yaml
 ```
 
 You can modify an example config to use your new model by changing the `model_training_id` field.

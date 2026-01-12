@@ -4,8 +4,8 @@
 # Delegates training to tinyml-modelmaker
 #
 # Usage:
-#   ./run_training.sh examples/hello_world/config.yaml
-#   ./run_training.sh /absolute/path/to/config.yaml
+#   ./run_tinyml_modelzoo.sh examples/hello_world/config.yaml
+#   ./run_tinyml_modelzoo.sh /absolute/path/to/config.yaml
 #
 
 set -e

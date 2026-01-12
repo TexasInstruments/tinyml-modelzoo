@@ -40,8 +40,8 @@ tinyml-modelzoo/
 │   ├── models/            # Neural network model definitions
 │   ├── model_descriptions/ # Model metadata for GUI integration
 │   └── device_info/       # Target device performance data
-├── run_training.sh        # Training wrapper (Linux)
-├── run_training.bat       # Training wrapper (Windows)
+├── run_tinyml_modelzoo.sh        # Training wrapper (Linux)
+├── run_tinyml_modelzoo.bat       # Training wrapper (Windows)
 └── ADDING_NEW_MODELS.md   # Guide for adding custom models
 ```
 
@@ -65,7 +65,7 @@ source ~/.pyenv/versions/py310_tinyml/bin/activate
 cd tinyml-modelzoo
 
 # Run an example (e.g., hello_world)
-./run_training.sh examples/hello_world/config.yaml
+./run_tinyml_modelzoo.sh examples/hello_world/config.yaml
 ```
 
 **Windows:**
@@ -74,7 +74,7 @@ cd tinyml-modelzoo
 cd tinyml-modelzoo
 
 # Run an example
-run_training.bat examples\hello_world\config.yaml
+run_tinyml_modelzoo.bat examples\hello_world\config.yaml
 ```
 
 ### What Happens When You Run an Example?

@@ -3,8 +3,8 @@ REM TinyML ModelZoo Training Wrapper for Windows
 REM Delegates training to tinyml-modelmaker
 REM
 REM Usage:
-REM   run_training.bat examples\hello_world\config.yaml
-REM   run_training.bat C:\path\to\config.yaml
+REM   run_tinyml_modelzoo.bat examples\hello_world\config.yaml
+REM   run_tinyml_modelzoo.bat C:\path\to\config.yaml
 
 setlocal enabledelayedexpansion
 

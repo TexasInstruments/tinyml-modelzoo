@@ -135,6 +135,13 @@ However, for the 4K model, as the number of parameters are too less, it is not a
 
 Partially quantized models show comparable results compared to their float counterparts.
 
+Float REGR_13k model Results, 512 frame_size
+![image](./images/float_actual_vs_predicted.png)
+
+
+Partially Quantized REGR_13k model Results, 512 frame_size
+![image](./images/partially_quantized_actual_vs_predicted.png)
+
 ## Running on Device
 
 It finally generates four files mod.a, tvmgen_default.h, test_vector.c, user_input_config.h 

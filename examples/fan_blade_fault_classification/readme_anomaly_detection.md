@@ -6,7 +6,7 @@
 
 Fan blade faults such as imbalance, damage, and obstruction can lead to reduced efficiency, increased energy consumption, and potential system failure. Early detection of these anomalies through vibration analysis enables predictive maintenance, preventing costly downtime and extending equipment lifespan.
 
-In this example, we demonstrate how to use **TinyML ModelMaker** to train an autoencoder-based anomaly detection model for fan blade fault detection. The model learns normal vibration patterns from a healthy fan and automatically detects deviations that indicate potential faults—including fault types it has never seen during training.
+In this example, we demonstrate how to use **Tiny ML ModelMaker** to train an autoencoder-based anomaly detection model for fan blade fault detection. The model learns normal vibration patterns from a healthy fan and automatically detects deviations that indicate potential faults—including fault types it has never seen during training.
 
 To learn more about anomaly detection, refer to the **[Anomaly Detection Model Architecture](../../docs/anomaly_detection/Anomaly_Model_Architecture.md)**.
 

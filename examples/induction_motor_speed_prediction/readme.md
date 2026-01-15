@@ -6,7 +6,7 @@
 
 This dataset simulates 15,000 observations of three-phase induction motors operating under varied electrical and mechanical conditions. It is designed to capture realistic, physically-informed relationships between inputs (supply, motor, and operating parameters) and the target variable (motor speed in RPM).
 
-The dataset combines clear, physics-based relations (e.g., frequency → synchronous speed) with non-linear interactions (e.g., load, voltage and temperature affecting slip). It is well suited for benchmarking regression models on domain-informed prediction tasks and for TinyML experiments where compact models must generalize from physically-structured inputs.
+The dataset combines clear, physics-based relations (e.g., frequency → synchronous speed) with non-linear interactions (e.g., load, voltage and temperature affecting slip). It is well suited for benchmarking regression models on domain-informed prediction tasks and for Tiny ML experiments where compact models must generalize from physically-structured inputs.
 
 `Key feature groups`
 
@@ -44,7 +44,7 @@ Derived quantities included in the dataset
 - Apparent power: S = V × I
 - Thermal effects and simple resistance scaling are included so models must learn both linear and non-linear interactions.
 
-## Usage in TinyML ModelMaker
+## Usage in Tiny ML ModelMaker
 
 Prepare the zipped dataset by running the induction_motor_speed_prediction python file. The script will create zipped dataset as `induction_motor_speed_prediction_dataset.zip`. 
 ```bash
@@ -58,7 +58,7 @@ dataset:
     input_data_path: 'examples/induction_motor_speed_prediction/induction_motor_speed_prediction_dataset.zip'
 ```
 
-This zipped dataset is designed to work with TinyML ModelMaker. Run the modelmaker with the yaml [configuration](config.yaml) using the below code.
+This zipped dataset is designed to work with Tiny ML ModelMaker. Run the modelmaker with the yaml [configuration](config.yaml) using the below code.
 
 ```bash
 run_tinyml_modelmaker.sh examples/induction_motor_speed_prediction/config.yaml

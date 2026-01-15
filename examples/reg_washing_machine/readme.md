@@ -136,11 +136,16 @@ However, for the 4K model, as the number of parameters are too less, it is not a
 Partially quantized models show comparable results compared to their float counterparts.
 
 Float REGR_13k model Results, 512 frame_size
-![image](./images/float_actual_vs_predicted.png)
-
+<p align='center'>
+<img src="./images/float_actual_vs_predicted.png"
+alt="float_train_prediction_plot" width="60%"/>
+</p>
 
 Partially Quantized REGR_13k model Results, 512 frame_size
-![image](./images/partially_quantized_actual_vs_predicted.png)
+<p align='center'>
+<img src="./images/partially_quantized_actual_vs_predicted.png"
+"alt="partially_quantized_prediction_plot" width="60%"/>
+</p>
 
 ## Running on Device
 

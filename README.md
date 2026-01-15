@@ -59,7 +59,6 @@ tinyml-modelzoo/
 **Linux:**
 ```bash
 # Activate your Python environment
-source ~/.pyenv/versions/py310_tinyml/bin/activate
 
 # Navigate to modelzoo
 cd tinyml-modelzoo

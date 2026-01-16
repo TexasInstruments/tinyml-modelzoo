@@ -144,7 +144,7 @@ alt="float_train_prediction_plot" width="60%"/>
 Partially Quantized REGR_13k model Results, 512 frame_size
 <p align='center'>
 <img src="./images/partially_quantized_actual_vs_predicted.png"
-"alt="partially_quantized_prediction_plot" width="60%"/>
+alt="partially_quantized_prediction_plot" width="60%"/>
 </p>
 
 ## Running on Device

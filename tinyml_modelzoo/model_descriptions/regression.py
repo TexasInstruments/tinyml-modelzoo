@@ -42,8 +42,7 @@ this_dir_path = os.path.dirname(os.path.abspath(__file__))
 repo_parent_path = os.path.abspath(os.path.join(this_dir_path, '..', '..', '..', '..'))
 
 model_info_str = "Inference time numbers are for comparison purposes only. (Input Size: {})"
-template_gui_model_properties = [
-    dict(type="group", dynamic=True, name="train_group", label="Training Parameters", default=[])]
+template_gui_model_properties = []
 template_model_description = dict(
     common=dict(
         task_category=constants.TASK_CATEGORY_TS_REGRESSION,
@@ -94,7 +93,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['REGR_10k'][constants.TARGET_DEVICE_MSPM0G3519]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['REGR_10k'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_1k': deep_update_dict(deepcopy(template_model_description), {
@@ -124,7 +124,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['REGR_1k'][constants.TARGET_DEVICE_MSPM0G3519]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['REGR_1k'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_3k': deep_update_dict(deepcopy(template_model_description), {
@@ -154,7 +155,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['REGR_3k'][constants.TARGET_DEVICE_MSPM0G3519]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['REGR_3k'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_13k': deep_update_dict(deepcopy(template_model_description), {
@@ -184,7 +186,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['REGR_13k'][constants.TARGET_DEVICE_MSPM0G3519]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['REGR_13k'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_4k': deep_update_dict(deepcopy(template_model_description), {
@@ -214,7 +217,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=4) | (DEVICE_RUN_INFO['REGR_4k'][constants.TARGET_DEVICE_MSPM0G3519]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=4) | (DEVICE_RUN_INFO['REGR_4k'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     # NPU-Optimized Regression Models
@@ -244,7 +248,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=5) | (DEVICE_RUN_INFO['REGR_500_NPU'][constants.TARGET_DEVICE_AM261]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=5) | (DEVICE_RUN_INFO['REGR_500_NPU'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_2k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -273,7 +278,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=6) | (DEVICE_RUN_INFO['REGR_2k_NPU'][constants.TARGET_DEVICE_AM261]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=6) | (DEVICE_RUN_INFO['REGR_2k_NPU'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_6k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -302,7 +308,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=7) | (DEVICE_RUN_INFO['REGR_6k_NPU'][constants.TARGET_DEVICE_AM261]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=7) | (DEVICE_RUN_INFO['REGR_6k_NPU'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_8k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -331,7 +338,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=8) | (DEVICE_RUN_INFO['REGR_8k_NPU'][constants.TARGET_DEVICE_AM261]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=8) | (DEVICE_RUN_INFO['REGR_8k_NPU'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'REGR_20k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -360,7 +368,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=9) | (DEVICE_RUN_INFO['REGR_20k_NPU'][constants.TARGET_DEVICE_AM261]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=9) | (DEVICE_RUN_INFO['REGR_20k_NPU'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesregression.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
 }

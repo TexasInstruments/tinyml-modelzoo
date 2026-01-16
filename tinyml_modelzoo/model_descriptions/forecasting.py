@@ -42,8 +42,7 @@ this_dir_path = os.path.dirname(os.path.abspath(__file__))
 repo_parent_path = os.path.abspath(os.path.join(this_dir_path, '..', '..', '..', '..'))
 
 model_info_str = "Inference time numbers are for comparison purposes only. (Input Size: {})"
-template_gui_model_properties = [
-    dict(type="group", dynamic=True, name="train_group", label="Training Parameters", default=[])]
+template_gui_model_properties = []
 template_model_description = dict(
     common=dict(
         task_category=constants.TASK_CATEGORY_TS_FORECASTING,
@@ -91,7 +90,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_13k'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_13k'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_LSTM10': deep_update_dict(deepcopy(template_model_description), {
@@ -118,7 +118,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['FCST_LSTM10'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['FCST_LSTM10'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_LSTM8': deep_update_dict(deepcopy(template_model_description), {
@@ -145,7 +146,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_3k': deep_update_dict(deepcopy(template_model_description), {
@@ -172,7 +174,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['FCST_3k'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['FCST_3k'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     # NPU-Optimized Forecasting Models
@@ -200,7 +203,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_500_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_500_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_1k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -227,7 +231,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_1k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_1k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_2k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -254,7 +259,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_2k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_2k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_4k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -281,7 +287,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_4k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_4k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_6k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -308,7 +315,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_6k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_6k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_8k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -335,7 +343,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_8k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_8k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_10k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -362,7 +371,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_10k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_10k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FCST_20k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -389,7 +399,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_20k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FCST_20k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
 }

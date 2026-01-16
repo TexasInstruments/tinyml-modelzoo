@@ -28,8 +28,7 @@ data_processing_feature_extraction:
 training:
     # enable/disable training
     enable: True #False
-    # F28x generic timeseries model names: TimeSeries_Generic_1k_t, TimeSeries_Generic_4k_t, TimeSeries_Generic_6k_t, TimeSeries_Generic_13k_t
-    model_name: 'TimeSeries_Generic_55k_t'
+    model_name: CLS_55k_NPU
 #    model_spec: ''
     batch_size: 12
     learning_rate: 0.001

@@ -43,9 +43,7 @@ repo_parent_path = os.path.abspath(os.path.join(this_dir_path, '..', '..', '..',
 
 model_info_str = "Inference time numbers are for comparison purposes only. (Input Size: {})"
 template_gui_model_properties = [
-    dict(type="group", dynamic=False, name="train_group", label="Training Parameters", default=["training_epochs", "learning_rate"]),
-    dict(label="Epochs", name="training_epochs", type="integer", default=50, min=1, max=1000),
-    dict(label="Learning Rate", name="learning_rate", type="float", default=0.04, min=0.001, max=0.1, decimal_places=3, increment=0.001)]
+    dict(type="group", dynamic=True, name="train_group", label="Training Parameters", default=[])]
 template_model_description = dict(
     common=dict(
         task_category=constants.TASK_CATEGORY_TS_CLASSIFICATION,
@@ -669,8 +667,7 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_CC2755: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC2755]),
                 constants.TARGET_DEVICE_CC1352: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC1352]),
             },
-            properties=[dict(type="group", dynamic=True, script="pirdetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] +
-                       [template_gui_model_properties[0]] + [dict(label="Epochs", name="training_epochs", type="integer", default=30, min=2, max=500),] + [template_gui_model_properties[2]]
+            properties=[dict(type="group", dynamic=True, script="pirdetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
         ),
     }),
 }

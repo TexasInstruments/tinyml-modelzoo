@@ -338,7 +338,6 @@ _model_descriptions = {
     'CLS_55k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             task_type=constants.TASK_TYPE_ECG_CLASSIFICATION,
-            generic_model=False,
             model_details='NPU-Optimized Classification Model with ~55k params.\n12 Conv+BatchNorm+Relu layers + MaxPool + Linear Layer.\nLarge kernels decomposed into smaller compliant kernels. Optimized for TI NPU acceleration.',
             help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),

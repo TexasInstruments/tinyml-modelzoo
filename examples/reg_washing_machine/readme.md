@@ -48,7 +48,7 @@ For regression tasks, the dataset structure is expected to be as follows :
 
 * The dataset can be directly downloaded from https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/washing_machine_loading_data.zip, it's directly downloaded in the example
 
-## Usage in TinyML ModelMaker
+## Usage in Tiny ML ModelMaker
 
 The example can be run directly using the following command
 
@@ -134,6 +134,18 @@ We observe that for the 13K parameter model, the RMSE reduces as the frame size 
 However, for the 4K model, as the number of parameters are too less, it is not able to learn larger context properly. Hence, it does not show much improvement as the frame size increases from 512 to 1024, but still it shows improvement when frame size is increased from 256 to 512.
 
 Partially quantized models show comparable results compared to their float counterparts.
+
+Float REGR_13k model Results, 512 frame_size
+<p align='center'>
+<img src="./images/float_actual_vs_predicted.png"
+alt="float_train_prediction_plot" width="60%"/>
+</p>
+
+Partially Quantized REGR_13k model Results, 512 frame_size
+<p align='center'>
+<img src="./images/partially_quantized_actual_vs_predicted.png"
+alt="partially_quantized_prediction_plot" width="60%"/>
+</p>
 
 ## Running on Device
 

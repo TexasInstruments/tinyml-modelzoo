@@ -68,7 +68,7 @@ Unlike classification tasks, forecasting **always requires annotation files**. T
 
 For this example, we have already prepared the dataset in the required format. You can find the zipped dataset [here.](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/pmsm_rotor_temp.zip)
 
-## Usage in TinyML ModelMaker
+## Usage in Tiny ML ModelMaker
 
 You can run this example directly in **TinyML ModelMaker** using the following command:
 

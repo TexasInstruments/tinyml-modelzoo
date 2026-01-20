@@ -42,10 +42,7 @@ this_dir_path = os.path.dirname(os.path.abspath(__file__))
 repo_parent_path = os.path.abspath(os.path.join(this_dir_path, '..', '..', '..', '..'))
 
 model_info_str = "Inference time numbers are for comparison purposes only. (Input Size: {})"
-template_gui_model_properties = [
-    dict(type="group", dynamic=False, name="train_group", label="Training Parameters", default=["training_epochs", "learning_rate"]),
-    dict(label="Epochs", name="training_epochs", type="integer", default=50, min=1, max=1000),
-    dict(label="Learning Rate", name="learning_rate", type="float", default=0.04, min=0.001, max=0.1, decimal_places=3, increment=0.001)]
+template_gui_model_properties = []
 template_model_description = dict(
     common=dict(
         task_category=constants.TASK_CATEGORY_TS_CLASSIFICATION,
@@ -98,7 +95,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=6) | (DEVICE_RUN_INFO['CLS_ResAdd_3k'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=6) | (DEVICE_RUN_INFO['CLS_ResAdd_3k'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_ResCat_3k': deep_update_dict(deepcopy(template_model_description), {
@@ -130,7 +128,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_ResCat_3k'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_ResCat_3k'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
 
@@ -164,7 +163,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['CLS_6k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['CLS_6k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_1k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -197,7 +197,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['CLS_1k_NPU'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['CLS_1k_NPU'][constants.TARGET_DEVICE_AM261]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     # NPU-Optimized Models
@@ -216,7 +217,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F29P58: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_100_NPU'][constants.TARGET_DEVICE_F29P58]),
                 constants.TARGET_DEVICE_F29P32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_100_NPU'][constants.TARGET_DEVICE_F29P32]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_500_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -234,7 +236,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F29P58: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_500_NPU'][constants.TARGET_DEVICE_F29P58]),
                 constants.TARGET_DEVICE_F29P32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_500_NPU'][constants.TARGET_DEVICE_F29P32]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_2k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -252,7 +255,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F29P58: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_2k_NPU'][constants.TARGET_DEVICE_F29P58]),
                 constants.TARGET_DEVICE_F29P32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_2k_NPU'][constants.TARGET_DEVICE_F29P32]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_4k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -270,7 +274,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F29P58: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_4k_NPU'][constants.TARGET_DEVICE_F29P58]),
                 constants.TARGET_DEVICE_F29P32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_4k_NPU'][constants.TARGET_DEVICE_F29P32]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_8k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -288,7 +293,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F29P58: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_8k_NPU'][constants.TARGET_DEVICE_F29P58]),
                 constants.TARGET_DEVICE_F29P32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_8k_NPU'][constants.TARGET_DEVICE_F29P32]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_13k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -306,7 +312,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F29P58: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_13k_NPU'][constants.TARGET_DEVICE_F29P58]),
                 constants.TARGET_DEVICE_F29P32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_13k_NPU'][constants.TARGET_DEVICE_F29P32]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_20k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -324,7 +331,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F29P58: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_20k_NPU'][constants.TARGET_DEVICE_F29P58]),
                 constants.TARGET_DEVICE_F29P32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_20k_NPU'][constants.TARGET_DEVICE_F29P32]),
             },
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'CLS_55k_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -377,7 +385,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['ArcFault_model_1400_t'][constants.TARGET_DEVICE_MSPM0G5187]),
                 constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['ArcFault_model_1400_t'][constants.TARGET_DEVICE_MSPM33C32]),
             },
-            properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="arcfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'ArcFault_model_700_t': deep_update_dict(deepcopy(template_model_description), {
@@ -408,7 +417,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['ArcFault_model_700_t'][constants.TARGET_DEVICE_MSPM33C32]),
 
             },
-            properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="arcfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'ArcFault_model_300_t': deep_update_dict(deepcopy(template_model_description), {
@@ -438,7 +448,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['ArcFault_model_300_t'][constants.TARGET_DEVICE_MSPM0G5187]),
                 constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['ArcFault_model_300_t'][constants.TARGET_DEVICE_MSPM33C32]),
             },
-        properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+        properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="arcfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'ArcFault_model_200_t': deep_update_dict(deepcopy(template_model_description), {
@@ -468,7 +479,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['ArcFault_model_200_t'][constants.TARGET_DEVICE_MSPM0G5187]),
                 constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['ArcFault_model_200_t'][constants.TARGET_DEVICE_MSPM33C32]),
             },
-            properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="arcfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="arcfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'MotorFault_model_1_t': deep_update_dict(deepcopy(template_model_description), {
@@ -498,7 +510,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['MotorFault_model_1_t'][constants.TARGET_DEVICE_MSPM0G5187]),
                 constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['MotorFault_model_1_t'][constants.TARGET_DEVICE_MSPM33C32]),
             },
-            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="motorfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'MotorFault_model_2_t': deep_update_dict(deepcopy(template_model_description), {
@@ -528,7 +541,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['MotorFault_model_2_t'][constants.TARGET_DEVICE_MSPM0G5187]),
                 constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['MotorFault_model_2_t'][constants.TARGET_DEVICE_MSPM33C32]),
             },
-            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="motorfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'MotorFault_model_3_t': deep_update_dict(deepcopy(template_model_description), {
@@ -558,7 +572,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['MotorFault_model_3_t'][constants.TARGET_DEVICE_MSPM0G5187]),
                 constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['MotorFault_model_3_t'][constants.TARGET_DEVICE_MSPM33C32]),
             },
-            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="motorfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FanImbalance_model_1_t': deep_update_dict(deepcopy(template_model_description), {
@@ -583,7 +598,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F28P55: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FanImbalance_model_1_t'][constants.TARGET_DEVICE_F28P55]),
                 constants.TARGET_DEVICE_F29H85: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FanImbalance_model_1_t'][constants.TARGET_DEVICE_F29H85]),
             },
-            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="motorfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FanImbalance_model_2_t': deep_update_dict(deepcopy(template_model_description), {
@@ -608,7 +624,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F28P55: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FanImbalance_model_2_t'][constants.TARGET_DEVICE_F28P55]),
                 constants.TARGET_DEVICE_F29H85: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['FanImbalance_model_2_t'][constants.TARGET_DEVICE_F29H85]),
             },
-            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="motorfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'FanImbalance_model_3_t': deep_update_dict(deepcopy(template_model_description), {
@@ -633,7 +650,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_F28P55: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['FanImbalance_model_3_t'][constants.TARGET_DEVICE_F28P55]),
                 constants.TARGET_DEVICE_F29H85: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['FanImbalance_model_3_t'][constants.TARGET_DEVICE_F29H85]),
             },
-            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="motorfault.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="motorfault.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'NAS': deep_update_dict(deepcopy(template_model_description), {
@@ -677,8 +695,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_MSPM0G3519]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="pirdetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] +
-                       [template_gui_model_properties[0]] + [dict(label="Epochs", name="training_epochs", type="integer", default=30, min=2, max=500),] + [template_gui_model_properties[2]]
+            properties=[dict(type="group", dynamic=True, script="pirdetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="pirdetection.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
 }

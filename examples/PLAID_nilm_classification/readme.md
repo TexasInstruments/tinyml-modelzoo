@@ -36,7 +36,7 @@ The classes here correspond to **11 different appliance types**:
 
 In this dataset, each class directory contains files corresponding to the voltage and current measurements when only that appliance class is turned on. While the dataset is extensive, we have taken a subset of it to use with ModelMaker. You can find the dataset subset here: [PLAID_submetered_dataset](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/plaid_nilm_submetered_dataset.zip)
 
-## Usage in TinyML ModelMaker
+## Usage in Tiny ML ModelMaker
 
 Here is the command to run the yaml file with TinyML ModelMaker:
 

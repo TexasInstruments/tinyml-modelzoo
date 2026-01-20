@@ -39,9 +39,9 @@ You can find the original dataset and its full description here:  [Electric Moto
 
 In our regression example we’ll use `i_d, i_q, u_d, u_q, motor_speed, ambient, coolant, pm, stator_winding, stator_tooth` as **input features** to predict **target variable**:  **Motor torque (`torque`)**
 
-## Usage in TinyML ModelMaker
+## Usage in Tiny ML ModelMaker
 
-You can run this example directly in **TinyML ModelMaker** using the following command:
+You can run this example directly in **Tiny ML ModelMaker** using the following command:
 
 ```bash
 ./run_tinyml_modelmaker.sh examples/torque_measurement_regression/config.yaml

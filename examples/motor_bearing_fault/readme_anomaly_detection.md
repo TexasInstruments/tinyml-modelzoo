@@ -5,7 +5,7 @@
 
 Motor bearing faults such as lack of lubrication, erosion, localized defects, contamination, and flaking can lead to reduced efficiency, increased vibration, overheating, and catastrophic motor failure. Early detection of these bearing anomalies through vibration analysis enables predictive maintenance, preventing costly downtime and extending motor lifespan.
 
-In this example, we demonstrate how to use **TinyML ModelMaker** to train an autoencoder-based anomaly detection model for motor bearing fault detection. The model learns normal vibration patterns from a healthy bearing and automatically detects deviations that indicate potential bearing faults—including fault types it has never seen during training.
+In this example, we demonstrate how to use **Tiny ML ModelMaker** to train an autoencoder-based anomaly detection model for motor bearing fault detection. The model learns normal vibration patterns from a healthy bearing and automatically detects deviations that indicate potential bearing faults—including fault types it has never seen during training.
 
 To learn more about anomaly detection, refer to the **[Anomaly Detection Model Architecture](../../docs/anomaly_detection/Anomaly_Model_Architecture.md)**.
 

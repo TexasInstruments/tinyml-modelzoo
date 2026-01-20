@@ -1,6 +1,6 @@
-# TinyML ModelZoo
+# Tiny ML ModelZoo
 
-Welcome to the **TinyML ModelZoo** - Texas Instruments' central repository for AI models, examples, and configurations for microcontroller (MCU) applications.
+Welcome to the **Tiny ML ModelZoo** - Texas Instruments' central repository for AI models, examples, and configurations for microcontroller (MCU) applications.
 
 ---
 
@@ -51,7 +51,7 @@ tinyml-modelzoo/
 
 ### Prerequisites
 
-1. Python 3.10 environment with the TinyML toolchain installed
+1. Python 3.10 environment with the Tiny ML toolchain installed
 2. Clone the [tinyml-tensorlab](https://github.com/TexasInstruments/tinyml-tensorlab) repository
 
 ### Running an Example
@@ -146,7 +146,7 @@ The following ready-to-use examples demonstrate various AI applications for MCUs
 
 ## Supported Task Categories
 
-TinyML ModelZoo supports the following AI task categories:
+Tiny ML ModelZoo supports the following AI task categories:
 
 | Task Category                     | Description                                               | Use Cases                                                     |
 |-----------------------------------|-----------------------------------------------------------|---------------------------------------------------------------|

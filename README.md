@@ -204,7 +204,7 @@ The following ready-to-use examples demonstrate various AI applications for MCUs
 
 ## Available Models
 
-Models are organized by task type. The **NPU** column indicates hardware acceleration support on TI devices with NPU (F28P55, F28P65, F29H85, F29P58, F29P32).
+Models are organized by task type. The **NPU** column indicates hardware acceleration support on TI devices with NPU (F28P55, AM13E2, MSPM0G5187).
 
 **NPU-optimized models** follow specific layer constraints for hardware acceleration:
 - All channels are multiples of 4 (m4)
@@ -215,7 +215,7 @@ Models are organized by task type. The **NPU** column indicates hardware acceler
 For detailed guidelines, see [NPU Configuration Guidelines](docs/NPU_CONFIGURATION_GUIDELINES.md).
 
 **When to use NPU-optimized models:**
-- Target device has NPU (F28P55, F28P65, F29H85, etc.)
+- Target device has NPU (F28P55, AM13E2, MSPM0G5187)
 - You need maximum inference speed
 - Standard models show "fallback to software" warnings during compilation
 
@@ -334,14 +334,51 @@ Key steps:
 
 ## Supported Target Devices
 
-| Device | NPU | Flash | SRAM | Notes |
-|--------|-----|-------|------|-------|
-| F28P55 | Yes | High | High | Recommended for complex models |
-| F28P65 | Yes | High | High | NPU-accelerated inference |
-| F2837 | No | Medium | Medium | General purpose MCU |
-| F28003 | No | Low | Low | Cost-optimized |
-| F28004 | No | Low | Low | Cost-optimized |
-| MSPM0G3507 | No | Low | Low | Ultra-low power |
+### C2000 DSP Family (Texas Instruments)
+
+| Device | NPU | Description | Notes |
+|--------|-----|-------------|-------|
+| F28P55 | Yes | C2000 32-bit MCU | Recommended for complex models |
+| F28P65 | No | C2000 32-bit MCU, 150 MHz | High performance |
+| F29H85 | No | C2000 64-bit MCU with C29x core | High capacity |
+| F29P58 | No | C2000 64-bit MCU with C29x core | High capacity |
+| F29P32 | No | C2000 64-bit MCU with C29x core | High capacity |
+| F2837 | No | C2000 32-bit dual-core MCU, 200 MHz | General purpose |
+| F28003 | No | C2000 32-bit MCU, 100 MHz | Cost-optimized |
+| F28004 | No | C2000 32-bit MCU, 100 MHz | Cost-optimized |
+| F280013 | No | C2000 32-bit MCU, 100 MHz | Entry-level |
+| F280015 | No | C2000 32-bit MCU, 120 MHz | Entry-level |
+
+### MSPM0 Family (Arm Cortex-M0+)
+
+| Device | NPU | Description | Notes |
+|--------|-----|-------------|-------|
+| MSPM0G3507 | No | 80 MHz Arm Cortex-M0+ | Ultra-low power, classification only |
+| MSPM0G3519 | No | 80 MHz Arm Cortex-M0+ | Ultra-low power |
+| MSPM0G5187 | Yes | 80 MHz Arm Cortex-M0+ | Ultra-low power, NPU-accelerated |
+
+### MSPM33C Family (Arm Cortex-M33)
+
+| Device | NPU | Description | Notes |
+|--------|-----|-------------|-------|
+| MSPM33C32 | No | 160 MHz Arm Cortex-M33, TrustZone | 1MB flash, 256kB SRAM |
+| MSPM33C34 | No | 160 MHz Arm Cortex-M33 | High performance |
+| AM13E2 | Yes | Arm Cortex-M33 MCU | NPU-accelerated, CLI only |
+
+### AM26x Family (Arm Cortex-R5)
+
+| Device | NPU | Description | Notes |
+|--------|-----|-------------|-------|
+| AM263 | No | Quad-core Arm Cortex-R5F, 400 MHz | High performance |
+| AM263P | No | Quad-core Arm Cortex-R5F, 400 MHz | High performance |
+| AM261 | No | Single-core Arm Cortex-R5F, 400 MHz | Cost-optimized |
+
+### Connectivity Devices (Wireless)
+
+| Device | NPU | Description | Notes |
+|--------|-----|-------------|-------|
+| CC2755 | No | 96 MHz Arm Cortex-M33 wireless MCU | Optimized for PIR/wireless apps |
+| CC1352 | No | Arm Cortex-M4 wireless MCU | Sub-1GHz and 2.4GHz |
 
 ---
 

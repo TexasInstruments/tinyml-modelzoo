@@ -8,8 +8,8 @@ Welcome to the **Tiny ML ModelZoo** - Texas Instruments' central repository for 
 
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
-- [Example Applications](#example-applications)
 - [Supported Task Categories](#supported-task-categories)
+- [Example Applications](#example-applications)
 - [Available Models](#available-models)
 - [Adding New Models](#adding-new-models)
 - [Additional Resources](#additional-resources)
@@ -84,63 +84,14 @@ run_tinyml_modelzoo.bat examples\hello_world\config.yaml
 4. **Quantization** - The model is optimized for MCU deployment
 5. **Compilation** - TI's Neural Network Compiler generates device-ready code
 
-Output artifacts are saved to `./data/projects/<project_name>/`.
+* Output artifacts are saved to `../tinyml-modelmaker/data/projects/<project_name>/`.
 
----
-
-## Example Applications
-
-The following ready-to-use examples demonstrate various AI applications for MCUs, organized by task type.
-
-### Classification Examples
-
-| No. | Example                                                                              | Data Type    | Description                                                                     |
-|-----|--------------------------------------------------------------------------------------|--------------|---------------------------------------------------------------------------------|
-| 1   | [hello_world](examples/hello_world/)                                                 | Univariate   | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
-| 2   | [dc_arc_fault](examples/dc_arc_fault/)                                               | Univariate   | Detect DC arc faults from current waveforms for electrical safety.              |
-| 3   | [ac_arc_fault](examples/ac_arc_fault/)                                               | Univariate   | Detect AC arc faults in electrical systems.                                     |
-| 4   | [motor_bearing_fault](examples/motor_bearing_fault/)                                 | Multivariate | Classify 5 bearing fault types + normal operation from vibration data.          |
-| 5   | [blower_imbalance](examples/blower_imbalance/)                                       | Multivariate | Detect blade imbalance in HVAC blowers using 3-phase motor currents.            |
-| 6   | [fan_blade_fault_classification](examples/fan_blade_fault_classification/)           | Multivariate | Detect faults in BLDC fans from accelerometer data.                             |
-| 7   | [electrical_fault](examples/electrical_fault/)                                       | Multivariate | Classify transmission line faults using voltage and current.                    |
-| 8   | [grid_stability](examples/grid_stability/)                                           | Multivariate | Predict power grid stability from node parameters.                              |
-| 9   | [gas_sensor](examples/gas_sensor/)                                                   | Multivariate | Identify gas type and concentration from sensor array data.                     |
-| 10  | [branched_model_parameters](examples/branched_model_parameters/)                     | Multivariate | Human Activity Recognition from accelerometer/gyroscope data.                   |
-| 11  | [ecg_classification](examples/ecg_classification/)                                   | Multivariate | Classify normal vs anomalous heartbeats from ECG signals.                       |
-| 12  | [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Multivariate | Non-Intrusive Load Monitoring - identify active appliances.                     |
-| 13  | [PLAID_nilm_classification](examples/PLAID_nilm_classification/)                     | Multivariate | Appliance identification using the PLAID dataset.                               |
-| 14  | [pir_detection](examples/pir_detection/)                                             | Multivariate | Detect presence/motion using PIR sensor data.                                   |
-
-### Regression Examples
-
-| No. | Example | Data Type | Description |
-|-----|---------|-----------|-------------|
-| 1 | [torque_measurement_regression](examples/torque_measurement_regression/) | Multivariate | Predict PMSM motor torque from current measurements. |
-| 2 | [induction_motor_speed_prediction](examples/induction_motor_speed_prediction/) | Multivariate | Predict induction motor speed from electrical signals. |
-| 3 | [reg_washing_machine](examples/reg_washing_machine/) | Multivariate | Predict washing machine load weight. |
-
-### Anomaly Detection Examples
-
-| No. | Example | Data Type | Description |
-|-----|---------|-----------|-------------|
-| 1 | [dc_arc_fault (DSI)](examples/dc_arc_fault/config_anomaly_detection_dsi.yaml) | Univariate | Detect anomalous DC arc patterns using autoencoder (DSI dataset). |
-| 2 | [dc_arc_fault (DSK)](examples/dc_arc_fault/config_anomaly_detection_dsk.yaml) | Univariate | Detect anomalous DC arc patterns using autoencoder (DSK dataset). |
-| 3 | [ecg_classification](examples/ecg_classification/config_anomaly_detection.yaml) | Multivariate | Detect anomalous heartbeat patterns from ECG signals. |
-| 4 | [fan_blade_fault_classification](examples/fan_blade_fault_classification/config_anomaly_detection.yaml) | Multivariate | Detect anomalous fan blade behavior from accelerometer data. |
-| 5 | [motor_bearing_fault](examples/motor_bearing_fault/config_anomaly_detection.yaml) | Multivariate | Detect anomalous bearing behavior from vibration data. |
-
-### Forecasting Examples
-
-| No. | Example | Data Type | Description |
-|-----|---------|-----------|-------------|
-| 1 | [forecasting_pmsm_rotor](examples/forecasting_pmsm_rotor/) | Multivariate | Forecast PMSM rotor winding temperature. |
-| 2 | [hvac_indoor_temp_forecast](examples/hvac_indoor_temp_forecast/) | Multivariate | Predict indoor temperature for HVAC control. |
-
-### Image Classification Examples
-
-| No. | Example | Data Type | Description |
-|-----|---------|-----------|-------------|
-| 1 | [MNIST_image_classification](examples/MNIST_image_classification/) | Image | Handwritten digit recognition (MNIST dataset). |
+* You can choose to save the output artifacts in your own custom directory, by specifying in the respective `config.yaml` by adding this under the common section:
+    ```yaml
+  common:
+      projects_path: './your/choice'  # or absolute path
+      # ... other settings
+    ```
 
 ---
 
@@ -162,9 +113,92 @@ Tiny ML ModelZoo supports the following AI task categories:
 
 **Regression** - The model outputs a continuous numerical value. Best for: "What is the current torque?", "What will the temperature be?"
 
+**Forecasting** - Predicts future values in a time series. Best for: "What will happen next?"
+
 **Anomaly Detection** - Uses autoencoders to learn "normal" patterns. Reconstruction error indicates anomalies. Best for: "Is this behavior normal?"
 
-**Forecasting** - Predicts future values in a time series. Best for: "What will happen next?"
+* The main difference between Anomaly Detection v/s Classification can be understood with the below example:
+  * Is it Normal? or an anomaly? --> Anomaly Detection (binary outcome)
+  * Is it Normal? or anomaly type A? or anomaly type B? or anomaly type C? --> Classification (multiple categories)
+
+* The main difference between Classification v/s Regression can be understood with the below example:
+  * Using independent variables Xa, Xb, Xc to predict dependent **discrete** variable (target) Y --> Classification 
+    * Y can produce discrete values that indicate if it stands for Class A / Class B / Class C .... so on
+  * Using independent variables Xa, Xb, Xc to predict dependent **continuous** variable (target) Y --> Regression
+
+* The main difference between Regression v/s Forecasting can be understood with the below example:
+  * Using independent variables Xa, Xb, Xc to predict dependent continuous variable (target) **Y** at the **same** time instant --> Regression
+  * Using independent variables Xa, Xb, Xc to predict dependent continuous variable (target) **Xa** (or Xb or Xc) for the **next** time instant--> Forecasting
+
+---
+
+There are two ways to proceed using this toolchain. 
+1. If you, as a user, find that there is an application under the `Example Applications` section below, then you can proceed with it.
+2. However, if you do not find any applications that are of your direct interest, you may as well use the toolchain to do either of the [Supported Task Categories](#supported-task-categories) as mentioned above referring to the generic example for each of them:
+
+
+| Generic Example Type         | Example                              | Description                                                                     |
+|------------------------------|--------------------------------------|---------------------------------------------------------------------------------|
+| Timeseries Classification    | [hello_world](examples/hello_world/) | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
+| Timeseries Regression        | Coming Soon                          |                                                                                 |
+| Timeseries Forecasting       | Coming Soon                          |                                                                                 |
+| Timeseries Anomaly Detection | Coming Soon                          |                                                                                 |
+
+---
+
+## Example Applications
+
+The following ready-to-use examples demonstrate various AI applications for MCUs, organized by task type.
+
+### Classification Examples
+
+| No. | Example                                                                              | Data Type    | Description                                                                     |
+|-----|--------------------------------------------------------------------------------------|--------------|---------------------------------------------------------------------------------|
+| 1   | [dc_arc_fault](examples/dc_arc_fault/)                                               | Univariate   | Detect DC arc faults from current waveforms for electrical safety.              |
+| 2   | [ac_arc_fault](examples/ac_arc_fault/)                                               | Univariate   | Detect AC arc faults in electrical systems.                                     |
+| 3   | [motor_bearing_fault](examples/motor_bearing_fault/)                                 | Multivariate | Classify 5 bearing fault types + normal operation from vibration data.          |
+| 4   | [blower_imbalance](examples/blower_imbalance/)                                       | Multivariate | Detect blade imbalance in HVAC blowers using 3-phase motor currents.            |
+| 5   | [fan_blade_fault_classification](examples/fan_blade_fault_classification/)           | Multivariate | Detect faults in BLDC fans from accelerometer data.                             |
+| 6   | [electrical_fault](examples/electrical_fault/)                                       | Multivariate | Classify transmission line faults using voltage and current.                    |
+| 7   | [grid_stability](examples/grid_stability/)                                           | Multivariate | Predict power grid stability from node parameters.                              |
+| 8   | [gas_sensor](examples/gas_sensor/)                                                   | Multivariate | Identify gas type and concentration from sensor array data.                     |
+| 9   | [branched_model_parameters](examples/branched_model_parameters/)                     | Multivariate | Human Activity Recognition from accelerometer/gyroscope data.                   |
+| 10  | [ecg_classification](examples/ecg_classification/)                                   | Multivariate | Classify normal vs anomalous heartbeats from ECG signals.                       |
+| 11  | [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Multivariate | Non-Intrusive Load Monitoring - identify active appliances.                     |
+| 12  | [PLAID_nilm_classification](examples/PLAID_nilm_classification/)                     | Multivariate | Appliance identification using the PLAID dataset.                               |
+| 13  | [pir_detection](examples/pir_detection/)                                             | Multivariate | Detect presence/motion using PIR sensor data.                                   |
+
+### Regression Examples
+
+| No. | Example                                                                        | Data Type    | Description                                            |
+|-----|--------------------------------------------------------------------------------|--------------|--------------------------------------------------------|
+| 1   | [torque_measurement_regression](examples/torque_measurement_regression/)       | Multivariate | Predict PMSM motor torque from current measurements.   |
+| 2   | [induction_motor_speed_prediction](examples/induction_motor_speed_prediction/) | Multivariate | Predict induction motor speed from electrical signals. |
+| 3   | [reg_washing_machine](examples/reg_washing_machine/)                           | Multivariate | Predict washing machine load weight.                   |
+
+### Forecasting Examples
+
+| No. | Example                                                          | Data Type    | Description                                  |
+|-----|------------------------------------------------------------------|--------------|----------------------------------------------|
+| 1   | [forecasting_pmsm_rotor](examples/forecasting_pmsm_rotor/)       | Multivariate | Forecast PMSM rotor winding temperature.     |
+| 2   | [hvac_indoor_temp_forecast](examples/hvac_indoor_temp_forecast/) | Multivariate | Predict indoor temperature for HVAC control. |
+
+### Anomaly Detection Examples
+
+| No. | Example                                                                                                 | Data Type    | Description                                                       |
+|-----|---------------------------------------------------------------------------------------------------------|--------------|-------------------------------------------------------------------|
+| 1   | [dc_arc_fault (DSI)](examples/dc_arc_fault/config_anomaly_detection_dsi.yaml)                           | Univariate   | Detect anomalous DC arc patterns using autoencoder (DSI dataset). |
+| 2   | [dc_arc_fault (DSK)](examples/dc_arc_fault/config_anomaly_detection_dsk.yaml)                           | Univariate   | Detect anomalous DC arc patterns using autoencoder (DSK dataset). |
+| 3   | [ecg_classification](examples/ecg_classification/config_anomaly_detection.yaml)                         | Multivariate | Detect anomalous heartbeat patterns from ECG signals.             |
+| 4   | [fan_blade_fault_classification](examples/fan_blade_fault_classification/config_anomaly_detection.yaml) | Multivariate | Detect anomalous fan blade behavior from accelerometer data.      |
+| 5   | [motor_bearing_fault](examples/motor_bearing_fault/config_anomaly_detection.yaml)                       | Multivariate | Detect anomalous bearing behavior from vibration data.            |
+
+
+### Image Classification Examples
+
+| No. | Example                                                            | Data Type | Description                                    |
+|-----|--------------------------------------------------------------------|-----------|------------------------------------------------|
+| 1   | [MNIST_image_classification](examples/MNIST_image_classification/) | Image     | Handwritten digit recognition (MNIST dataset). |
 
 ---
 

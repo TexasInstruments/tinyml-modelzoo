@@ -13,6 +13,8 @@ cd tinyml-Modelzoo
 run_tinyml_modelzoo.sh examples/hello_world/config.yaml
 ```
 
+### Understanding the outputs
+
 The example project has four useful file outputs by ModelMaker. We will see their name and meaning.
 - `mod.a`: The ONNX model is compiled by tvm to get C files, which are converted into a single mod.a that can run on device. This file stores the core functionality of AI model.
 - `tvmgen_default.h`: Mod.a exposes few APIs to interact with model which are present here. You can use these APIs in your application to run model
@@ -21,6 +23,21 @@ The example project has four useful file outputs by ModelMaker. We will see thei
 - `user_input_config.h`: This configuration file has preprocessing flag definitions for the parameters used for feature extraction.
 
 These 4 files can be used in a CCS Project to perform AI on edge.
+
+### How are these obtained
+
+The modelzoo is built on PyTorch framework and the training of the CNN model is done using PyTorch. After the training is converted we convert the layers in TI NPU understandable format. Then the AI model is exported in ONNX format using torch.onnx.export. The ONNX model can be found in the modelmaker run output *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/model.onnx*.
+
+This ONNX model is compiled using [TI MCU NNC](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/). You can go to the compiler page and check for different options and optimizations present. For different AI tasks such as Classification, Regression, Forecasting, Anomaly Detection, we use different optimizations. For classification example we use:
+
+- SKIP_NORMALIZE
+- OUTPUT_INT
+
+To get the artifacts with mod.a and the tvmgen_default.h, we use TI MCU NNC and compile the onnx model. Below is the command to perform this.
+
+```bash
+tvmc compile --target="c, ti-npu type=hard skip_normalize=true output_int=true" --target-c-mcpu=c28 ./model.onnx -o artifacts_c28/mod.a --cross-compiler="cl2000" --cross-compiler-options="$CL2000_OPTIONS"
+```
 
 ## How to run on device
 
@@ -42,22 +59,22 @@ After run the modelmaker from command line is finished. Copy the 4 files (path p
 ### Compiled model files
 
 - mod.a: The compiled model is present in this file. 
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/wisdm_example/run/{date-time}/{model}/compilation/artifacts/mod.a*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/compilation/artifacts/mod.a*
   - Path CCS Project: *f28p55x_generic_timseries_classification/artifacts/mod.a*
 - tvmgen_default.h: Header file to access the model inference APIs from mod.a 
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/wisdm_example/run/{date-time}/{model}/compilation/artifacts/tvmgen_default.h*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/compilation/artifacts/tvmgen_default.h*
   - Path CCS Project: *f28p55x_generic_timseries_classification/artifacts/tvmgen_default.h*
 
 ### Test data for device verification
 
 - test_vector.c: Test cases to check if the model works on device currently
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/wisdm_example/run/{date-time}/{model}/training/quantization/golden_vectors/test_vector.c*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/golden_vectors/test_vector.c*
   - Path CCS Project: *f28p55x_generic_timseries_classification/test_vector.c*
 - user_input_config.h: Configuration of feature extraction library in SDK. 
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/wisdm_example/run/{date-time}/{model}/training/quantization/golden_vectors/user_input_config.h*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/golden_vectors/user_input_config.h*
   - Path CCS Project: *f28p55x_generic_timseries_classification/user_input_config.h*
 
-## Load sample example
+### Load sample example
 
 We will load the generic timeseries example for f28p55 device using Code Composer Studio.
 
@@ -72,7 +89,7 @@ We will load the generic timeseries example for f28p55 device using Code Compose
 7. The imported project will look like this in the CCS Project
 ![Imported Project](assets/imported_project.png)
 
-## Run the sample example
+### Run the sample example
 
 We will build the project and flash the program in device. The project has a 'C' file application_main.c, which contains the code for calling APIs to the feature extraction lib and model inference. We will use debug mode to see the result of model inference present in *test_result*.
 
@@ -91,10 +108,3 @@ We will build the project and flash the program in device. The project has a 'C'
 ![Variable test_result](assets/variable_test_result.png)
 15. If the test_result is 1 it means the model inference is working correctly, if it is 0, the model inference is wrong.
 ![test_result value](assets/test_result_value.png)
-
-## TLDR
-
-- Run modelzoo using **run_tinyml_modelzoo examples/hello_world/config.yaml**
-- Copy the file from modelmaker run folder to the CCS project
-- Build the application
-- Flash application using Debug

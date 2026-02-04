@@ -8,7 +8,6 @@
 2. [Prerequisites](#prerequisites)
 3. [Deployment Steps](#deployment-steps)
 4. [Verify Your Model](#verify-your-model)
-5. [Next Steps](#next-steps)
 
 ---
 

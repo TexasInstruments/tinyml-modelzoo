@@ -140,11 +140,11 @@ tvmc compile --target="c, ti-npu type=hard skip_normalize=true output_int=true" 
 
 ### CCS Studio
 
-Code Composer Studio (CCS) is a free integrated development environment (IDE) provided by Texas Instruments (TI) for developing and debugging applications for TI's micro-controllers and processors. It offers various examples for users to get started with their problem statement. One of the application is f28p55x_generic_timseries_classification. We will use this example to run on device f28p55x for this guide.
+Code Composer Studio (CCS) is a free integrated development environment (IDE) provided by Texas Instruments (TI) for developing and debugging applications for TI's micro-controllers and processors. It offers various examples for users to get started with their problem statement. One of the application is f28p55x_generic_timeseries_classification. We will use this example to run on device f28p55x for this guide.
 
 ### Requirements
 
-The CCS example *f28p55x_generic_timseries_classification* requires 4 files from modelmaker. We will copy the files from modelmaker run to the CCS example project. 
+The CCS example *f28p55x_generic_timeseries_classification* requires 4 files from modelmaker. We will copy the files from modelmaker run to the CCS example project. 
 
 1. C2000Ware 6.01.00.00
 2. Location of example: *C:\ti\c2000\C2000Ware_6_01_00_00\libraries\ai\examples\generic_timeseries_classification\f28p55x*
@@ -157,19 +157,19 @@ After run the modelmaker from command line is finished. Copy the 4 files (path p
 
 - mod.a: The compiled model is present in this file. 
   - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/compilation/artifacts/mod.a*
-  - Path CCS Project: *f28p55x_generic_timseries_classification/artifacts/mod.a*
+  - Path CCS Project: *f28p55x_generic_timeseries_classification/artifacts/mod.a*
 - tvmgen_default.h: Header file to access the model inference APIs from mod.a 
   - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/compilation/artifacts/tvmgen_default.h*
-  - Path CCS Project: *f28p55x_generic_timseries_classification/artifacts/tvmgen_default.h*
+  - Path CCS Project: *f28p55x_generic_timeseries_classification/artifacts/tvmgen_default.h*
 
 #### Test data for device verification
 
 - test_vector.c: Test cases to check if the model works on device currently
   - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/golden_vectors/test_vector.c*
-  - Path CCS Project: *f28p55x_generic_timseries_classification/test_vector.c*
+  - Path CCS Project: *f28p55x_generic_timeseries_classification/test_vector.c*
 - user_input_config.h: Configuration of feature extraction library in SDK. 
   - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/golden_vectors/user_input_config.h*
-  - Path CCS Project: *f28p55x_generic_timseries_classification/user_input_config.h*
+  - Path CCS Project: *f28p55x_generic_timeseries_classification/user_input_config.h*
 
 ### Load sample example
 
@@ -179,9 +179,9 @@ We will load the generic timeseries example for f28p55 device using Code Compose
 2. Go to View tab -> Open Resource Explorer
 ![Resource Explorer](assets/view_tab.png)
 3. Type the Board or Device to filter as **LAUNCHXL-F28P55X**
-4. Type keyword as **f28p55x_generic_timseries_classification**
+4. Type keyword as **f28p55x_generic_timeseries_classification**
 ![Resource Explorer with filled fields](assets/resouce_explorer_with_filled_fields.png)
-5. Select the folder **f28p55x_generic_timseries_classification** and click Import
+5. Select the folder **f28p55x_generic_timeseries_classification** and click Import
 6. Download and install the required dependencies of the project.
 7. The imported project will look like this in the CCS Project
 ![Imported Project](assets/imported_project.png)
@@ -211,7 +211,7 @@ The `test_vector.c` file contains multiple test cases. To test different cases:
 1. Open `test_vector.c` in the editor
 2. Comment out the current test set (SET 0)
 3. Uncomment another test set (e.g., SET 1)
-4. Rebuild and reflash the project
+4. Rebuild and flash the project again
 5. Verify that the golden vector matches the model output
 
 ---
@@ -231,7 +231,7 @@ To explore more classification use cases, refer to the following examples:
 - [Hello World](../../examples/hello_world/readme.md) - Prediction of the type of waveform of signal
 - [AC Arc Fault](../../examples/ac_arc_fault/readme.md) - Predict whether an arc is present in circuit or not
 - [Blower Imbalance](../../examples/blower_imbalance/readme.md) - Prediction of imbalance present in fan blowers
-- [ECG Classification](../../examples/ecg_classification/readme.md) - Classifiying ECG Signals
+- [ECG Classification](../../examples/ecg_classification/readme.md) - Classifying ECG Signals
 - [Electrical Fault](../../examples/electrical_fault/readme.md) - Predicting presence of electrical faults between lines 
 - [Fan Blade Fault Classification](../../examples/fan+blade_fault_classification/readme.md) - Prediction of faults in blades of fans
 - [Gas Sensor](../../examples/gas_sensor/readme.md) - Prediction of the type of gas present in a room
@@ -240,7 +240,7 @@ To explore more classification use cases, refer to the following examples:
 - [NILM Appliance Usage Classification](../../examples/nilm_appliance_usage_classification/readme.md) - 
 - [PLAID NILM Classification](../../examples/PLAID_nilm_classification/readme.md) - 
 - [DC Arc Fault](../../examples/dc_arc_fault/readme.md) - Predict whether an arc is present in circuit or not
-- [WISDM](../../examples/branched_model_parameters/readme.md) - Wearable Hand Movement detection from accelerameter
+- [WISDM](../../examples/branched_model_parameters/readme.md) - Wearable Hand Movement detection from accelerometer
 
 <hr>
 

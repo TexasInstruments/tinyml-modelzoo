@@ -111,7 +111,7 @@ dataset:
 
 <b> Under `data_processing_feature_extraction` section, you have to specify the following parameters mandatorily </b>:-
 
-- `variables`: Specifies which columns to use as input features. In our case, we use columns 0 to 5 (6 features total: `i_a`, `u_d`, `u_q`, `ambient`, `coolant`, `pm`).
+- `variables`: Specifies which columns to use as input features. You can specify either an integer (to use the first N columns) or a list of column indices. In our case, we use `variables: 6` to take the first 6 columns as input features (`i_a`, `u_d`, `u_q`, `ambient`, `coolant`, `pm`).
 - `target_variables`: Specifies which column(s) to predict. In our case, we predict column 5 (`pm` - permanent magnet temperature).
 
 We can use data processing transforms such as Simple Window (which is mandatory to use for forecasting problems) and Downsampling (which is optional to use) before training the dataset. Let's see how to configure those:-
@@ -144,10 +144,8 @@ data_processing_feature_extraction:
     frame_size: 3
     stride_size: 0.4
     forecast_horizon: 1  # Number of future timesteps to be predicted
-    variables:
-    - 0
-    - 5
-    target_variables: 
+    variables: 6  # takes the first 6 columns as input features
+    target_variables:
     - 5
 ```
 

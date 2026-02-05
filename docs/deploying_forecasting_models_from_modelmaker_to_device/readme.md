@@ -119,8 +119,8 @@ These devices use **F29H85x SDK**.
 | Device | LaunchPad/EVM | Product Page | SDK Download |
 |--------|---------------|--------------|--------------|
 | **F29H85x** | [F29H85X-SOM-EVM](https://www.ti.com/tool/F29H85X-SOM-EVM) | [F29H850TU](https://www.ti.com/product/F29H850TU) | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
-| **F29P58x** | - | [F29P58](https://www.ti.com/product/F29P58) | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
-| **F29P32x** | - | [F29P32](https://www.ti.com/product/F29P32) | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
+| **F29P58x** | - | - | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
+| **F29P32x** | - | - | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
 
 **SDK Version**: 1.00 (Release: 01_00_00)
 
@@ -142,7 +142,7 @@ These devices use **MCU-PLUS-SDK**.
 |--------|---------------|--------------|--------------|
 | **AM263** | [LP-AM263](https://www.ti.com/tool/LP-AM263) | [AM2634](https://www.ti.com/product/AM2634) | [MCU-PLUS-SDK-AM263X](https://www.ti.com/tool/MCU-PLUS-SDK-AM263X) |
 | **AM263P** | [LP-AM263P](https://www.ti.com/tool/LP-AM263P) | [AM263P4](https://www.ti.com/product/AM263P4) | [MCU-PLUS-SDK-AM263PX](https://www.ti.com/tool/MCU-PLUS-SDK-AM263PX) |
-| **AM261** | [LP-AM261](https://www.ti.com/tool/LP-AM261) | [AM2611](https://www.ti.com/product/AM2611) | [MCU-PLUS-SDK-AM26X](https://www.ti.com/tool/MCU-PLUS-SDK-AM26X) |
+| **AM261** | [LP-AM261](https://www.ti.com/tool/LP-AM261) | - | [MCU-PLUS-SDK-AM261X](https://www.ti.com/tool/MCU-PLUS-SDK-AM261X) |
 
 **SDK Version**: 6.0.1 (Release: 06_00_01)
 

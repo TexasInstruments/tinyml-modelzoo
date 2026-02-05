@@ -3,7 +3,7 @@ common:
   target_device: F28P55
 dataset:
   dataset_name: generic_timeseries_forecasting
-  input_data_path: examples/generic_timeseries_forecasting/generic_timeseries_forecasting.zip
+  input_data_path: /home/fasna/Documents/tinyml/tinyml-modelzoo/examples/generic_timeseries_forecasting/generic_timeseries_forecasting.zip
 data_processing_feature_extraction:
   data_proc_transforms:
   - SimpleWindow  # 'SimpleWindow' must be specified for forecasting tasks
@@ -17,7 +17,7 @@ training:
   model_name: FCST_LSTM10
   model_config: ''
   batch_size: 32
-  training_epochs: 5
+  training_epochs: 50
   num_gpus: 1
   quantization: 1
   optimizer: adam

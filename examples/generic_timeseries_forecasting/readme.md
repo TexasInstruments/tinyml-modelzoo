@@ -10,6 +10,8 @@ Time series forecasting is about predicting future values based on past observat
 
 This example serves as a **"Hello World" introduction** to time series forecasting using the TinyML ModelMaker toolchain. While not directly industry-specific, this example demonstrates how to use **any generic time series forecasting task** with our toolchain. If you're new to time series forecasting or want to understand how to configure and run forecasting models on TinyML ModelMaker, this is the perfect starting point.
 
+The core idea is simple: **provide your dataset in the expected format, configure a YAML file with your training parameters, and ModelMaker handles the rest** — from data processing to model training, quantization, and compilation for deployment on embedded devices.
+
 ### The Simulated Thermostat Dataset
 
 To demonstrate time series forecasting, we use a **simulated thermostat dataset**. This dataset models a room temperature controlled by an ON/OFF heater with hysteresis:
@@ -18,7 +20,7 @@ To demonstrate time series forecasting, we use a **simulated thermostat dataset*
 - **Heater turns OFF** when temperature rises above 24°C (upper threshold)
 - Temperature changes gradually due to thermal inertia
 
-This creates an oscillating temperature pattern that is ideal for learning time series forecasting. 
+This creates an oscillating temperature pattern that is ideal for learning time series forecasting. You can download the complete dataset here: [`generic_timeseries_forecasting.zip`](generic_timeseries_forecasting.zip)
 
 This example will walk you through:
 - How the dataset should be structured
@@ -79,9 +81,15 @@ The model pipeline is configured using a YAML file, where you can enable or disa
 
 ## Configuring the YAML file
 
+The YAML configuration file is where you define all the parameters for your forecasting pipeline. By simply modifying this file, you can control dataset loading, data processing, model architecture, training hyperparameters, and compilation settings.
+
 ### `common` section
 
-Set the task type to `generic_timeseries_forecasting` along with other basic parameters as shown below:
+In the `common` section, you must specify:
+- **task_type**: Must be set to `generic_timeseries_forecasting` for forecasting tasks
+- **target_device**: The target hardware device for deployment
+
+**Supported Target Devices: F28P55, F29H85**
 
 ```yaml
 common:
@@ -108,11 +116,18 @@ dataset:
 <b>Under `data_processing_feature_extraction` section, you have to specify the following parameters mandatorily</b>:
 
 - `variables`: Takes the first `variables` columns of the data files (after the time columns) as input to predict the target variables.
-- `target_variables`: Represents variables to be predicted which can be specified in any of these formats:
-    - Column indices: `Eg: [0]`
-    - Column names: `Eg: ['temperature']`
+- `target_variables`: Specifies which variables to predict. Can be specified in any of these formats:
 
-    **If numbers which represent indices are provided in list, assign column number 0 to the first non-time column and continue numbering from there.**
+| Format | Example | Description |
+|--------|---------|-------------|
+| Empty list | `[]` | Predict all columns |
+| List of indices | `[0]` or `[0, 1, 2]` | Column indices (0-indexed, after time column) |
+| List of names | `['temperature']` or `['temp', 'humidity']` | Column names from header |
+| Single index | `0` | Single column index (converted to `[0]`) |
+| Single name | `temperature` | Single column name (converted to `['temperature']`) |
+| Comma-separated names | `temp,humidity` | Multiple column names as string |
+
+> **Note:** When using indices, column 0 refers to the first non-time column in your data file.
 
 We can use data processing transforms such as SimpleWindow (which is mandatory to use for forecasting problems) and Downsampling (which is optional to use) before training the dataset. Let's see how to configure those:
 
@@ -144,16 +159,16 @@ data_processing_feature_extraction:
 
 ### `training` section
 
-You can configure training parameters here like `model_name`, `training_epochs`, `optimizer` etc. **It is important to note that for forecasting problems, `output_int` must be set to `False`.**
+You can configure training parameters here like `model_name`, `training_epochs`, `optimizer` etc. **It is mandatory to set `output_int` to `false` for forecasting problems.**
 
-Here we are using an LSTM model:
+Here we are using a generic model for forecasting (`FCST_LSTM10`), which is a single layer LSTM with hidden size of 10. This lightweight model has only **542 trainable parameters**, making it ideal for resource-constrained embedded devices.
 
 ```yaml
 training:
     model_name: FCST_LSTM10
     model_config: ''
     batch_size: 32
-    training_epochs: 5
+    training_epochs: 50
     num_gpus: 1
     quantization: 1
     optimizer: adam
@@ -202,26 +217,65 @@ The model can predict multiple future timesteps for multiple target variables. F
 
 ### Viewing Detailed Results
 
-- Float train best epoch results can be found at:
-`data/projects/{dataset_name}/run/{date-time}/{model_name}/training/base/best_epoch_{best_epoch_num}_results`
+#### Float Train Best Epoch Results
 
-- Quantized train best epoch results can be found at:
-`data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/best_epoch_{best_epoch_num}_results`
+Results can be found at:
+`tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/base/best_epoch_{best_epoch_num}_results`
 
-- Test results can be found at:
-`data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/test_results`
+**Example Results (Best Epoch 48):**
+
+| Variable | Metric | Timestep 1 | Timestep 2 | Overall |
+|----------|--------|------------|------------|---------|
+| temperature | SMAPE | 0.60% | 0.88% | 0.74% |
+| temperature | R² | 0.9811 | 0.9563 | 0.9687 |
+
+#### Quantized Train Best Epoch Results
+
+Results can be found at:
+`tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/best_epoch_{best_epoch_num}_results`
+
+**Example Results (Best Epoch 1):**
+
+| Variable | Metric | Timestep 1 | Timestep 2 | Overall |
+|----------|--------|------------|------------|---------|
+| temperature | SMAPE | 0.61% | 0.88% | 0.74% |
+| temperature | R² | 0.9806 | 0.9552 | 0.9679 |
+
+#### Test Results
+
+Results can be found at:
+`tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/test_results`
+
+**Example Results:**
+
+| Variable | Metric | Timestep 1 | Timestep 2 | Overall |
+|----------|--------|------------|------------|---------|
+| temperature | SMAPE | 0.66% | 0.95% | 0.80% |
+| temperature | R² | 0.9763 | 0.9517 | 0.9640 |
 
 In each of these directories, you will find:
 
 **1. Prediction Plots**
 
-They are located under `predictions_plots` folder. For each target variable, you will see one plot which consists of `forecast_horizon` number of subplots (e.g., plot for 1 step ahead, 2 step ahead, etc.). Each subplot compares predicted vs actual (ground truth) values for that particular timestep of that target variable. A black dotted line (x = y) represents perfect prediction. Points close to this line indicate accurate forecasting.
+They are located under `prediction_plots` folder. For each target variable, you will see one plot which consists of `forecast_horizon` number of subplots (e.g., plot for 1 step ahead, 2 step ahead, etc.). Each subplot compares predicted vs actual (ground truth) values for that particular timestep of that target variable. A black dotted line (x = y) represents perfect prediction. Points close to this line indicate accurate forecasting.
+
+**Float Training Prediction Plot:**
+
+![Float Training Predictions](assets/float_train_temperature_predictions.png)
+
+**Quantized Training Prediction Plot:**
+
+![Quantized Training Predictions](assets/quant_train_temperature_predictions.png)
+
+**Test Prediction Plot:**
+
+![Test Predictions](assets/test_temperature_predictions.png)
 
 **2. CSV Files**
 
 They are located under the `predictions_csv` folder. It will contain separate CSV files for each target variable. Each file contains predicted and actual values for each timestep forecasted.
 
-Also you can see the compiled model at: `data/projects/{dataset_name}/run/{date-time}/{model_name}/compilation`
+Also you can see the compiled model at: `tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/compilation`
 
 ## Running on Device
 
@@ -230,13 +284,13 @@ After successfully running ModelMaker, you will get the compiled model artifacts
 1. **Artifacts**:
    - `mod.a` and `tvmgen_default.h` are generated and stored in:
      ```
-     data/projects/{dataset_name}/run/{date-time}/{model_name}/compilation/artifacts
+     tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/compilation/artifacts
      ```
 
 2. **Golden Vectors**:
    - `user_input_config.h` and `test_vector.c` are stored in:
      ```
-     data/projects/{dataset_name}/run/{date-time}/{model_name}/training/base/golden_vectors
+     tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/base/golden_vectors
      ```
 
 Steps to run this example on-device can be found by following this guide: [Deploying Forecasting Models from ModelMaker to Device](../../docs/deploying_forecasting_models_from_modelmaker_to_device/readme.md)
@@ -249,4 +303,4 @@ This example demonstrates the fundamentals of time series forecasting with TinyM
 
 **Update history:**
 
-[28th Jan 2025]: Compatible with v1.3 of Tiny ML ModelMaker
+[28th Jan 2026]: Compatible with v1.3 of Tiny ML ModelMaker

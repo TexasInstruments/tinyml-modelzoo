@@ -20,7 +20,7 @@ To demonstrate time series forecasting, we use a **simulated thermostat dataset*
 - **Heater turns OFF** when temperature rises above 24°C (upper threshold)
 - Temperature changes gradually due to thermal inertia
 
-This creates an oscillating temperature pattern that is ideal for learning time series forecasting. You can download the complete dataset here: [`generic_timeseries_forecasting.zip`](generic_timeseries_forecasting.zip)
+This creates an oscillating temperature pattern that is ideal for learning time series forecasting. You can download the complete dataset here: [`generic_timeseries_forecasting.zip`](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_forecasting.zip)
 
 This example will walk you through:
 - How the dataset should be structured
@@ -41,7 +41,7 @@ The dataset consists of simulated thermostat data containing the following colum
 - Validation: 2 files (thermostat_11.csv, thermostat_12.csv)
 - Test: 3 files (thermostat_13.csv, thermostat_14.csv, thermostat_15.csv)
 
-Each file contains 1000 timesteps of simulated temperature data. You can download the dataset here: [`generic_timeseries_forecasting.zip`](generic_timeseries_forecasting.zip)
+Each file contains 1000 timesteps of simulated temperature data. You can download the dataset here: [`generic_timeseries_forecasting.zip`](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_forecasting.zip)
 
 ## Preparing the Dataset
 
@@ -67,7 +67,7 @@ For forecasting tasks, **ModelMaker** expects the dataset to be packaged in a sp
 
 Unlike classification tasks, forecasting **always requires annotation files**. These tell the tool which files belong to training, validation, and testing sets. The data directory is automatically named 'files' for forecasting and regression tasks.
 
-For this example, we have already prepared the dataset in the required format. You can find the zipped dataset at: [`generic_timeseries_forecasting.zip`](generic_timeseries_forecasting.zip)
+For this example, we have already prepared the dataset in the required format. You can find the zipped dataset at: [`generic_timeseries_forecasting.zip`](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_forecasting.zip)
 
 ## Usage in Tiny ML ModelMaker
 
@@ -89,7 +89,16 @@ In the `common` section, you must specify:
 - **task_type**: Must be set to `generic_timeseries_forecasting` for forecasting tasks
 - **target_device**: The target hardware device for deployment
 
-**Supported Target Devices: F28P55, F29H85**
+**Supported Target Devices:**
+
+| Device Family | Supported Devices |
+|---------------|-------------------|
+| C2000 (C28) | F280013, F280015, F28003, F28004, F2837, F28P55, F28P65 |
+| C2000 (C29) | F29H85, F29P58, F29P32 |
+| MSPM33 | MSPM33C32 |
+| AM26x | AM263, AM263P, AM261 |
+
+Here we will be compiling for F28P55 device:
 
 ```yaml
 common:
@@ -108,7 +117,7 @@ Here is how we configured `dataset` section for our thermostat dataset example:
 ```yaml
 dataset:
     dataset_name: generic_timeseries_forecasting
-    input_data_path: examples/generic_timeseries_forecasting/generic_timeseries_forecasting.zip
+    input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_forecasting.zip
 ```
 
 ### `data_processing_feature_extraction` section

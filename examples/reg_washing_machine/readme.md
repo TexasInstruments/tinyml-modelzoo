@@ -135,6 +135,8 @@ However, for the 4K model, as the number of parameters are too less, it is not a
 
 Partially quantized models show comparable results compared to their float counterparts.
 
+Partial quantization means only the initial batchnorm, initial convolution layer and last fully connected layer are in float, all other layers of the model are in int8.
+
 Float REGR_13k model Results, 512 frame_size
 <p align='center'>
 <img src="./images/float_actual_vs_predicted.png"
@@ -153,15 +155,12 @@ It finally generates four files mod.a, tvmgen_default.h, test_vector.c, user_inp
 
 mod.a, tvmgen_default.h can be found in
 ``` 
-./tinyml-modelmaker/data/projects/<dataset_name>/run/{date-time}/{model_name}/compilation/artifacts/
-
+tinyml-modelmaker/data/projects/<dataset_name>/run/{date-time}/{model_name}/compilation/artifacts/
 ``` 
 
 test_vector.c and user_input_config.h can be found in 
-
 ``` 
-./tinyml-modelmaker/data/projects/<dataset_name>/run/{date-time}/{model_name}/training/quantization/golden_vectors/
-
+tinyml-modelmaker/data/projects/<dataset_name>/run/{date-time}/{model_name}/training/quantization/golden_vectors/
 ``` 
 
 These four files can be used to run the model on the device as illustrated in the following guide: [Deploying Regression Models from ModelMaker to Device](../../docs/deploying_regression_models_from_modelmaker_to_device/readme.md)

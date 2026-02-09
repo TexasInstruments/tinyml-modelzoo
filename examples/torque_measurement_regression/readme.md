@@ -44,7 +44,7 @@ In our regression example we’ll use `i_d, i_q, u_d, u_q, motor_speed, ambient,
 You can run this example directly in **Tiny ML ModelMaker** using the following command:
 
 ```bash
-./run_tinyml_modelmaker.sh examples/torque_measurement_regression/config.yaml
+./run_tinyml_modelzoo.sh ./examples/torque_measurement_regression/config.yaml
 ```
 The model pipeline is configured using a YAML file, where you can enable or disable different stages such as dataset loading, data processing, feature extraction, training, testing, and compilation depending on your needs.
 
@@ -98,7 +98,7 @@ Run the modelmaker from command line. After the run is finished. Copy the 4 file
   - Path CCS Project: *f28p55x_generic_timseries_regression/user_input_config.h*
 
 
-Steps to run this example on-device can be found by following this guide: [Deploying Regression Models from ModelMaker to Device](../../docs/deploying_regression_models_from_modelmaker_to_device/readme.md)
+Steps to run a regression example on-device can be found in the following guide: [Deploying Regression Models from ModelMaker to Device](../../docs/deploying_regression_models_from_modelmaker_to_device/readme.md)
 
 ## Model Metrics
 

@@ -74,7 +74,7 @@ These devices use **MCU-PLUS-SDK**. It is recommended to use the SDK Version: 11
 
 ## Output From Modelzoo
 
-Modelzoo will start by loading the dataset, train the model, test the model, compile the model. Modelzoo will create the output folder in `tinyml-modelmaker/data/projects/{dataset_name}`. You can find the dataset name in the [configuration](config.yaml) yaml. Let's assume the dataset_name to be generic_timeseries_classification as we will use the hello world example.
+Modelzoo will start by loading the dataset, train the model, test the model, compile the model. Modelzoo will create the output folder in `tinyml-modelmaker/data/projects/{dataset_name}`. You can find the dataset name in the [configuration](config.yaml) yaml. Let's assume the dataset_name to be hello_world_example_dsg as we will use the hello world example for generic timeseries classification.
 
 ```bash
 cd tinyml-Modelzoo
@@ -89,7 +89,7 @@ These files are located in the following directory structure:
 tinyml-modelmaker/
 └── data/
     └── projects/
-        └── hello_world/
+        └── hello_world_example_dsg/
             └── run/
                 └── {date-time}/
                     └── {model_name}/
@@ -121,14 +121,14 @@ These 4 files can be used in a CCS Project to perform AI on edge.
 
 ### How are these obtained
 
-The modelzoo is built on PyTorch framework and the training of the CNN model is done using PyTorch. After the training is converted we convert the layers in TI NPU understandable format. Then the AI model is exported in ONNX format using torch.onnx.export. The ONNX model can be found in the modelmaker run output *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/model.onnx*.
+The modelzoo is built on PyTorch framework and the training of the CNN model is done using PyTorch. After the training is converted we convert the layers in TI NPU understandable format. Then the AI model is exported in ONNX format using torch.onnx.export. The ONNX model can be found in the modelmaker run output *tinyml-modelmaker/data/projects/hello_world_example_dsg/run/{date-time}/{model}/training/quantization/model.onnx*.
 
 This ONNX model is compiled using [TI MCU NNC](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/). You can go to the compiler page and check for different options and optimizations present. For different AI tasks such as Classification, Regression, Forecasting, Anomaly Detection, we use different optimizations. For classification example we use:
 
 - SKIP_NORMALIZE
 - OUTPUT_INT
 
-To get the artifacts with mod.a and the tvmgen_default.h, we use TI MCU NNC and compile the onnx model. Below is the command to perform this.
+To get the artifacts with mod.a and the tvmgen_default.h, we use TI MCU NNC and compile the onnx model. Below is the command to perform this. You can explore more [compilation option](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/compiling.html).
 
 ```bash
 tvmc compile --target="c, ti-npu type=hard skip_normalize=true output_int=true" --target-c-mcpu=c28 ./model.onnx -o artifacts_c28/mod.a --cross-compiler="cl2000" --cross-compiler-options="$CL2000_OPTIONS"
@@ -149,6 +149,11 @@ The CCS example *f28p55x_generic_timeseries_classification* requires 4 files fro
 1. C2000Ware 6.01.00.00
 2. Location of example: *C:\ti\c2000\C2000Ware_6_01_00_00\libraries\ai\examples\generic_timeseries_classification\f28p55x*
 
+Location of examples for other device families:
+- For C2000 Family (F29x) Example: *C:\ti\f29h85x-sdk_1_04_00_00\examples\ai\generic_timeseries_classification*
+- For Sitara MCU Family (AM13x) Example: *C:\ti\mcu_sdk\examples\ai\generic_timeseries_classification*
+- For Sitara MCU Family (AM26x) Example: *C:\ti\mcu_plus_sdk_am263x_11_03_00_00\examples\ai\generic_timeseries_classification*
+
 ### Running for Target Device
 
 After run the modelmaker from command line is finished. Copy the 4 files (path present below) from Modelmaker to CCS Project. Build the CCS Project, flash the program and start debugging the application. Check for the variable *error* for different sets of test cases preset in test_vector.c.
@@ -156,19 +161,19 @@ After run the modelmaker from command line is finished. Copy the 4 files (path p
 #### Compiled model files
 
 - mod.a: The compiled model is present in this file. 
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/compilation/artifacts/mod.a*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world_example_dsg/run/{date-time}/{model}/compilation/artifacts/mod.a*
   - Path CCS Project: *f28p55x_generic_timeseries_classification/artifacts/mod.a*
 - tvmgen_default.h: Header file to access the model inference APIs from mod.a 
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/compilation/artifacts/tvmgen_default.h*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world_example_dsg/run/{date-time}/{model}/compilation/artifacts/tvmgen_default.h*
   - Path CCS Project: *f28p55x_generic_timeseries_classification/artifacts/tvmgen_default.h*
 
 #### Test data for device verification
 
 - test_vector.c: Test cases to check if the model works on device currently
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/golden_vectors/test_vector.c*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world_example_dsg/run/{date-time}/{model}/training/quantization/golden_vectors/test_vector.c*
   - Path CCS Project: *f28p55x_generic_timeseries_classification/test_vector.c*
 - user_input_config.h: Configuration of feature extraction library in SDK. 
-  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world/run/{date-time}/{model}/training/quantization/golden_vectors/user_input_config.h*
+  - Path Modelmaker: *tinyml-modelmaker/data/projects/hello_world_example_dsg/run/{date-time}/{model}/training/quantization/golden_vectors/user_input_config.h*
   - Path CCS Project: *f28p55x_generic_timeseries_classification/user_input_config.h*
 
 ### Load sample example
@@ -237,12 +242,10 @@ To explore more classification use cases, refer to the following examples:
 - [Gas Sensor](../../examples/gas_sensor/readme.md) - Prediction of the type of gas present in a room
 - [Grid Stability](../../examples/grid_stability/readme.md) - Predicting the stability of a grid
 - [MNIST Image Classification](../../examples/MNIST_image_classification/readme.md) - Classifying the images of integers
-- [NILM Appliance Usage Classification](../../examples/nilm_appliance_usage_classification/readme.md) - 
-- [PLAID NILM Classification](../../examples/PLAID_nilm_classification/readme.md) - 
 - [DC Arc Fault](../../examples/dc_arc_fault/readme.md) - Predict whether an arc is present in circuit or not
 - [WISDM](../../examples/branched_model_parameters/readme.md) - Wearable Hand Movement detection from accelerometer
 
 <hr>
 
 **Update History:**
-- [28th Jan 2026]: Compatible with TinyML ModelMaker v1.3
+- [28th Jan 2026]: Compatible with TinyML ModelMaker v1.3.0

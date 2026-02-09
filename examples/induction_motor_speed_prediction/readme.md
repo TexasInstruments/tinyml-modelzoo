@@ -61,10 +61,10 @@ dataset:
 This zipped dataset is designed to work with Tiny ML ModelMaker. Run the modelmaker with the yaml [configuration](config.yaml) using the below code.
 
 ```bash
-run_tinyml_modelmaker.sh examples/induction_motor_speed_prediction/config.yaml
+run_tinyml_modelzoo.sh examples/induction_motor_speed_prediction/config.yaml
 ```
 
-1. `run_tinyml_modelmaker.sh` is the script to run modelmaker. It take two required arguments.
+1. `run_tinyml_modelzoo.sh` is the script to run modelmaker. It take two required arguments.
 2. `examples/induction_motor_speed_prediction/config.yaml` path of the yaml configuration to run
 
 The users can configure the yaml [configuration](config.yaml) to change parameters related to **data preprocessing, feature extraction**, training, testing, model and model compilation. In this example, we will configure the parameters of feature extraction. In this example we will be using REGR_1k model.
@@ -118,6 +118,7 @@ Run the modelmaker from command line. After the run is finished. Copy the 4 file
   - Path Modelmaker: *tinyml-modelmaker/data/projects/induction_motor_speed_prediction/run/{date-time}/{model}/training/quantization/golden_vectors/user_input_config.h*
   - Path CCS Project: *generic_timeseries_regression/user_input_config.h*
 
+Steps to run a regression example on-device can be found by in the following guide: [Deploying Regression Models from ModelMaker to Device](../../docs/deploying_regression_models_from_modelmaker_to_device/readme.md)
 
 ## Results by running on device
 

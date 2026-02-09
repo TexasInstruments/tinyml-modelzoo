@@ -1,0 +1,24 @@
+common:
+  task_type: generic_timeseries_regression
+  target_device: F28P55
+dataset:
+  dataset_name: Battery_Ma
+  input_data_path: '/home/abhijeet/Downloads/Battery_Ma_Dataset.zip'
+data_processing_feature_extraction:
+  stride_size: 0.5
+  data_proc_transforms:
+  - SimpleWindow
+  frame_size: 512
+  variables: 4
+training:
+  optimizer: adam
+  lr_scheduler: cosineannealinglr
+  model_name: REGR_13k
+  batch_size: 512
+  training_epochs: 500  # use 500 epochs for a better R2 score, RMSE
+  lambda_reg: 0.01
+  num_gpus: 1
+  quantization: 2 # 0 for float model, 2 for 8 bit quantized model
+  partial_quantization: True # input batchnorm, first conv/linear layer and last fc layer are not quantized, default is False
+testing: {}
+compilation: {}

@@ -13,7 +13,7 @@
 
 ## Overview
 
-This guide walks you through the process of taking a timeseries regression model trained in **TinyML Modelzoo** and running it **on a Texas Instruments (TI) microcontroller**. Timeseries regression predicts target variable based on independent variables, and previous context.
+This guide walks you through the process of taking a timeseries regression model trained in **TinyML Modelzoo** and running it on a Texas Instruments (TI) microcontroller. Timeseries regression predicts target variable based on independent variables, and previous context.
 
 To learn more about running timeseries regression examples on ModelMaker, refer to the [Generic TimeSeries Regression Example](../../examples/generic_timseries_regression/readme.md), which demonstrates how to run regression examples using a synthetically generated dataset.
 
@@ -29,11 +29,10 @@ Ensure you have a TI LaunchPad for your target device. The following devices are
 
 | Device Family | Device |
 |---------------|--------|
-| C2000 (F28x) | F28003x, F28004x, F28P55x, F28P65x |
-| C2000 (F29x) | F29H85x |
-| MSPM0 | MSPM33C321Ax |
-| Sitara | AM13E2x |
-| Sitara MCU | AM263x |
+| C2000 (F28x) | F28003x, F28004x, F280013x, F280015x, F28P55x, F28P65x, F2837x |
+| C2000 (F29x) | F29H85x, F29P58x, F29P32x |
+| MSPM33 | MSPM33C321Ax |
+| Sitara MCU | AM263x, AM263P, AM261 |
 
 ---
 
@@ -84,17 +83,20 @@ tinyml-modelmaker/
 ```
 
 **Note:** Choose the golden vectors based on the model type you compiled in ModelMaker:
-- **Float model (non-quantized):** Use golden vectors from `training/base/golden_vectors/`
-- **Quantized model:** Use golden vectors from `training/quantization/golden_vectors/`
+- **Float model (non-quantized):** Use golden vectors from `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/training/base/golden_vectors/`
+- **Quantized model:** Use golden vectors from `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/training/quantization/golden_vectors/`
+
+
+If quantization is not used i.e. set to 0, the post_training_analysis folder is present in `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/training/base/`
 
 ### Exact File Locations
 
 | File | Float Model Location | Quantized Model Location |
 |------|---------------------|--------------------------|
-| **mod.a** | `compilation/artifacts/mod.a` | `compilation/artifacts/mod.a` |
-| **tvmgen_default.h** | `compilation/artifacts/tvmgen_default.h` | `compilation/artifacts/tvmgen_default.h` |
-| **test_vector.c** | `training/base/golden_vectors/test_vector.c` | `training/quantization/golden_vectors/test_vector.c` |
-| **user_input_config.h** | `training/base/golden_vectors/user_input_config.h` | `training/quantization/golden_vectors/user_input_config.h` |
+| **mod.a** | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/compilation/artifacts/mod.a` | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/compilation/artifacts/mod.a` |
+| **tvmgen_default.h** | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/compilation/artifacts/tvmgen_default.h` | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/compilation/artifacts/tvmgen_default.h` |
+| **test_vector.c** | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/training/base/golden_vectors/test_vector.c` | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/training/quantization/golden_vectors/test_vector.c` |
+| **user_input_config.h** | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/training/base/golden_vectors/user_input_config.h` | `tinyml-modelmaker/data/projects/{dataset-name}/run/{date-time}/{model-name}/training/quantization/golden_vectors/user_input_config.h` |
 
 2. **Code Composer Studio (CCS)**: TI's integrated development environment. Download CCS from [TI's website](https://www.ti.com/tool/CCSTUDIO). Version used in this guide: 20.2.0.
 
@@ -108,10 +110,13 @@ These devices use **C2000Ware SDK**.
 
 | Device | LaunchPad/EVM | Product Page | SDK Download |
 |--------|---------------|--------------|--------------|
+| **F280013x** | [LAUNCHXL-F2800137](https://www.ti.com/tool/LAUNCHXL-F2800137) | [TMS320F2800137](https://www.ti.com/product/TMS320F2800137) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
+| **F280015x** | [LAUNCHXL-F2800157](https://www.ti.com/tool/LAUNCHXL-F2800157) | [TMS320F2800157](https://www.ti.com/product/TMS320F2800157) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
 | **F28003x** | [LAUNCHXL-F280039C](https://www.ti.com/tool/LAUNCHXL-F280039C) | [TMS320F280039C](https://www.ti.com/product/TMS320F280039C) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
 | **F28004x** | [LAUNCHXL-F280049C](https://www.ti.com/tool/LAUNCHXL-F280049C) | [TMS320F280049C](https://www.ti.com/product/TMS320F280049C) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
 | **F28P55x** | [LAUNCHXL-F28P55X](https://www.ti.com/tool/LAUNCHXL-F28P55X) | [TMS320F28P550SJ](https://www.ti.com/product/TMS320F28P550SJ) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
 | **F28P65x** | [LAUNCHXL-F28P65X](https://www.ti.com/tool/LAUNCHXL-F28P65X) | [TMS320F28P650DK](https://www.ti.com/product/TMS320F28P650DK) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
+| **F2837x** | [LAUNCHXL-F28379D](https://www.ti.com/tool/LAUNCHXL-F28379D) | [TMS320F28377D](https://www.ti.com/product/TMS320F28377D) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
 
 **SDK Version**: 6.0.1 (Release: 06_00_01)
 
@@ -122,10 +127,12 @@ These devices use **F29H85x SDK**.
 | Device | LaunchPad/EVM | Product Page | SDK Download |
 |--------|---------------|--------------|--------------|
 | **F29H85x** | [F29H85X-SOM-EVM](https://www.ti.com/tool/F29H85X-SOM-EVM) | [F29H850TU](https://www.ti.com/product/F29H850TU) | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
+| **F29P58x** | - | - | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
+| **F29P32x** | - | - | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
 
 **SDK Version**: 1.00 (Release: 01_00_00)
 
-### MSPM0 Family
+### MSPM33 Family
 
 These devices use **MSPM33 SDK**.
 
@@ -135,23 +142,17 @@ These devices use **MSPM33 SDK**.
 
 **SDK Version**: 1.02.00.00 (Release: 1_02_00_00)
 
-### Sitara Family
-
-These devices use **MSPM33 SDK** (shared SDK).
-
-| Device | Product Page | SDK Download |
-|--------|--------------|--------------|
-| **AM13E2x** | [AM13E2](https://www.ti.com/product/AM13E2) | [MSPM33-SDK](https://www.ti.com/tool/download/MSPM33-SDK) |
-
-**SDK Version**: 1.02.00.00 (Release: 1_02_00_00)
-
 ### Sitara MCU Family (AM26x)
 
 These devices use **MCU-PLUS-SDK**.
 
 | Device | LaunchPad/EVM | Product Page | SDK Download |
 |--------|---------------|--------------|--------------|
-| **AM263x** | [LP-AM263](https://www.ti.com/tool/LP-AM263) | [AM2634](https://www.ti.com/product/AM2634) | [MCU-PLUS-SDK-AM263X](https://www.ti.com/tool/MCU-PLUS-SDK-AM263X) |
+| **AM263** | [LP-AM263](https://www.ti.com/tool/LP-AM263) | [AM2634](https://www.ti.com/product/AM2634) | [MCU-PLUS-SDK-AM263X](https://www.ti.com/tool/MCU-PLUS-SDK-AM263X) |
+| **AM263P** | [LP-AM263P](https://www.ti.com/tool/LP-AM263P) | [AM263P4](https://www.ti.com/product/AM263P4) | [MCU-PLUS-SDK-AM263PX](https://www.ti.com/tool/MCU-PLUS-SDK-AM263PX) |
+| **AM261** | [LP-AM261](https://www.ti.com/tool/LP-AM261) | - | [MCU-PLUS-SDK-AM261X](https://www.ti.com/tool/MCU-PLUS-SDK-AM261X) |
+
+**SDK Version**: 6.0.1 (Release: 06_00_01)
 
 ---
 
@@ -249,7 +250,6 @@ The `test_vector.c` file contains multiple test cases. To test different cases:
 ---
 
 With this workflow, you can create your own generic time series regression applications using the same process.
-
 
 **Update History:**
 - [29th Jan 2026]: Compatible with TinyML ModelMaker v1.3

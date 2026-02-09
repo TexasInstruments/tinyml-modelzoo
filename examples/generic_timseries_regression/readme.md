@@ -38,7 +38,7 @@ The dataset consists of synthetically generated columns:
 - Test: 1 file 
 
 Each file contains 5000 datapoints of generated x corresponding y variable
-The dataset can be downloaded from here: [`/home/abhijeet/Downloads/generic_regression_hello_world.zip`]()
+The dataset can be downloaded from here: [`generic_timeseries_regression_dataset'](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_regression.zip)
 
 ## Preparing the Dataset
 
@@ -65,14 +65,14 @@ For regression tasks, **ModelMaker** expects the dataset to be packaged in a spe
 
 Unlike classification tasks, regression **always requires annotation files**. These tell the tool which files belong to training, validation, and testing sets. The data directory is automatically named 'files' for regression and forecasting tasks.
 
-For this example, we have already prepared the dataset in the required format. You can find the zipped dataset at: [`generic_timeseries_regression.zip`](/home/abhijeet/Downloads/generic_regression_hello_world.zip)
+For this example, we have already prepared the dataset in the required format. You can find the zipped dataset at: [`generic_timeseries_regression_dataset`](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_regression.zip)
 
 ## Usage in Tiny ML ModelMaker
 
 You can run this example directly in **TinyML ModelMaker** using the following command:
 
 ```bash
-./run_tinyml_modelzoo.sh examples/generic_timeseries_regression/config.yaml 
+./run_tinyml_modelzoo.sh ./examples/generic_timeseries_regression/config.yaml 
 ```
 
 The model pipeline is configured using a YAML file, where you can enable or disable different stages such as dataset loading, data processing, feature extraction, training, testing, and compilation depending on your needs.
@@ -100,7 +100,7 @@ Here is how we configured `dataset` section for our hello world dataset example:
 ```yaml
 dataset:
     dataset_name: generic_timeseries_regression
-    input_data_path: '/home/abhijeet/Downloads/generic_regression_hello_world.zip'
+    input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_regression.zip
 ```
 
 ### `data_processing_feature_extraction` section
@@ -146,7 +146,6 @@ You can enable or disable compilation and testing as needed:
 
 ```yaml
 testing: {}
-
 compilation: {}
 ```
 
@@ -185,6 +184,11 @@ Can be found at `data/projects/{dataset_name}/run/{date-time}/{model_name}/train
 
 We plot the prediction by the model vs the actual value, i.e. predicted vs actual plot for the dataset. Also, we plot histogram of Error (actual - predicted) plot along with metrics such as mean, standard deviation, etc.
 
+<p align='center'>
+<img src="./assets/generic_regression_actual_vs_predicted.png"
+alt="float_train_prediction_plot" width="60%"/>
+</p>
+
 **2. Output vs Input File for Test Data**
 
 They are located at `data/projects/{dataset_name}/run/{date-time}/{model_name}/training/base/post_training_analysis/`
@@ -192,6 +196,14 @@ They are located at `data/projects/{dataset_name}/run/{date-time}/{model_name}/t
  With filename results_on_test_set.csv. The file consists of two columns ground_truth, predicted. where ground truth is the true value and predicted is the predicted value by the model on the test data
 
 Also you can see the compiled model at: `data/projects/{dataset_name}/run/{date-time}/{model_name}/compilation`
+
+
+For the generic_timeseries_regression dataset the results on the test set are 
+
+| Metric | Value |
+|----------|----------|
+| RMSE   | 0.13  |
+| R2 score  | 0.99   |
 
 ## Running on Device
 

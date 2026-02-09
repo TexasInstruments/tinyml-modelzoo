@@ -97,6 +97,9 @@ Run the modelmaker from command line. After the run is finished. Copy the 4 file
   - Path Modelmaker: *tinyml-modelmaker/data/projects/torque_measurement/run/{date-time}/{model}/training/quantization/golden_vectors/user_input_config.h*
   - Path CCS Project: *f28p55x_generic_timseries_regression/user_input_config.h*
 
+
+Steps to run this example on-device can be found by following this guide: [Deploying Regression Models from ModelMaker to Device](../../docs/deploying_regression_models_from_modelmaker_to_device/readme.md)
+
 ## Model Metrics
 
 The model successfully completed training on the dataset with notable performance metrics. Analysis of the training logs revealed that the floating-point model achieved an impressive MSE of 12.98 and an R2-Score of 0.994, demonstrating strong predictive accuracy. In comparison, the quantized model showed somewhat diminished but still acceptable performance with an MSE of 83.59 and an R2-Score of 0.963. The model when evalated for test data gave RMSE of 9.40, MSE of 88.36 and R2-Score of 0.98.

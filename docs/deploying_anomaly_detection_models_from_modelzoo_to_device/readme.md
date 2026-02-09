@@ -106,7 +106,7 @@ These devices use **C2000Ware SDK**.
 | **F28P55x** | [LAUNCHXL-F28P55X](https://www.ti.com/tool/LAUNCHXL-F28P55X) | [TMS320F28P550SJ](https://www.ti.com/product/TMS320F28P550SJ) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
 | **F28P65x** | [LAUNCHXL-F28P65X](https://www.ti.com/tool/LAUNCHXL-F28P65X) | [TMS320F28P650DK](https://www.ti.com/product/TMS320F28P650DK) | [C2000Ware](https://www.ti.com/tool/C2000WARE) |
 
-**SDK Version**: 6.0.1 (Release: 06_00_01)
+**SDK Version**: 6.1.0 (Release: 6_01_00_00)
 
 ### C2000 Family (F29x)
 
@@ -116,9 +116,9 @@ These devices use **F29H85x SDK**.
 |--------|---------------|--------------|--------------|
 | **F29H85x** | [F29H85X-SOM-EVM](https://www.ti.com/tool/F29H85X-SOM-EVM) | [F29H850TU](https://www.ti.com/product/F29H850TU) | [F29H85X-SDK](https://www.ti.com/tool/download/F29H85X-SDK/) |
 
-**SDK Version**: 1.00 (Release: 01_00_00)
+**SDK Version**: 1.4.0 (Release: 01_04_00_00)
 
-### MSPM0 Family
+### MSPM33 Family
 
 These devices use **MSPM33 SDK**.
 
@@ -126,17 +126,17 @@ These devices use **MSPM33 SDK**.
 |--------|---------------|--------------|--------------|
 | **MSPM33C321Ax** | [LP-MSPM33C321A](https://www.ti.com/tool/LP-MSPM33C321A) | [MSPM33C321A](https://www.ti.com/product/MSPM33C321A) | [MSPM33-SDK](https://www.ti.com/tool/download/MSPM33-SDK) |
 
-**SDK Version**: 1.02.00.00 (Release: 1_02_00_00)
+**SDK Version**: 1.03.00.00 (Release: 1_03_00_00)
 
-### Sitara Family
+### Sitara MCU Family (AM13x)
 
-These devices use **MSPM33 SDK** (shared SDK).
+These devices use **MCU SDK** (shared SDK).
 
 | Device | Product Page | SDK Download |
 |--------|--------------|--------------|
-| **AM13E2x** | [AM13E2](https://www.ti.com/product/AM13E2) | [MSPM33-SDK](https://www.ti.com/tool/download/MSPM33-SDK) |
+| **AM13E2x** | [AM13E2](https://www.ti.com/product/AM13E2) | [MCU-SDK](https://www.ti.com/tool/download/MCU-SDK-AM13E2X) |
 
-**SDK Version**: 1.02.00.00 (Release: 1_02_00_00)
+**SDK Version**: 1.00.00.00 (Release: 1_00_00_00)
 
 ### Sitara MCU Family (AM26x)
 
@@ -145,6 +145,8 @@ These devices use **MCU-PLUS-SDK**.
 | Device | LaunchPad/EVM | Product Page | SDK Download |
 |--------|---------------|--------------|--------------|
 | **AM263x** | [LP-AM263](https://www.ti.com/tool/LP-AM263) | [AM2634](https://www.ti.com/product/AM2634) | [MCU-PLUS-SDK-AM263X](https://www.ti.com/tool/MCU-PLUS-SDK-AM263X) |
+
+**SDK Version**: 11.02.00.00 (Release: 11_02_00_00)
 
 ---
 

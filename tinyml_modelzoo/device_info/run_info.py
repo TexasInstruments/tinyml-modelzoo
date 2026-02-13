@@ -1207,5 +1207,11 @@ DEVICE_RUN_INFO = {
         'AM263': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
         'AM263P': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
         'AM261': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'}
+    },
+    'ECG_55k_NPU': {
+ 
+        'MSPM0G3507': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
+        'MSPM0G3519': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
+        'MSPM0G5187': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'}
     }
 }

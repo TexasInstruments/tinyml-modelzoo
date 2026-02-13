@@ -145,9 +145,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_AM263: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM263]),
                 constants.TARGET_DEVICE_AM263P: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM263P]),
                 constants.TARGET_DEVICE_AM261: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM261]),
-                constants.TARGET_DEVICE_MSPM0G3507: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM263]),
-                constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM263P]),
-                constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_AM261]),
+                constants.TARGET_DEVICE_MSPM0G3507: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_MSPM0G3507]),
+                constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_MSPM0G3519]),
+                constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=2) | (DEVICE_RUN_INFO['FCST_LSTM8'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]

@@ -164,7 +164,7 @@ _model_descriptions = {
             model_details='Regression Model with 13k params. 3 Conv+BatchNorm+Relu layers + Linear Layer.',
         ),
         'training': dict(
-            model_training_id='REG_TS_CNN_13K',
+            model_training_id='REG_TS_GEN_BASE_13K',
             model_name='REGR_13k',
             target_devices={
                 constants.TARGET_DEVICE_F280013: dict(model_selection_factor=3) | (DEVICE_RUN_INFO['REGR_13k'][constants.TARGET_DEVICE_F280013]),
@@ -195,7 +195,7 @@ _model_descriptions = {
             model_details='Regression Model with 4k params. 2 Conv+BatchNorm+Relu layers + Linear Layer.',
         ),
         'training': dict(
-            model_training_id='REG_TS_CNN_4K',
+            model_training_id='REG_TS_GEN_BASE_4K',
             model_name='REGR_4k',
             target_devices={
                 constants.TARGET_DEVICE_F280013: dict(model_selection_factor=4) | (DEVICE_RUN_INFO['REGR_4k'][constants.TARGET_DEVICE_F280013]),

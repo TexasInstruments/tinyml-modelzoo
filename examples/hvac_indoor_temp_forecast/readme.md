@@ -188,7 +188,7 @@ In this example, we will use the following setup:
 - **C2000Ware Version**: 6.00
 - **Code Composer Studio (CCS)**: Version 20.3.0
 
-Steps to run this example on-device can be found by following this example readme: [Run compiled model on a TI MCU without NPU](https://github.com/TexasInstruments/tinyml-tensorlab/blob/main/tinyml-modelmaker/docs/running_model_on_device_without_npu/readme.md)
+Steps to run this example on-device can be found by following this guide: [Deploying Forecasting Models from ModelMaker to Device](../../docs/deploying_forecasting_models_from_modelmaker_to_device/readme.md)
 
 Upon flashing and running the project we can see the model output matches the golden vectors.
 

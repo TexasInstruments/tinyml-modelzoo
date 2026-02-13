@@ -337,7 +337,6 @@ _model_descriptions = {
     }),
     'CLS_55k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
-            task_type=constants.TASK_TYPE_ECG_CLASSIFICATION,
             model_details='NPU-Optimized Classification Model with ~55k params.\n12 Conv+BatchNorm+Relu layers + MaxPool + Linear Layer.\nLarge kernels decomposed into smaller compliant kernels. Optimized for TI NPU acceleration.',
             help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
@@ -354,7 +353,25 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_55k_NPU'][constants.TARGET_DEVICE_MSPM0G3519]),
                 constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['CLS_55k_NPU'][constants.TARGET_DEVICE_MSPM0G5187]),
             },
-            properties=[dict(type="group", dynamic=True, script="ecgclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]), dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])] + template_gui_model_properties
+        ),
+    }),
+    'ECG_55k_NPU': deep_update_dict(deepcopy(template_model_description), {
+        'common': dict(
+            task_type=constants.TASK_TYPE_ECG_CLASSIFICATION,
+            generic_model=False,
+            model_details='NPU-Optimized Classification Model with ~55k params.\n12 Conv+BatchNorm+Relu layers + MaxPool + Linear Layer.\nLarge kernels decomposed into smaller compliant kernels. Optimized for TI NPU acceleration.',
+            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+        ),
+        'training': dict(
+            model_training_id='CNN_TS_GEN_BASE_55K_NPU',
+            model_name='ECG_55k_NPU',
+            target_devices={
+                constants.TARGET_DEVICE_MSPM0G3507: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['ECG_55k_NPU'][constants.TARGET_DEVICE_MSPM0G3507]),
+                constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['ECG_55k_NPU'][constants.TARGET_DEVICE_MSPM0G3519]),
+                constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=1) | (DEVICE_RUN_INFO['ECG_55k_NPU'][constants.TARGET_DEVICE_MSPM0G5187]),
+            },
+            properties=[dict(type="group", dynamic=True, script="ecgclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]), dict(type="group", dynamic=True, script="ecgclassification.py", name="train_group", label="Training Parameters", default=[])] + template_gui_model_properties
         ),
     }),
     'ArcFault_model_1400_t': deep_update_dict(deepcopy(template_model_description), {
@@ -711,7 +728,7 @@ enabled_models_list = [
     'CLS_6k_NPU',
     'CLS_8k_NPU',
     'CLS_13k_NPU',
-    'CLS_20k_NPU', 'CLS_55k_NPU',
+    'CLS_20k_NPU', 'CLS_55k_NPU', 'ECG_55k_NPU',
     # Application-specific models
     'ArcFault_model_200_t', 'ArcFault_model_300_t', 'ArcFault_model_700_t', 'ArcFault_model_1400_t',
     'MotorFault_model_1_t', 'MotorFault_model_2_t', 'MotorFault_model_3_t', 'PIRDetection_model_1_t',

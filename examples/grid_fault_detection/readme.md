@@ -53,4 +53,5 @@ After doing the above changes in yaml [configuration](config.yaml) file. Run the
 run_tinyml_modelzoo.sh examples/electrical_fault/config.yaml  # Use .\run_tinyml_modelzoo.bat for Windows Terminal/Powershell
 ```
 
+Steps to run this example on-device can be found by following this guide: [Deploying Classification Models from ModelMaker to Device](../../docs/deploying_classification_models_from_modelmaker_to_device/readme.md).
 <hr>

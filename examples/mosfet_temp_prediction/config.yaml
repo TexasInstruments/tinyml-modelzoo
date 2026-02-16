@@ -2,7 +2,7 @@ common:
   task_type: generic_timeseries_regression
   target_device: F29H85
 dataset:
-  dataset_name: induction_motor_speed_prediction
+  dataset_name: mosfet_temp_prediction
   input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/mosfet_temp_prediction.zip
 data_processing_feature_extraction:
   data_proc_transforms: ['SimpleWindow']

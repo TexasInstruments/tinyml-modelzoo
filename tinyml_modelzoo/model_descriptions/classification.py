@@ -1,5 +1,5 @@
 #################################################################################
-# Copyright (c) 2023-2024, Texas Instruments
+# Copyright (c) 2023-2026, Texas Instruments
 # All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -136,7 +136,7 @@ _model_descriptions = {
     'CLS_6k_NPU': deep_update_dict(deepcopy(template_model_description), {
 		'common': dict(
             model_details='NPU-Compliant Classification Model with 6k params.\nDepthwise separable convolutions + Linear Layer.\nLean model. Fully NPU compliant with m4 channels, kH<=7, and DWCONV+PWCONV pattern.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_6K_NPU',
@@ -170,7 +170,7 @@ _model_descriptions = {
     'CLS_1k_NPU': deep_update_dict(deepcopy(template_model_description), {
 		'common': dict(
             model_details='NPU-Compliant Classification Model with 1k params.\n4 Conv+BatchNorm+Relu layers + Linear Layer.\nVery lean model. Fully NPU compliant with m4 channels and kH<=7.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_1K_NPU',
@@ -205,7 +205,7 @@ _model_descriptions = {
     'CLS_100_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~100 params.\n2 Conv+BatchNorm+Relu layers + Adapt Avg Pool + Linear Layer.\nOptimized for TI NPU acceleration with m4 channels and compliant FC input.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_100_NPU',
@@ -224,7 +224,7 @@ _model_descriptions = {
     'CLS_500_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~500 params.\n3 Conv+BatchNorm+Relu layers + Adapt Avg Pool + Linear Layer.\nFills gap between 100 and 1k. Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_500_NPU',
@@ -243,7 +243,7 @@ _model_descriptions = {
     'CLS_2k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~2k params.\n4 Conv+BatchNorm+Relu layers + Adapt Avg Pool + Linear Layer.\nFills gap between 1k and 4k. Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_2K_NPU',
@@ -262,7 +262,7 @@ _model_descriptions = {
     'CLS_4k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~4k params.\n3 Conv+BatchNorm+Relu layers + Linear Layer.\nKernel sizes within NPU limits (kH<=7). Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_4K_NPU',
@@ -281,7 +281,7 @@ _model_descriptions = {
     'CLS_8k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~8k params.\nDepthwise separable convolutions for efficiency.\nFills gap between 6k and 13k. Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_8K_NPU',
@@ -300,7 +300,7 @@ _model_descriptions = {
     'CLS_13k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~13k params.\n6 Conv+BatchNorm+Relu layers + Linear Layer.\nKernel sizes within NPU limits (kH<=7). Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_13K_NPU',
@@ -319,7 +319,7 @@ _model_descriptions = {
     'CLS_20k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~20k params.\n8 Conv+BatchNorm+Relu layers + Linear Layer.\nFills gap between 13k and 55k. Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_20K_NPU',
@@ -338,7 +338,7 @@ _model_descriptions = {
     'CLS_55k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Classification Model with ~55k params.\n12 Conv+BatchNorm+Relu layers + MaxPool + Linear Layer.\nLarge kernels decomposed into smaller compliant kernels. Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_55K_NPU',
@@ -361,7 +361,7 @@ _model_descriptions = {
             task_type=constants.TASK_TYPE_ECG_CLASSIFICATION,
             generic_model=False,
             model_details='NPU-Optimized Classification Model with ~55k params.\n12 Conv+BatchNorm+Relu layers + MaxPool + Linear Layer.\nLarge kernels decomposed into smaller compliant kernels. Optimized for TI NPU acceleration.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='CNN_TS_GEN_BASE_55K_NPU',

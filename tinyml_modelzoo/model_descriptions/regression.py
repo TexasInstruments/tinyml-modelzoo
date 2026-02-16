@@ -1,5 +1,5 @@
 #################################################################################
-# Copyright (c) 2023-2024, Texas Instruments
+# Copyright (c) 2023-2026, Texas Instruments
 # All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -225,7 +225,7 @@ _model_descriptions = {
     'REGR_500_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Regression Model with ~500 params.\n2 Conv+BatchNorm+Relu layers + Linear Layer.\nUltra-compact model. Fully NPU compliant with m4 channels and FC input>=16.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='REG_TS_GEN_BASE_500_NPU',
@@ -255,7 +255,7 @@ _model_descriptions = {
     'REGR_2k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Regression Model with ~2K params.\n3 Conv+BatchNorm+Relu layers + 2 Linear Layers.\nFills gap between 1K and 3K. Fully NPU compliant with m4 channels.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='REG_TS_GEN_BASE_2K_NPU',
@@ -285,7 +285,7 @@ _model_descriptions = {
     'REGR_6k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Regression Model with ~6K params.\nDepthwise separable convolutions + Linear Layers.\nFills gap between 4K and 10K. Fully NPU compliant with DWCONV+PWCONV pattern.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='REG_TS_GEN_BASE_6K_NPU',
@@ -315,7 +315,7 @@ _model_descriptions = {
     'REGR_8k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Regression Model with ~8K params.\n4 Conv+BatchNorm+Relu layers + 2 Linear Layers.\nFills gap between 6K and 10K. Fully NPU compliant with m4 channels.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='REG_TS_GEN_BASE_8K_NPU',
@@ -345,7 +345,7 @@ _model_descriptions = {
     'REGR_20k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             model_details='NPU-Optimized Regression Model with ~20K params.\n4 Conv+BatchNorm+Relu layers + MaxPool + 2 Linear Layers.\nHigh capacity model. Fully NPU compliant with m4 channels and MaxPool<=4.',
-            help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
+            # help_url="file://docs/NPU_CONFIGURATION_GUIDELINES.md"
         ),
         'training': dict(
             model_training_id='REG_TS_GEN_BASE_20K_NPU',

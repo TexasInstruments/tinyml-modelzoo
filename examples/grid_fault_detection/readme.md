@@ -1,5 +1,5 @@
 # Single phase grid fault detection for on-board chargers
-### - Bhanu Vankayalapati
+### - Bhanu Vankayalapati, Adithya Thonse
 <hr>
 
 ## Overview
@@ -23,18 +23,18 @@ The path of this zipped dataset file is already mentioned in [configuration](con
 
 ```yaml
 dataset:
-    input_data_path: 'examples/grid_fault_detection/grid_fault_dataset.zip'
+    input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/grid_fault_dataset.zip
 ```
 
-## Usage in Tiny ML ModelMaker
+## Usage in Tiny ML ModelZoo
 
-This zipped dataset is designed to work with Tiny ML ModelMaker. Run the modelmaker with the yaml [configuration](config.yaml) using the below code.
+This zipped dataset is designed to work with Tiny ML ModelMaker. Run through ModelZoo with the yaml [configuration](config.yaml) using the below code.
 
 ```bash
-run_tinyml_modelmaker.sh examples/grid_fault_detection/config.yaml
+run_tinyml_modelzoo.sh examples/grid_fault_detection/config.yaml  # Use .\run_tinyml_modelzoo.bat for Windows Terminal/Powershell
 ```
 
-1. `run_tinyml_modelmaker.sh` is the script to run modelmaker. It take two required arguments.
+1. `run_tinyml_modelzoo.sh` is the script to run ModelZoo. "run_tinyml_modelzoo.bat" for Windows Terminal/Powershell
 2. `examples/grid_fault_detection/config.yaml` path of the yaml configuration to run
 
 The users can configure the yaml [configuration](config.yaml) to change parameters related to training, testing, model and model compilation. In this example, we will configure the parameters of feature extraction. Since the feature extraction step is handled outside the Tiny ML model maker tool, we set feature extraction to
@@ -42,15 +42,15 @@ The users can configure the yaml [configuration](config.yaml) to change paramete
 ```yaml
 data_processing_feature_extraction:
   data_proc_transforms: ['SimpleWindow']
-  frame_size: 16
+  frame_size: 16  # The dataset here has only 16 values per file, so do not provide a number more than 16
   stride_size: 1
-  variables: 1
+  variables: 1  # Indicates 1 channel (column) of data, i.e: current
 ```
 
-After doing the above changes in yaml [configuration](config.yaml) file. Run the modelmaker again for this dataset.
+After doing the above changes in yaml [configuration](config.yaml) file. Run the ModelZoo again for this dataset.
 
 ```bash
-run_tinyml_modelmaker.sh examples/electrical_fault/config.yaml
+run_tinyml_modelzoo.sh examples/electrical_fault/config.yaml  # Use .\run_tinyml_modelzoo.bat for Windows Terminal/Powershell
 ```
 
 <hr>

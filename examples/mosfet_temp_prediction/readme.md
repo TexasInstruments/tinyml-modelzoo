@@ -1,5 +1,5 @@
 # Accurate MOSFET junction temperature prediction
-### -Lei Ding
+### -Lei Ding, Bhanu Vankayalapati, Adithya Thonse
 <hr>
 
 ## Overview
@@ -68,12 +68,12 @@ This zipped dataset is designed to work with Tiny ML ModelMaker. Run the modelma
 run_tinyml_modelzoo.sh examples/mosfet_temp_prediction/config.yaml
 ```
 
-1. `run_tinyml_modelzoo.sh` is the script to run modelmaker. It take two required arguments.
+1. `run_tinyml_modelzoo.sh` is the script to run Tiny ML Modelzoo. 
 2. `examples/mosfet_temp_prediction/config.yaml` path of the yaml configuration to run
 
 The users can configure the yaml [configuration](config.yaml) to change parameters related to **data preprocessing, feature extraction**, training, testing, model and model compilation. In this example, we will configure the parameters of feature extraction. In this example we will be using REGR_1k model.
 
-REGR_3k is a regression model designed with MLP architecture.
+REGR_3k is a regression model designed with MLP architecture. You can use any of the other models as well. There are plenty other Regression models (starting with REGR*) as mentioned in the main [readme](../../README.md)
 
 
 ## How to run on device
@@ -104,6 +104,7 @@ Run the modelmaker from command line. After the run is finished. Copy the 4 file
   - Path Modelmaker: *tinyml-modelmaker/data/projects/mosfet_temp_prediction/run/{date-time}/{model}/compilation/artifacts/tvmgen_default.h*
   - Path CCS Project: *generic_timeseries_regression/artifacts/tvmgen_default.h*
 
+Steps to run this example on-device can be found by following this guide: [Deploying Regression Models from ModelMaker to Device](../../docs/deploying_regression_models_from_modelmaker_to_device/readme.md).
 
 <hr>
 Update history:

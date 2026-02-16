@@ -63,8 +63,8 @@ tinyml-modelzoo/
 # Navigate to modelzoo
 cd tinyml-modelzoo
 
-# Run an example (e.g., hello_world)
-./run_tinyml_modelzoo.sh examples/hello_world/config.yaml
+# Run an example (e.g., generic_timeseries_classification)
+./run_tinyml_modelzoo.sh examples/generic_timeseries_classification/config.yaml
 ```
 
 **Windows:**
@@ -73,7 +73,7 @@ cd tinyml-modelzoo
 cd tinyml-modelzoo
 
 # Run an example
-run_tinyml_modelzoo.bat examples\hello_world\config.yaml
+run_tinyml_modelzoo.bat examples\generic_timeseries_classification\config.yaml
 ```
 
 ### What Happens When You Run an Example?
@@ -137,12 +137,12 @@ There are two ways to proceed using this toolchain.
 2. However, if you do not find any applications that are of your direct interest, you may as well use the toolchain to do either of the [Supported Task Categories](#supported-task-categories) as mentioned above referring to the generic example for each of them:
 
 
-| Generic Example Type         | Example                              | Description                                                                     |
-|------------------------------|--------------------------------------|---------------------------------------------------------------------------------|
-| Timeseries Classification    | [hello_world](examples/hello_world/) | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
-| Timeseries Regression        | Coming Soon                          |                                                                                 |
-| Timeseries Forecasting       | Coming Soon                          |                                                                                 |
-| Timeseries Anomaly Detection | Coming Soon                          |                                                                                 |
+| Generic Example Type         | Example                                                                              | Description                                                                     |
+|------------------------------|--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| Timeseries Classification    | [generic_timeseries_classification](examples/generic_timeseries_classification/)     | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
+| Timeseries Regression        | [generic_timeseries_regression](examples/generic_timeseries_regression/)             | Generic regression example for continuous value prediction.                     |
+| Timeseries Forecasting       | [generic_timeseries_forecasting](examples/generic_timeseries_forecasting/)           | Generic forecasting example for time series prediction.                         |
+| Timeseries Anomaly Detection | [generic_timeseries_anomalydetection](examples/generic_timeseries_anomalydetection/) | Generic anomaly detection example using autoencoders.                           |
 
 ---
 

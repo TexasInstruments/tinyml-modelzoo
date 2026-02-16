@@ -1,0 +1,21 @@
+common:
+  task_type: generic_timeseries_classification
+  target_device: F29H85
+dataset:
+  dataset_name: grid_fault
+  input_data_path: '/home/a0504386/model_maker/tinyml-modelzoo/examples/grid_fault_detection/grid_fault_dataset.zip'
+data_processing_feature_extraction:
+  data_proc_transforms: ['SimpleWindow']
+  frame_size: 16
+  stride_size: 1
+  variables: 1
+training:
+  model_name: CLS_1k_NPU
+  num_gpus: 0
+  batch_size: 500
+  training_epochs: 250
+  num_gpus: 0
+testing:
+  skip_train: false
+  skip_quant: true
+compilation: {}

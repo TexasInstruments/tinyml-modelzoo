@@ -3,7 +3,7 @@ common:
   target_device: F29H85
 dataset:
   dataset_name: grid_fault
-  input_data_path: '/home/a0504386/model_maker/tinyml-modelzoo/examples/grid_fault_detection/grid_fault_dataset.zip'
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/grid_fault_dataset.zip
 data_processing_feature_extraction:
   data_proc_transforms: ['SimpleWindow']
   frame_size: 16
@@ -12,10 +12,7 @@ data_processing_feature_extraction:
 training:
   model_name: CLS_1k_NPU
   num_gpus: 0
-  batch_size: 500
+  batch_size: 512
   training_epochs: 250
-  num_gpus: 0
-testing:
-  skip_train: false
-  skip_quant: true
+testing: {}
 compilation: {}

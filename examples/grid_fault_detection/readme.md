@@ -43,7 +43,7 @@ The users can configure the yaml [configuration](config.yaml) to change paramete
 data_processing_feature_extraction:
   data_proc_transforms: ['SimpleWindow']
   frame_size: 16
-  stride_size: 0
+  stride_size: 1
   variables: 1
 ```
 
@@ -52,7 +52,5 @@ After doing the above changes in yaml [configuration](config.yaml) file. Run the
 ```bash
 run_tinyml_modelmaker.sh examples/electrical_fault/config.yaml
 ```
-
-You can see that, you don't encounter any error during modelmaker run. This is because the feature extraction was succesfully able to mitigate the mulitcollinearity problem. This will resolve the error of to train the model properly with good hyper parameters.
 
 <hr>

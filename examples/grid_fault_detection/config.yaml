@@ -2,7 +2,7 @@ common:
   task_type: generic_timeseries_classification
   target_device: F29H85
 dataset:
-  dataset_name: grid_fault
+  dataset_name: grid_fault_detection
   input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/grid_fault_dataset.zip
 data_processing_feature_extraction:
   data_proc_transforms: ['SimpleWindow']

@@ -440,6 +440,8 @@ Key steps:
 |--------|-----|-------------|-------|
 | CC2755 | No | 96 MHz Arm Cortex-M33 wireless MCU | Optimized for PIR/wireless apps |
 | CC1352 | No | Arm Cortex-M4 wireless MCU | Sub-1GHz and 2.4GHz |
+| CC1354 | No | Arm Cortex-M33 wireless MCU | Sub-1GHz and 2.4GHz |
+| CC35X1 | No | Arm Cortex-M33 wireless MCU | Wi-Fi + BLE combo |
 
 ---
 

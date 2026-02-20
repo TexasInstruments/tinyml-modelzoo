@@ -2,9 +2,9 @@ common:
   task_type: motor_fault
   target_device: MSPM0G5187
 dataset:
-  dataset_name: fan_blower_imbalance_dsi
-  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/fan_blower_imbalance_dsi.zip
-
+  dataset_name: fan_blower_imbalance_dsi_PLS_2_3_1_16_FEB
+  input_data_path: "/mnt/c/Users/a0507182/tensorlab/fan_blower_imbalance_DEE.zip"
+  # split_type: 'within_files'
 data_processing_feature_extraction:
   feature_extraction_name: MotorFault_256Input_FE_RFFT_16Feature_8Frame_3InputChannel_removeDC_2D1
 #   feat_ext_transform: [ 'FFT_Q15', 'Q15_SCALE', 'Q15_MAG', 'DC_REMOVE', 'BIN_Q15', 'CONCAT' ]

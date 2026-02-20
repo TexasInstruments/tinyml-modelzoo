@@ -1,4 +1,4 @@
-# ECG Classification
+# Motor Bearing Fault
 
   A simple timeseries classification example classify 5 bearing fault types plus normal operation from vibration data.
 
@@ -8,11 +8,11 @@
 
   **Windows:**
   ```bash
-  .\run_tinyml_modelzoo.bat examples\ecg_classification\<config_file>
+  .\run_tinyml_modelzoo.bat examples\motor_bearing_fault\<config_file>
 ```
-**Linux:**
+** Linux:**
   ```bash
-  ./run_tinyml_modelzoo.sh examples/ecg_classification/<config_file>
+  ./run_tinyml_modelzoo.sh examples/motor_bearing_fault/<config_file>
 ```
  ## Available Default Configurations For Each Device Family
 

@@ -2,7 +2,7 @@
 common:
     target_module: 'timeseries'
     task_type: 'pir_detection'
-    target_device: 'MSPM0G5187'
+    target_device: 'MSPM0G3507'
     run_name: '{date-time}/{model_name}'
 dataset:
     # enable/disable dataset loading

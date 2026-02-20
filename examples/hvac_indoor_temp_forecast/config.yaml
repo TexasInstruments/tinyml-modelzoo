@@ -27,5 +27,4 @@ training:
   output_int: false
 testing: {}
 compilation:
-  keep_libc_files: true
   compile_preset_name: forced_soft_npu_preset

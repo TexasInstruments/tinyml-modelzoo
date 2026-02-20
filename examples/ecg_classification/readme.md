@@ -1,6 +1,6 @@
 # ECG Classification
 
-  A simple timeseries classification example classify 5 bearing fault types plus normal operation from vibration data.
+
 
   ## How to Run
 
@@ -17,6 +17,6 @@
  ## Available Default Configurations For Each Device Family
 
  
-  - config.yaml - F28P55
+  - config.yaml - AM13E2
   - config_MSPM0.yaml - MSPM0G5187
 

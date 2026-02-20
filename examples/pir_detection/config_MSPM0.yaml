@@ -2,13 +2,12 @@
 common:
     target_module: 'timeseries'
     task_type: 'pir_detection'
-    target_device: 'MSPM0G3507'
+    target_device: 'MSPM0G5187'
     run_name: '{date-time}/{model_name}'
 dataset:
     # enable/disable dataset loading
     enable: True #False
-    dataset_name: pir_detection
-    input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/pir_detection_classification_dsk.zip
+    dataset_name: pir_detection_classification
     
 data_processing_feature_extraction: # One or more can be cascaded in the list
     data_proc_transforms: []
@@ -21,10 +20,9 @@ training:
     model_name: 'PIRDetection_model_1_t'
     model_config: ''
     batch_size: 64
-    training_epochs: 20
+    training_epochs: 100
     num_gpus: 0  # 1
-    learning_rate: 0.0001
-    weight_decay: 1e-10
+    learning_rate: 0.001
 
 testing:
     enable: True

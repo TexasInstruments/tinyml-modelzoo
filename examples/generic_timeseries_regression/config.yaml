@@ -15,7 +15,7 @@ training:
   lr_scheduler: cosineannealinglr
   model_name: REGR_2k
   batch_size: 256
-  training_epochs: 50
+  training_epochs: 45
   lambda_reg: 0.01
   num_gpus: 1
   quantization: 2 # 0 for float model, 2 for 8 bit quantized model

@@ -202,9 +202,9 @@ For the generic_timeseries_regression dataset the results on the test set are
 
 | Model | RMSE | R2 Score  |
 |----------|----------|----------|
-| Float Model   | 0.13  | 0.97  | 
-| Partially Quantized Model  | 0.10   | 0.98 |
-| Fully Quantized Model  | 0.10   | 0.98 |
+| Float Model   | 0.15  | 0.95  | 
+| Partially Quantized Model  | 0.11   | 0.98 |
+| Fully Quantized Model  | 0.11   | 0.97 |
 
 For Float Model Configuration is :
 ```yaml

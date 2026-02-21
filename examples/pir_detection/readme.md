@@ -6,7 +6,7 @@
 
   After completing the repository setup, run the following command from the `tinyml-modelzoo` directory:
 
-  **Windows:**
+**Windows:**
   ```bash
   .\run_tinyml_modelzoo.bat examples\pir_detection\<config_file>
 ```

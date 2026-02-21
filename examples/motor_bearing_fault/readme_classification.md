@@ -10,7 +10,7 @@
   ```bash
   .\run_tinyml_modelzoo.bat examples\motor_bearing_fault\<config_file>
 ```
-** Linux:**
+**Linux:**
   ```bash
   ./run_tinyml_modelzoo.sh examples/motor_bearing_fault/<config_file>
 ```

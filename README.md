@@ -434,7 +434,7 @@ Key steps:
 
 | Device | NPU | Description        | Notes                     |
 |--------|-----|--------------------|---------------------------|
-| AM13E2 | Yes | Arm Cortex-M33 MCU | NPU-accelerated, CLI only |
+| AM13E2 | Yes | Arm Cortex-M33 MCU | NPU-accelerated |
 
 ### AM26x Family (Arm Cortex-R5)
 

@@ -428,6 +428,12 @@ Key steps:
 |--------|-----|-------------|-------|
 | MSPM33C32 | No | 160 MHz Arm Cortex-M33, TrustZone | 1MB flash, 256kB SRAM |
 | MSPM33C34 | No | 160 MHz Arm Cortex-M33 | High performance |
+
+
+### AM13 Family (Arm Cortex-M33)
+
+| Device | NPU | Description        | Notes                     |
+|--------|-----|--------------------|---------------------------|
 | AM13E2 | Yes | Arm Cortex-M33 MCU | NPU-accelerated, CLI only |
 
 ### AM26x Family (Arm Cortex-R5)

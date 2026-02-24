@@ -22,14 +22,11 @@
 
   1. Hardware:
      - MSPM0G5187 microcontroller [Link](https://www.ti.com/product/MSPM0G5187)
-     - LP-MSPM0G5187 LaunchPad Development Kit
      - UART connection to host PC
 
   2. Software:
      - Code Composer Studio 12.x or later
      - MSPM0 SDK 2.08.00 or later
-     - TI Edge AI Studio
-     - Host GUI application for image capture and display
 
 ## Dataset Information
 
@@ -40,16 +37,6 @@
   - **Image Format:** 28x28 grayscale PNG images
   - **Download:** [mnist_classes.zip](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/mnist_classes.zip)
 
-  Dataset structure:
-  mnist_classes/
-  └── classes/
-      ├── 0/
-      │   ├── 000000.png
-      │   └── ...
-      ├── 1/
-      │   └── ...
-      └── 9/
-          └── ...
 
 For dataset recreation instructions, refer to `readme_dataset_creation.md`.
 
@@ -99,8 +86,9 @@ After completing the repository setup, run the following command from the `tinym
   .\run_tinyml_modelzoo.bat examples\character_recognition\config_MSPM0.yaml
 ```
 
+
+**Linux:**
 ```bash
-  Linux:
   ./run_tinyml_modelzoo.sh examples/character_recognition/config_MSPM0.yaml
 ```
 

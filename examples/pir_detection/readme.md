@@ -2,7 +2,7 @@
 
 ## Overview
 
-  The PIR Motion Detection application is an Edge AI solution that runs on the MSPM0G5187 microcontroller with integrated Neural Processing Unit (NPU). It classifies passive infrared (PIR) sensor signals into different motion categories in real-time, enabling intelligent motion detection for security systems, smart home automation, and occupancy sensing. This reference design uses the EdgeAI Sensor Boosterpack (TIDA-010997) with machine learning inference to distinguish between human motion, background motion, and pet motion.
+  The PIR Motion Detection application is an Edge AI solution that runs on the MSPM0G5187 microcontroller with integrated Neural Processing Unit (NPU). It classifies passive infrared (PIR) sensor signals into different motion categories in real-time, enabling intelligent motion detection for security systems, smart home automation, and occupancy sensing. 
 
 ## Problem and Solution
 
@@ -22,7 +22,6 @@
   1. Hardware:
      - MSPM0G5187 microcontroller with integrated NPU [Link](https://www.ti.com/product/MSPM0G5187)
      - EdgeAI Sensor Boosterpack (TIDA-010997) with PIR sensor
-     - LP-MSPM0G5187 LaunchPad Development Kit
 
   2. Software:
      - Code Composer Studio 12.x or later
@@ -31,7 +30,7 @@
 
 ## Dataset Information
 
-  The example uses the `pir_detection_classification` dataset which contains labeled PIR sensor recordings categorized into three motion classes:
+  The example uses the `pir_detection_classification` [Link]( https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/pir_detection_classification_dsk.zip) dataset which contains labeled PIR sensor recordings categorized into three motion classes:
 
   - **Human Motion**: Movement patterns characteristic of human activity
   - **Background Motion**: Environmental disturbances and noise

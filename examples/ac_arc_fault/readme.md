@@ -21,14 +21,14 @@
 
 ## System Components
 
-  1. Hardware:
-    - MSPM0G5187 microcontroller with integrated NPU [Link](https://www.ti.com/product/MSPM0G5187)
-    - TIDA-010971 Analog Front End with PCB Rogowski coil [Link](https://www.ti.com/lit/df/slvrbz4/slvrbz4.pdf?ts=1771928618141&ref_url=https%253A%252F%252Fwww.google.com%252F)
-    - LP-MSPM0G5187 LaunchPad Development Kit
-  2. Software:
-    - Code Composer Studio 12.x or later
-    - MSPM0 SDK 2.08.00 or later
-    - TI Edge AI Studio
+1. Hardware:
+- MSPM0G5187 microcontroller with integrated NPU [Link](https://www.ti.com/product/MSPM0G5187)
+- TIDA-010971 Analog Front End with PCB Rogowski coil [Link](https://www.ti.com/lit/df/slvrbz4/slvrbz4.pdf?ts=1771928618141&ref_url=https%253A%252F%252Fwww.google.com%252F)
+
+2. Software:
+- Code Composer Studio 12.x or later
+- MSPM0 SDK 2.08.00 or later
+- TI Edge AI Studio
 
  ## Dataset Labelling
 
@@ -61,67 +61,92 @@
 
   Four pre-configured model architectures:
 
-  1. ArcFault_model_200_t:
-    - Simplest, smallest & fastest model
-    - ~200 parameters, 3.6KB flash, 197.82μs inference time
-    - 99.60% accuracy
-  2. ArcFault_model_300_t:
-    - ~300 parameters, 3.9KB flash, 246.91μs inference time
-    - 99.60% accuracy
-  3. ArcFault_model_700_t:
-    - Sweet spot between speed & memory
-    - ~800 parameters, 4.5KB flash, 288.36μs inference time
-    - 99.42% accuracy
-  4. ArcFault_model_1400_t (Recommended):
-    - Most accurate model
-    - ~1600 parameters, 5.6KB flash, 397.51μs inference time
-    - 99.88% accuracy
+1. ArcFault_model_200_t:
+
+- Simplest, smallest & fastest model
+- ~200 parameters, 3.6KB flash, 197.82μs inference time
+- 99.60% accuracy
+
+2. ArcFault_model_300_t:
+
+- ~300 parameters, 3.9KB flash, 246.91μs inference time
+- 99.60% accuracy
+
+3. ArcFault_model_700_t:
+
+- Sweet spot between speed & memory
+- ~800 parameters, 4.5KB flash, 288.36μs inference time
+- 99.42% accuracy
+
+4. ArcFault_model_1400_t (Recommended):
+
+- Most accurate model
+- ~1600 parameters, 5.6KB flash, 397.51μs inference time
+- 99.88% accuracy
 
 ## Model Architecture Options(Available on Tensorlab CLI Tools)
 
   Eleven pre-configured model architectures:
 
-  1. CLS_100_NPU:
+1. CLS_100_NPU:
+
     - Ultra-compact model
     - ~100 parameters, CNN architecture
     - NPU compatible
-  2. CLS_500_NPU:
+
+2. CLS_500_NPU:
+
     - Compact model
     - ~500 parameters, CNN architecture
     - NPU compatible
-  3. CLS_1k_NPU:
+3. CLS_1k_NPU:
     - Lightweight 2-layer CNN
     - ~1K parameters, CNN architecture
     - NPU compatible
-  4. CLS_2k_NPU:
+4. CLS_2k_NPU:
+
     - 2-layer model
     - ~2K parameters, CNN architecture
     - NPU compatible
-  5. CLS_ResAdd_3k:
+
+5. CLS_ResAdd_3k:
+
     - Residual connections with addition
     - ~3K parameters, ResNet (Add) architecture
     - CPU only
-  6. CLS_ResCat_3k:
+
+6. CLS_ResCat_3k:
+
     - Residual connections with concatenation
     - ~3K parameters, ResNet (Cat) architecture
     - CPU only
-  7. CLS_4k_NPU:
+
+7. CLS_4k_NPU:
+
     - Balanced model
     - ~4K parameters, CNN architecture
     - NPU compatible
-  8. CLS_6k_NPU:
+
+8. CLS_6k_NPU:
+
     - Depthwise separable convolutions
     - ~6K parameters, CNN (DW-Sep) architecture
     - NPU compatible
-  9. CLS_8k_NPU:
+
+9. CLS_8k_NPU:
+
     - Depthwise separable convolutions
     - ~8K parameters, CNN (DW-Sep) architecture
     - NPU compatible
-  10. CLS_13k_NPU:
+
+10. CLS_13k_NPU:
+
     - Higher capacity model
     - ~13K parameters, CNN architecture
     - NPU compatible
-  11. CLS_20k_NPU:
+
+11. CLS_20k_NPU:
+
     - High capacity model
     - ~20K parameters, CNN architecture
     - NPU compatible
@@ -130,16 +155,16 @@
 
 NOTE: Running the config yaml takes care of everything including feature extraction, training, quantization and compilation. 
 
-  1. Training:
-    - Use TI Edge AI Studio (GUI) or tinyml-tensorlab (CLI)
-    - Batch size: 50, Learning rate: 0.04, Optimizer: SGD
-    - Enable Quantize-Aware Training for INT8 accuracy
-  2. Quantization:
-    - INT8 quantization required-Enabled in the config file by default aswell as in Edge AI Studio
-    - ~4x reduction in model size
-  3. Compilation:
-    - TI Neural Network Compiler converts trained model
-    - Generates model.a, interface headers, and configuration
+1. Training:
+- Use TI Edge AI Studio (GUI) or tinyml-tensorlab (CLI)
+- Batch size: 50, Learning rate: 0.04, Optimizer: SGD
+- Enable Quantize-Aware Training for INT8 accuracy
+2. Quantization:
+- INT8 quantization required-Enabled in the config file by default aswell as in Edge AI Studio
+- ~4x reduction in model size
+3. Compilation:
+- TI Neural Network Compiler converts trained model
+- Generates model.a, interface headers, and configuration
 
 ## Performance Metrics
 

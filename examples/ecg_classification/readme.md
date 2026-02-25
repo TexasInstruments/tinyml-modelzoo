@@ -5,6 +5,12 @@
 
   The ECG Classification application is an Edge AI solution that runs on the MSPM0G5187 microcontroller with integrated Neural Processing Unit (NPU). It classifies electrocardiogram signals into different cardiac conditions in real-time, enabling portable and low-power heart monitoring devices. 
 
+**⚠️ Device Support:** While this documentation focuses on the **MSPM0G5187**, the following device are also fully supported:
+  - **AM13E2**
+  - **F28P55**=
+
+Check the `config_<device>.yaml` files for device-specific configurations.
+
 ## Problem and Solution
 
   - Cardiovascular diseases are the leading cause of death globally, accounting for approximately 17.9 million deaths annually

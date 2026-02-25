@@ -4,6 +4,13 @@
 
   The PIR Motion Detection application is an Edge AI solution that runs on the MSPM0G5187 microcontroller with integrated Neural Processing Unit (NPU). It classifies passive infrared (PIR) sensor signals into different motion categories in real-time, enabling intelligent motion detection for security systems, smart home automation, and occupancy sensing. 
 
+**⚠️ Device Support:** While this documentation focuses on the **MSPM0G5187**, the following device are also fully supported:
+  - **CC35X1** 
+  - **CC1352**
+  - **CC1354** 
+
+Check the `config_<device>.yaml` files for device-specific configurations.
+
 ## Problem and Solution
 
   - Traditional PIR sensors only detect presence/absence without distinguishing motion sources

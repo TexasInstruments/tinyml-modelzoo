@@ -83,13 +83,13 @@ After completing the repository setup, run the following command from the `tinym
 
 **Windows:**
 ```bash
-  .\run_tinyml_modelzoo.bat examples\character_recognition\config_MSPM0.yaml
+  .\run_tinyml_modelzoo.bat examples\MNIST_image_classification\config_image_classification_mnist.yaml
 ```
 
 
 **Linux:**
 ```bash
-  ./run_tinyml_modelzoo.sh examples/character_recognition/config_MSPM0.yaml
+  ./run_tinyml_modelzoo.sh examples/MNIST_image_classification/config_image_classification_mnist.yaml
 ```
 
 ## References

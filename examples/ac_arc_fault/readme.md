@@ -111,7 +111,7 @@ NOTE: Running the config yaml takes care of everything including feature extract
 
 **Linux:**
  ```bash
- .\run_tinyml_modelzoo.bat examples\ac_arc_fault\config_MSPM0.yaml
+ ./run_tinyml_modelzoo.sh examples/ac_arc_fault/config_MSPM0.yaml
  ```
 
 

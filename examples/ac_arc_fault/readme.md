@@ -78,8 +78,6 @@ Eleven pre-configured CNN/ResNet models available (~100 to ~20K parameters), mos
 ## Performance Metrics for MSPM0G5187 with NPU
 
   - End-to-end latency: <150ms (including 8-frame voting)
-  - Model size: ~5.6KB flash
-  - SRAM usage: ~24KB (out of 32KB available)
   - Detection accuracy: >99%
   - False positive rate: 0.01%
   - Precision: 99.97%

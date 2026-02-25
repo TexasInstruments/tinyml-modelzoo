@@ -61,7 +61,7 @@
 
   Four pre-configured model architectures:
 
-| Model | Parameters | Flash | Inference Time | Accuracy | Notes |
+| Model | Parameters | Flash(MSPM0G5187) | Inference Time | Accuracy | Notes |
   |-------|------------|-------|----------------|----------|-------|
   | ArcFault_model_200_t | ~200 | 3.6 KB | - | 99.60% | Simplest, smallest & fastest |
   | ArcFault_model_300_t | ~300 | 3.9 KB | - | 99.60% | - |

@@ -7,7 +7,7 @@
 
 **⚠️ Device Support:** While this documentation focuses on the **MSPM0G5187**, the following device are also fully supported:
   - **AM13E2**
-  - **F28P55**=
+  - **F28P55**
 
 Check the `config_<device>.yaml` files for device-specific configurations.
 
@@ -46,12 +46,11 @@ Check the `config_<device>.yaml` files for device-specific configurations.
   - Mild: Minor cardiac abnormalities
   - Other: Other cardiac conditions requiring attention
 
-## Feature Extraction Pipeline
+## Feature Extraction Pipeline for MSPM0
 
   1. ECG Signal Acquisition: 2500 samples per frame
-  2. Signal Normalization
-  3. Roundoff processing for INT8 compatibility
-  4. Single frame input to model
+  2. Signal Normalization by Rounding Off
+  3. Single frame input to model
 
 ## Model Architecture Options (Available on Tensorlab CLI Tools)
 
@@ -59,10 +58,8 @@ Check the `config_<device>.yaml` files for device-specific configurations.
 - CNN architecture optimized for NPU
 - ~55K parameters
 - NPU compatible
-- Balanced accuracy and performance
 
-
-## Model Performance
+## Model Performance for MSPM0
 
   - Accuracy: ~97%
 
@@ -110,6 +107,8 @@ NOTE: Running the config yaml handles everything including feature extraction, t
   - https://software-dl.ti.com/mctools/nnc/mcu/users_guide/
   - TI Model Training Guide: https://github.com/TexasInstruments/tinyml-tensorlab/tree/main
   - https://en.wikipedia.org/wiki/Electrocardiography
+  - MSPM0 SDK: https://www.ti.com/tool/MSPM0-SDK
+- EdgeAI Software Guide: https://dev.ti.com/tirex/explore/node?node=A__AKCnvqDed-Plz2JO5Umb3Q__MSPM0-SDK__a3PaaoK__LATEST
 
 
 

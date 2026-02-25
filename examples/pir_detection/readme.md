@@ -8,6 +8,7 @@
   - **CC35X1** 
   - **CC1352**
   - **CC1354** 
+  - **CC2755**
 
 Check the `config_<device>.yaml` files for device-specific configurations.
 
@@ -70,7 +71,8 @@ Data was captured using the EdgeAI Sensor Boosterpack with motion recorded from 
 
 ## AI Model Performance
 
-  - **Accuracy:** ~92.46%
+  - **Accuracy:** ~98% (*Accuracy numbers for CC1352 with floating point feature extraction*)
+  - **Accuracy:** ~92.46% (*Accuracy numbers on MSPM0 with fixed point feature extraction*)
 
 
 ## Training and Deployment Process
@@ -109,9 +111,11 @@ Data was captured using the EdgeAI Sensor Boosterpack with motion recorded from 
 ## Available Default Configurations For Each Device Family
 
  
-  - config.yaml - CC1352
+  - config.yaml - CC2755
   - config_MSPM0.yaml - MSPM0G5187
-  - config_CC1352.yaml - CC2755
+  - config_CC1352.yaml - CC1352
+  - config_CC1354.yaml - CC1354
+  - config_CC35X1.yaml - CC35X1
 
 ## References
 
@@ -120,5 +124,6 @@ Data was captured using the EdgeAI Sensor Boosterpack with motion recorded from 
   - https://software-dl.ti.com/mctools/nnc/mcu/users_guide/
   - TI Model Training Guide: https://github.com/TexasInstruments/tinyml-tensorlab/tree/main
   - https://en.wikipedia.org/wiki/Passive_infrared_sensor
-  - EdgeAI Software Guide: SDK_INSTALL_DIR/docs/english/middleware/edgeAI/MSPM0_EdgeAI_User_Guide.html
+  - EdgeAI Software Guide: https://dev.ti.com/tirex/explore/node?node=A__AKCnvqDed-Plz2JO5Umb3Q__MSPM0-SDK__a3PaaoK__LATEST
+- MSPM0 SDK: https://www.ti.com/tool/MSPM0-SDK
 

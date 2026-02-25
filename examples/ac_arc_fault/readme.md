@@ -4,7 +4,8 @@
 
 ## Overview
 
-  The AC Arc Fault Detection application is an Edge AI solution that runs on the MSPM0G5187 microcontroller with integrated Neural Processing Unit (NPU). It detects series arc faults in residential and commercial electrical systems, which are a leading cause of electrical fires. This reference design combines the TIDA-010971 analog front end with machine learning inference to achieve high detection accuracy while maintaining immunity to masking loads per UL 1699 guidelines.
+  The AC Arc Fault Detection application is an Edge AI solution that runs on the MSPM0G5187 microcontroller with integrated Neural Processing Unit (NPU). It detects series arc faults in residential and commercial electrical systems, which are a leading cause of electrical fires. This reference design combines the TIDA-010971 analog front end with machine learning inference to achieve high detection accuracy while maintaining immunity to masking loads per UL 1699 guidelines. This application enables engineers to develop Arc Fault Circuit Interrupter (AFCI) products for compliance with National Electrical Code (NEC) requirements while leveraging the power efficiency and performance of Edge AI on microcontrollers.
+  
 
 ## Problem and Solution
 
@@ -15,20 +16,19 @@
 ## Key Performance Targets
 
   - Less than 10ms response time
-  - Less than 10mW MCU active power consumption
   - Greater than 95% detection accuracy
   - Compliance with UL 1699 requirements
 
 ## System Components
 
 1. Hardware:
-- MSPM0G5187 microcontroller with integrated NPU [Link](https://www.ti.com/product/MSPM0G5187)
-- TIDA-010971 Analog Front End with PCB Rogowski coil [Link](https://www.ti.com/lit/df/slvrbz4/slvrbz4.pdf?ts=1771928618141&ref_url=https%253A%252F%252Fwww.google.com%252F)
+    - MSPM0G5187 microcontroller with integrated NPU [Link](https://www.ti.com/product/MSPM0G5187)
+    - TIDA-010971 Analog Front End with PCB Rogowski coil [Link](https://www.ti.com/lit/df/slvrbz4/slvrbz4.pdf?ts=1771928618141&ref_url=https%253A%252F%252Fwww.google.com%252F)
 
 2. Software:
-- Code Composer Studio 12.x or later
-- MSPM0 SDK 2.08.00 or later
-- TI Edge AI Studio
+    - Code Composer Studio 12.x or later
+    - MSPM0 SDK 2.08.00 or later
+    - TI Edge AI Studio
 
  ## Dataset Labelling
 
@@ -61,95 +61,30 @@
 
   Four pre-configured model architectures:
 
-1. ArcFault_model_200_t:
+| Model | Parameters | Flash | Inference Time | Accuracy | Notes |
+  |-------|------------|-------|----------------|----------|-------|
+  | ArcFault_model_200_t | ~200 | 3.6 KB | - | 99.60% | Simplest, smallest & fastest |
+  | ArcFault_model_300_t | ~300 | 3.9 KB | - | 99.60% | - |
+  | ArcFault_model_700_t | ~800 | 4.5 KB | - | 99.42% | Sweet spot between speed & memory |
+  | ArcFault_model_1400_t | ~1600 | 5.6 KB | 0.7 ms | 99.88% | **Recommended** - Most accurate |
 
-- Simplest, smallest & fastest model
-- ~200 parameters, 3.6KB flash, 197.82μs inference time
-- 99.60% accuracy
-
-2. ArcFault_model_300_t:
-
-- ~300 parameters, 3.9KB flash, 246.91μs inference time
-- 99.60% accuracy
-
-3. ArcFault_model_700_t:
-
-- Sweet spot between speed & memory
-- ~800 parameters, 4.5KB flash, 288.36μs inference time
-- 99.42% accuracy
-
-4. ArcFault_model_1400_t (Recommended):
-
-- Most accurate model
-- ~1600 parameters, 5.6KB flash, 397.51μs inference time
-- 99.88% accuracy
 
 ## Model Architecture Options(Available on Tensorlab CLI Tools)
 
-  Eleven pre-configured model architectures:
+Eleven pre-configured CNN/ResNet models available (~100 to ~20K parameters), most with NPU support.
 
-1. CLS_100_NPU:
+  **See tinyml-modelzoo/README.md for full details.**
 
-    - Ultra-compact model
-    - ~100 parameters, CNN architecture
-    - NPU compatible
+## Performance Metrics for MSPM0G5187 with NPU
 
-2. CLS_500_NPU:
-
-    - Compact model
-    - ~500 parameters, CNN architecture
-    - NPU compatible
-3. CLS_1k_NPU:
-    - Lightweight 2-layer CNN
-    - ~1K parameters, CNN architecture
-    - NPU compatible
-4. CLS_2k_NPU:
-
-    - 2-layer model
-    - ~2K parameters, CNN architecture
-    - NPU compatible
-
-5. CLS_ResAdd_3k:
-
-    - Residual connections with addition
-    - ~3K parameters, ResNet (Add) architecture
-    - CPU only
-
-6. CLS_ResCat_3k:
-
-    - Residual connections with concatenation
-    - ~3K parameters, ResNet (Cat) architecture
-    - CPU only
-
-7. CLS_4k_NPU:
-
-    - Balanced model
-    - ~4K parameters, CNN architecture
-    - NPU compatible
-
-8. CLS_6k_NPU:
-
-    - Depthwise separable convolutions
-    - ~6K parameters, CNN (DW-Sep) architecture
-    - NPU compatible
-
-9. CLS_8k_NPU:
-
-    - Depthwise separable convolutions
-    - ~8K parameters, CNN (DW-Sep) architecture
-    - NPU compatible
-
-10. CLS_13k_NPU:
-
-    - Higher capacity model
-    - ~13K parameters, CNN architecture
-    - NPU compatible
-
-11. CLS_20k_NPU:
-
-    - High capacity model
-    - ~20K parameters, CNN architecture
-    - NPU compatible
+  - End-to-end latency: <150ms (including 8-frame voting)
+  - Model size: ~5.6KB flash
+  - SRAM usage: ~24KB (out of 32KB available)
+  - Detection accuracy: >99%
+  - False positive rate: 0.01%
+  - Precision: 99.97%
+  - Recall: 99.72%
+  - F1-Score: 99.84%
 
 ## Training and Deployment Process
 
@@ -165,19 +100,6 @@ NOTE: Running the config yaml takes care of everything including feature extract
 3. Compilation:
 - TI Neural Network Compiler converts trained model
 - Generates model.a, interface headers, and configuration
-
-## Performance Metrics
-
-  - End-to-end latency: <150ms (including 8-frame voting)
-  - Model size: ~5.6KB flash
-  - SRAM usage: ~24KB (out of 32KB available)
-  - Detection accuracy: >99%
-  - False positive rate: 0.01%
-  - Precision: 99.97%
-  - Recall: 99.72%
-  - F1-Score: 99.84%
-
-  This application enables engineers to develop Arc Fault Circuit Interrupter (AFCI) products for compliance with National Electrical Code (NEC) requirements while leveraging the power efficiency and performance of Edge AI on microcontrollers.
 
  ## How to Run
 
@@ -202,4 +124,5 @@ NOTE: Running the config yaml takes care of everything including feature extract
 - [TI Neural Network Compiler Guide](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/)
 - TI Model Training Guide: [tinyml-tensorlab](https://github.com/TexasInstruments/tinyml-tensorlab/tree/main)
 - [AC Arc Fault Detection Theory](https://en.wikipedia.org/wiki/Arc-fault_circuit_interrupter)
-- EdgeAI Software Guide: SDK_INSTALL_DIR/docs/english/middleware/edgeAI/MSPM0_EdgeAI_User_Guide.html
+- EdgeAI Software Guide: https://dev.ti.com/tirex/explore/node?node=A__AKCnvqDed-Plz2JO5Umb3Q__MSPM0-SDK__a3PaaoK__LATEST
+- MSPM0 SDK: https://www.ti.com/tool/MSPM0-SDK

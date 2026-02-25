@@ -53,7 +53,6 @@ For dataset recreation instructions, refer to `readme_dataset_creation.md`.
   1. **Lenet5** (Default):
      - Classic LeNet-5 CNN architecture
      - ~60,000 parameters
-     - CPU inference (no NPU acceleration)
      - Proven architecture for digit recognition
 
 ## Model Performance
@@ -99,3 +98,5 @@ After completing the repository setup, run the following command from the `tinym
   - TI Model Training Guide: https://github.com/TexasInstruments/tinyml-tensorlab/tree/main
   - http://yann.lecun.com/exdb/mnist/
   - https://en.wikipedia.org/wiki/LeNet
+  - EdgeAI Software Guide: https://dev.ti.com/tirex/explore/node?node=A__AKCnvqDed-Plz2JO5Umb3Q__MSPM0-SDK__a3PaaoK__LATEST
+- MSPM0 SDK: https://www.ti.com/tool/MSPM0-SDK

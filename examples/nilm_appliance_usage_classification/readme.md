@@ -161,7 +161,7 @@ After successfully running Modelmaker, you will get four main files:
      data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/golden_vectors
      ```
 
-These four files will be needed while running on device and are attached here in this same directory.
+These four files will be needed while running on device.
 
 In this example, we will use the following setup:
 
@@ -184,7 +184,7 @@ Here are the key performance metrics for the model running on the device:
 
 | Metric               | Value       |
 |----------------------|-------------|
-| **Device Name**      | f28p55x     |
+| **Device Name**      | F28P55x     |
 | **AI Model Cycles**  | 165629      |
 | **Inference Time**   | 1104.19 µs  |
 | **Results Match**    | TRUE        |

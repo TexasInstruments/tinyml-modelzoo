@@ -299,7 +299,7 @@ After successfully running ModelMaker, you will get the compiled model artifacts
 2. **Golden Vectors**:
    - `user_input_config.h` and `test_vector.c` are stored in:
      ```
-     tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/base/golden_vectors
+     tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/golden_vectors
      ```
 
 Steps to run this example on-device can be found by following this guide: [Deploying Forecasting Models from ModelMaker to Device](../../docs/deploying_forecasting_models_from_modelmaker_to_device/readme.md)

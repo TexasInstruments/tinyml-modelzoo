@@ -306,6 +306,8 @@ We have compiled this example using the ti-npu soft preset for F28P55x device, w
      tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/golden_vectors
      ```
 
+These four files will be needed while running on device.
+
 In this example, we will use the following setup:
 
 - **Device**: LAUNCHXL-F28P55X

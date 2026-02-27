@@ -301,7 +301,9 @@ After successfully running ModelMaker, you will get the compiled model artifacts
      ```
      tinyml-modelmaker/data/projects/{dataset_name}/run/{date-time}/{model_name}/training/quantization/golden_vectors
      ```
-
+     
+These four files will be needed while running on device.
+ 
 Steps to run this example on-device can be found by following this guide: [Deploying Forecasting Models from ModelMaker to Device](../../docs/deploying_forecasting_models_from_modelmaker_to_device/readme.md)
 
 <hr>

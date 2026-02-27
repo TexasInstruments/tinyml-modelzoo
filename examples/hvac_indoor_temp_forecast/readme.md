@@ -32,12 +32,12 @@ The dataset consists of time-series samples collected at uniform timesteps and i
 **`indoorTemperature` at the next timestep** (or over a short future horizon. You can do this by setting forecast_horizon parameter in the YAML file.)
 
 
-## Usage in Tiny ML ModelMaker
+## Usage in Tiny ML ModelZoo
 
-Here is the command to use this dataset with Tiny ML ModelMaker:
+Here is the command to use this dataset with Tiny ML ModelZoo:
 
 ```bash
-./run_tinyml_modelmaker.sh examples/hvac_indoor_temp_forecast/config.yaml
+./run_tinyml_modelzoo.sh examples/hvac_indoor_temp_forecast/config.yaml
 ```
 
 Users can configure the model pipeline using a YAML configuration file (like shown in the command above), where different stages (dataset loading, data processing and feature extraction, training, testing, and compilation) can be enabled or disabled based on requirements.

@@ -36,12 +36,12 @@ The classes here correspond to **11 different appliance types**:
 
 In this dataset, each class directory contains files corresponding to the voltage and current measurements when only that appliance class is turned on. While the dataset is extensive, we have taken a subset of it to use with ModelMaker. You can find the dataset subset here: [PLAID_submetered_dataset](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/plaid_nilm_submetered_dataset.zip)
 
-## Usage in Tiny ML ModelMaker
+## Usage in Tiny ML ModelZoo
 
 Here is the command to run the yaml file with TinyML ModelMaker:
 
 ```bash
-./run_tinyml_modelmaker.sh examples/PLAID_nilm_classification/config.yaml
+./run_tinyml_modelzoo.sh examples/PLAID_nilm_classification/config.yaml
 ```
 
 Users can configure the model pipeline using a YAML configuration file (like shown in the command above), where different stages (dataset loading, data processing and feature extraction, training, testing, and compilation) can be enabled or disabled based on requirements.

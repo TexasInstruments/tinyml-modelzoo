@@ -69,7 +69,7 @@ Unlike classification tasks, forecasting **always requires annotation files**. T
 
 For this example, we have already prepared the dataset in the required format. You can find the zipped dataset at: [`generic_timeseries_forecasting.zip`](https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/generic_timeseries_forecasting.zip)
 
-## Usage in Tiny ML ModelMaker
+## Usage in Tiny ML ModelZoo
 
 You can run this example directly in **TinyML ModelMaker** using the following command:
 

@@ -80,4 +80,4 @@ echo.
 
 REM Run training via modelmaker
 cd /d "%MODELMAKER_DIR%"
-python "%RUN_SCRIPT%" "%CONFIG_FILE%" %*
+python "%RUN_SCRIPT%" "%CONFIG_FILE%"

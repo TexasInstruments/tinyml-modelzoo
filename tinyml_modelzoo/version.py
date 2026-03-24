@@ -1,5 +1,4 @@
-#################################################################################
-# Copyright (c) 2023-2026, Texas Instruments
+# Copyright (c) 2018-2025, Texas Instruments
 # All Rights Reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -26,22 +25,27 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#################################################################################
 
-"""
-TinyML Model Zoo - Centralized model definitions for TI microcontrollers.
+import argparse
 
-This package provides:
-- Model class definitions (classification, regression, anomaly detection, forecasting, image)
-- Model metadata and descriptions
-- Device performance information
-- Example configurations
-"""
+__version__ = '1.3.0'
 
-from .models import model_dict, get_model
-from .version import __version__
 
-__all__ = [
-    "model_dict",
-    "get_model",
-]
+def print_version():
+    print(__version__)
+
+
+def print_version_(delimiter):
+    version_str = delimiter.join([f'{r:0>2}' for r in __version__.split('.')])
+    print(version_str)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--delimiter', default=None)
+    args = parser.parse_args()
+    if args.delimiter is not None:
+        print_version_(args.delimiter)
+    else:
+        print_version()
+

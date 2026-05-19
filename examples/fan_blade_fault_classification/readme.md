@@ -12,6 +12,14 @@ Involves using TI toolchains to collect the data and train the model and preview
 
 <hr>
 
+**⚠️ Device Support:** While this documentation focuses on the **F28P55x**, the following devices are also fully supported:
+  - **CC2755**
+  - **CC35X1**
+
+Check the `config_<device>.yaml` files for device-specific configurations.
+
+<hr>
+
 This application example showcases the following story:
 * [Loading your F28P55x device with a Live Data Capture Code](#capturing-data)
 * [Collecting a dataset on Model Composer](#collected-dataset)
@@ -87,6 +95,12 @@ This application example showcases the following story:
 
 * You should be able to see in the Live Preview Mode in this manner: 
 * ![fan_blade_demo_model_composer.png](assets/fan_blade_demo_model_composer.png)
+
+## Available Default Configurations For Each Device Family
+
+  - config.yaml - F28P55
+  - config_CC2755.yaml - CC2755
+  - config_CC35X1.yaml - CC35X1
 
 ## Other Tiny ML Modelmaker Features
 

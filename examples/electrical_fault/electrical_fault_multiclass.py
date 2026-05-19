@@ -27,6 +27,8 @@ class_names = [
 def download_data():
     print("Downloading dataset")
     data = re.get(DATASET_URL)
+    if data.status_code != 200:
+        raise Exception(f"Failed to download dataset. HTTP status code: {data.status_code}")
     with open(f"{DATASET_NAME}.zip", "wb") as f:
         f.write(data.content)
     return None
@@ -62,7 +64,7 @@ def load_data():
             return -1
     data['Target'] = data.apply(map_to_class, axis=1)
     # Convert to string labels for folder naming
-    data['Target'] = data['Target'].apply(lambda x: class_names[x] if x != -1 else "unknown")
+    data['Target'] = data['Target'].apply(lambda x: class_names[x] if 0 <= x < len(class_names) else "unknown")
     return data
 
 def store_datafiles(df):

@@ -13,6 +13,10 @@ Involves using TI toolchains to collect the data and train the model and preview
 <hr>
 
 **⚠️ Device Support:** While this documentation focuses on the **F28P55x**, the following devices are also fully supported:
+  - **CC1312**
+  - **CC1314**
+  - **CC1352**
+  - **CC1354**
   - **CC2755**
   - **CC35X1**
 
@@ -99,6 +103,10 @@ This application example showcases the following story:
 ## Available Default Configurations For Each Device Family
 
   - config.yaml - F28P55
+  - config_CC1312.yaml - CC1312
+  - config_CC1314.yaml - CC1314
+  - config_CC1352.yaml - CC1352
+  - config_CC1354.yaml - CC1354
   - config_CC2755.yaml - CC2755
   - config_CC35X1.yaml - CC35X1
 

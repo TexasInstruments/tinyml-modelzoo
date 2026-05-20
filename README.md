@@ -109,6 +109,7 @@ tinyml-modelzoo/
 |--------|-----|-------------|-------|
 | CC2755 | CDE | 96 MHz Arm Cortex-M33 wireless MCU | Optimized for PIR/wireless apps |
 | CC1312 | No | Arm Cortex-M4F wireless MCU | Sub-1GHz |
+| CC1314 | No | Arm Cortex-M33 wireless MCU | Sub-1GHz |
 | CC1352 | No | Arm Cortex-M4F wireless MCU | Sub-1GHz |
 | CC1354 | No | Arm Cortex-M33 wireless MCU | Sub-1GHz |
 | CC35X1 | CDE | Arm Cortex-M33 wireless MCU | Wi-Fi + BLE combo |

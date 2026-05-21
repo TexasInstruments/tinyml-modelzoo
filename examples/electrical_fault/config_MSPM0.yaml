@@ -4,7 +4,7 @@ common:
 
 dataset:
   dataset_name: electrical_fault
-  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/electrical_fault_multiclass_dataset.zip
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_04_00/datasets/electrical_fault_6class_dataset.zip
 
 data_processing_feature_extraction:
   data_proc_transforms: ['SimpleWindow']
@@ -12,11 +12,6 @@ data_processing_feature_extraction:
   stride_size: 0.01
   variables: 3
   feature_extraction_name: Custom_Default
-#FFT without Binning
-  # feat_ext_transform: ['FFT_Q15', 'DC_REMOVE', 'Q15_MAG', 'LOG_DB', 'CONCAT']
-  # feature_size_per_frame: 128
-  # num_frame_concat: 1
-#FFT with Binning
   feat_ext_transform: ['FFT_Q15', 'DC_REMOVE', 'Q15_MAG', 'BIN_Q15', 'LOG_DB', 'CONCAT']
   feature_size_per_frame: 32
   num_frame_concat: 8

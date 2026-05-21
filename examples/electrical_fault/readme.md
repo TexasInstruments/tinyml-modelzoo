@@ -10,7 +10,7 @@ The fault can be Line-to-line, Line-to-ground, Line-to-line-to-ground and more. 
 
 Users can choose between two dataset options, each processed by a different script to produce a distinct output file:
 - **2-class dataset** (`detect_dataset.xlsx`): Processed by `electrical_fault.py` to create `electrical_fault_dataset.zip` for fault detection (binary classification - fault vs no fault)
-- **6-class dataset** (`classData.csv`): Processed by `electrical_fault_multiclass.py` to create `electrical_fault_multiclass_dataset.zip` for fault type classification (6 fault types based on G,C,B,A combinations)
+- **6-class dataset** (`classData.csv`): Processed by `electrical_fault_6class.py` to create `electrical_fault_6class_dataset.zip` for fault type classification (6 fault types based on G,C,B,A combinations)
 
 <p align="center">  
     <img src="assets/simulink.png" width="280" alt="Simulink Model">
@@ -47,15 +47,15 @@ This creates `electrical_fault_dataset.zip`
 **For 6-class dataset (fault type classification):**
 ```bash
 cd examples/electrical_fault
-python electrical_fault_multiclass.py
+python electrical_fault_6class.py
 ```
-This creates `electrical_fault_multiclass_dataset.zip`
+This creates `electrical_fault_6class_dataset.zip`
 
 The path to the appropriate zipped dataset file should be mentioned in [configuration](config.yaml) yaml under `dataset.input_data_path`, make sure it matches the script you ran.
 
 ```yaml
 dataset:
-    input_data_path: 'examples/electrical_fault/electrical_fault_dataset.zip'   # OR 'examples/electrical_fault/electrical_fault_multiclass_dataset.zip'
+    input_data_path: 'examples/electrical_fault/electrical_fault_dataset.zip'   # OR 'examples/electrical_fault/electrical_fault_6class_dataset.zip'
 ```
 
 ## Usage in Tiny ML ModelZoo

@@ -75,7 +75,7 @@ A generic time-series classification CNN model is used:
 
 | Model | Parameters | Flash (kB) | RAM (kB) | Inference Latency (NPU) | Accuracy |
 |-------|-----------|------------|----------|--------------------------|----------|
-| **CLS_6k** | ~6,000 | 14 | 0.7 | 0.67 ms | 97.57% |
+| **CLS_6k** | ~6,000 | 14 | 0.7 | 0.67 ms | 97.65% |
 
 _NOTE: The above statistics was measured on LP-MSPM0G5187 Launchpad_
 

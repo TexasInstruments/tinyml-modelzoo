@@ -471,9 +471,7 @@ Key steps:
 
 - [TI's Neural Network Compiler Documentation](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/)
 - [NPU Configuration Guidelines](docs/NPU_CONFIGURATION_GUIDELINES.md) - Design models optimized for TI NPU acceleration
-- [Edge AI Studio Model Composer](https://dev.ti.com/modelcomposer/) - No-code GUI for model development
-- [Understanding the Config File](../tinyml-modelmaker/docs/UnderstandingConfigFile.md)
-- [Dataset Format Guide](../tinyml-modelmaker/docs/DatasetFormat_Timeseries_Classification.md)
+- [Edge AI Studio for MCUs](https://www.ti.com/tool/download/EDGE-AI-STUDIO-MCU/) - No-code GUI for data collection & model development
 
 ---
 

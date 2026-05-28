@@ -59,12 +59,7 @@ class CNN_LENET5(GenericModelWithSpec):
 
 
 class CNN_IMG_MOBILENETV1_58K_NPU(GenericModelWithSpec):
-    def __init__(self, config, input_features=(128, 128), variables=3, num_classes=10):
-        super().__init__(config, input_features=input_features, variables=variables,
-                         num_classes=num_classes)
-        self.model_spec = self.gen_model_spec()
-        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
-                                   input_features=self.input_features, num_classes=self.num_classes)
+
     """
     NPU-compliant MobileNetV1-inspired tiny model.
     - ~58K parameters
@@ -78,6 +73,13 @@ class CNN_IMG_MOBILENETV1_58K_NPU(GenericModelWithSpec):
     Architecture:
     BatchNorm -> Conv3x3/s2 ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] -> [DWConv3x3 + PWConv1x1] ->AdaptiveAvgPool -> FC
     """
+    def __init__(self, config, input_features=(128, 128), variables=3, num_classes=10):
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables,
+                                   input_features=self.input_features, num_classes=self.num_classes)
+
     def gen_model_spec(self):
         layers = py_utils.DictPlus()
         # Input: variables x 128 x 128

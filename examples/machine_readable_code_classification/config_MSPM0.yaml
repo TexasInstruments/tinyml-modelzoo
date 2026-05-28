@@ -6,7 +6,7 @@ dataset:
   dataset_name: machine_readable_code_classification
   input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_04_00/datasets/machine_readable_code_classification.zip
 data_processing_feature_extraction:
-  feature_extraction_name:  MachineReadable_Defaul
+  feature_extraction_name:  MachineReadable_Default
 training:
   model_name: Lenet5
   batch_size: 64

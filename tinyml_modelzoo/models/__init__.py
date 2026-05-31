@@ -44,6 +44,12 @@ import os
 import importlib
 import importlib.util
 import inspect
+import sys
+
+# Add tinyml-mlbackend to path for importing proprietary models
+_mlbackend_path = os.path.join(os.path.dirname(__file__), '../../../tinyml-mlbackend')
+if os.path.exists(_mlbackend_path) and _mlbackend_path not in sys.path:
+    sys.path.insert(0, _mlbackend_path)
 
 # Import base class
 from .base import GenericModelWithSpec
@@ -57,6 +63,10 @@ _MODEL_MODULES = [
     'forecasting',
     'feature_extraction',
     'image',
+    'cnn_af_3l',
+    'cnn_mf_1l',
+    'cnn_mf_2l',
+    'cnn_mf_3l',
 ]
 
 # Central model registry - built dynamically

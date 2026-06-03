@@ -117,38 +117,9 @@ class CNN_IMG_MOBILENETV1_58K_NPU(GenericModelWithSpec):
 
 class CNN_IMG_MOBILENETV2_58K_NPU(GenericModelWithSpec):
     """
-    NPU-compliant MobileNetV2-inspired probe model.
-                                                                                                                            Closest possible sequential approximation of MobileNetV2
-    using the current model_spec framework.                                                                               
-    Included:
-    - Inverted bottleneck blocks
-    - Expansion PWCONV
-    - Depthwise DWCONV
-    - Projection PWCONV
-    - Canonical MobileNetV2 channel schedule
-    - AdaptiveAvgPool + FC head
+    NPU-compliant MobileNetV2-inspired probe model.                                                                                                                          Closest possible sequential approximation of MobileNetV2
 
-    Not yet included:
-    - Residual Add
-    - ReLU6
-    - Linear projection without ReLU
     """
-# class MobileNetV2_Inspired_NPU(GenericModelWithSpec):
-#     """
-#     MobileNetV2-inspired model.
-
-#     Similar to MobileNetV2:
-#     - Uses inverted residual blocks
-#     - 1x1 expansion conv -> 3x3 depthwise conv -> 1x1 projection conv
-#     - Uses residual add when stride=1 and input/output channels match
-#     - Uses canonical MobileNetV2 channel schedule
-
-#     Differences from exact MobileNetV2:
-#     - Uses ReLU instead of ReLU6
-#     - Projection uses Conv+BN without ReLU
-#     - Written as direct PyTorch module, not model_spec, because residual add needs custom forward()
-#     """
-
     def __init__(self, config, input_features=(128, 128), variables=3, num_classes=4):
         super().__init__(
             config,
@@ -157,138 +128,121 @@ class CNN_IMG_MOBILENETV2_58K_NPU(GenericModelWithSpec):
             num_classes=num_classes,
         )
 
-        self.layers = torch.nn.ModuleList()
-
-        input_channel = 16
-        last_channel = 128
+        stem_ch = 16
+        final_ch = 96
 
         self.stem = torch.nn.Sequential(
             torch.nn.BatchNorm2d(num_features=self.variables),
             torch.nn.Conv2d(
-                in_channels=self.variables,
-                out_channels=input_channel,
+                self.variables, stem_ch,
                 kernel_size=(3, 3),
                 stride=(2, 2),
                 padding=(1, 1),
                 bias=False,
             ),
-            torch.nn.BatchNorm2d(input_channel),
+            torch.nn.BatchNorm2d(stem_ch),
             torch.nn.ReLU(),
         )
 
-        # t, c, n, s
-        inverted_residual_setting = [
+        cfg = [
             (1, 16, 1, 1),
             (2, 24, 2, 2),
+            (2, 24, 1, 1),
             (2, 32, 2, 2),
+            (2, 32, 1, 1),
             (2, 48, 2, 2),
-            (2, 64, 2, 1),
         ]
 
-        for expansion_ratio, output_channel, num_blocks, stride in inverted_residual_setting:
-            for block_idx in range(num_blocks):
+        blocks = []
+        in_ch = stem_ch
+
+        for expansion_ratio, out_ch, repeats, stride in cfg:
+            for block_idx in range(repeats):
                 block_stride = stride if block_idx == 0 else 1
 
-                self.layers.append(
-                    InvertedResidualBlock(
-                        in_channels=input_channel,
-                        out_channels=output_channel,
+                blocks.append(
+                    InvertedResidualBlockTinyQuantFriendly(
+                        in_channels=in_ch,
+                        out_channels=out_ch,
                         stride=block_stride,
                         expansion_ratio=expansion_ratio,
-                        use_residual=False
                     )
                 )
 
-                input_channel = output_channel
+                in_ch = out_ch
+
+        self.blocks = torch.nn.Sequential(*blocks)
 
         self.head = torch.nn.Sequential(
             torch.nn.Conv2d(
-                in_channels=input_channel,
-                out_channels=last_channel,
+                in_ch, final_ch,
                 kernel_size=(1, 1),
                 stride=(1, 1),
                 padding=(0, 0),
                 bias=False,
             ),
-            torch.nn.BatchNorm2d(last_channel),
+            torch.nn.BatchNorm2d(final_ch),
             torch.nn.ReLU(),
             torch.nn.AdaptiveAvgPool2d((1, 1)),
             torch.nn.Flatten(start_dim=1),
-            torch.nn.Linear(last_channel, self.num_classes),
+            torch.nn.Linear(final_ch, self.num_classes),
         )
 
     def forward(self, x):
         x = self.stem(x)
-
-        for layer in self.layers:
-            x = layer(x)
-
+        x = self.blocks(x)
         x = self.head(x)
         return x
 
 
-class InvertedResidualBlock(torch.nn.Module):
-    def __init__(self, in_channels, out_channels, stride, expansion_ratio, use_residual=False):
+class InvertedResidualBlockTinyQuantFriendly(torch.nn.Module):
+    def __init__(self, in_channels, out_channels, stride, expansion_ratio):
         super().__init__()
 
-        hidden_dim = in_channels * expansion_ratio
-
-        self.use_residual = (
-            use_residualstride == 1 and in_channels == out_channels
-        )
+        hidden_channels = in_channels * expansion_ratio
 
         layers = []
 
         if expansion_ratio != 1:
             layers += [
                 torch.nn.Conv2d(
-                    in_channels=in_channels,
-                    out_channels=hidden_dim,
+                    in_channels, hidden_channels,
                     kernel_size=(1, 1),
                     stride=(1, 1),
                     padding=(0, 0),
                     bias=False,
                 ),
-                torch.nn.BatchNorm2d(hidden_dim),
+                torch.nn.BatchNorm2d(hidden_channels),
                 torch.nn.ReLU(),
             ]
 
         layers += [
             torch.nn.Conv2d(
-                in_channels=hidden_dim,
-                out_channels=hidden_dim,
+                hidden_channels, hidden_channels,
                 kernel_size=(3, 3),
                 stride=(stride, stride),
                 padding=(1, 1),
-                groups=hidden_dim,
+                groups=hidden_channels,
                 bias=False,
             ),
-            torch.nn.BatchNorm2d(hidden_dim),
+            torch.nn.BatchNorm2d(hidden_channels),
             torch.nn.ReLU(),
-        ]
 
-        # Linear projection: no ReLU after this
-        layers += [
             torch.nn.Conv2d(
-                in_channels=hidden_dim,
-                out_channels=out_channels,
+                hidden_channels, out_channels,
                 kernel_size=(1, 1),
                 stride=(1, 1),
                 padding=(0, 0),
                 bias=False,
             ),
             torch.nn.BatchNorm2d(out_channels),
+            torch.nn.ReLU(),
         ]
 
         self.block = torch.nn.Sequential(*layers)
 
     def forward(self, x):
-        out = self.block(x)
-
-        if self.use_residual:
-            out = out + x
-
-        return out
+        return self.block(x)
 # Export all image classification models
 __all__ = [
     'CNN_LENET5',

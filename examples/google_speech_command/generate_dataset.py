@@ -48,13 +48,13 @@ def prepare_speechcommands_class_folders(root=".", output_dir=None, force=False)
 
     print("Downloading SpeechCommands if needed...")
 
-    # torchaudio.datasets.SPEECHCOMMANDS(
-    #     root=str(root),
-    #     url="speech_commands_v0.02",
-    #     folder_in_archive="SpeechCommands",
-    #     download=True,
-    # )
-    # print("Download finished.")
+    torchaudio.datasets.SPEECHCOMMANDS(
+        root=str(root),
+        url="speech_commands_v0.02",
+        folder_in_archive="SpeechCommands",
+        download=True,
+    )
+    print("Download finished.")
     raw_dir = root / "SpeechCommands" / "speech_commands_v0.02"
 
     if output_dir is None:

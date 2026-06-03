@@ -59,20 +59,19 @@ class CNN_LENET5(GenericModelWithSpec):
 
 
 class CNN_IMG_MOBILENETV1_58K_NPU(GenericModelWithSpec):
-
-    # """
-    # NPU-compliant MobileNetV1-inspired tiny model.
-    # - ~58K parameters
+    """
+    NPU-compliant MobileNetV1-inspired tiny model.
+    - ~58K parameters
    
-    # Similarity to MobileNetV1:
-    # - Uses MobileNetV1-style depthwise separable blocks:
-    # Depthwise 3x3 convolution followed by Pointwise 1x1 convolution
-    # - Uses repeated DWCONV + PWCONV blocks for efficient spatial filtering and channel mixing
-    # - Uses progressive downsampling and global average pooling before the final classifier
+    Similarity to MobileNetV1:
+    - Uses MobileNetV1-style depthwise separable blocks:
+    Depthwise 3x3 convolution followed by Pointwise 1x1 convolution
+    - Uses repeated DWCONV + PWCONV blocks for efficient spatial filtering and channel mixing
+    - Uses progressive downsampling and global average pooling before the final classifier
 
-    # Architecture:
-    # BatchNorm -> Conv3x3/s2 ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] -> [DWConv3x3 + PWConv1x1] ->AdaptiveAvgPool -> FC
-    # """
+    Architecture:
+    BatchNorm -> Conv3x3/s2 ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] ->[DWConv3x3 + PWConv1x1] ->[DWConv3x3/s2 + PWConv1x1] -> [DWConv3x3 + PWConv1x1] ->AdaptiveAvgPool -> FC
+    """
     def __init__(self, config, input_features=(128, 128), variables=3, num_classes=10):
         super().__init__(config, input_features=input_features, variables=variables,
                          num_classes=num_classes)
@@ -115,25 +114,24 @@ class CNN_IMG_MOBILENETV1_58K_NPU(GenericModelWithSpec):
         model_spec = dict(model_spec=layers)
         return model_spec
 
-class MobileNetV2_NPU(GenericModelWithSpec):
-    ## @brief MobileNetV2-inspired NPU probe model.
-    #
-    #  Closest possible sequential approximation of MobileNetV2
-    #  using the current model_spec framework.
-    #
-    #  Included:
-    #  - Inverted bottleneck blocks
-    #  - Expansion PWCONV
-    #  - Depthwise DWCONV
-    #  - Projection PWCONV
-    #  - Canonical MobileNetV2 channel schedule
-    #  - AdaptiveAvgPool + FC head
-    #
-    #  Not yet included:
-    #  - Residual Add
-    #  - ReLU6
-    #  - Linear projection without ReLU
+class CNN_IMG_MOBILENETV2_58K_NPU(GenericModelWithSpec):
+    """
+    NPU-compliant MobileNetV2-inspired probe model.
+                                                                                                                            Closest possible sequential approximation of MobileNetV2
+    using the current model_spec framework.                                                                               
+    Included:
+    - Inverted bottleneck blocks
+    - Expansion PWCONV
+    - Depthwise DWCONV
+    - Projection PWCONV
+    - Canonical MobileNetV2 channel schedule
+    - AdaptiveAvgPool + FC head
 
+    Not yet included:
+    - Residual Add
+    - ReLU6
+    - Linear projection without ReLU
+    """
     def __init__(self, config, input_features=(128, 128), variables=3, num_classes=4):
         super().__init__(config, input_features=input_features, variables=variables, num_classes=num_classes)
         self.model_spec = self.gen_model_spec()
@@ -179,11 +177,12 @@ class MobileNetV2_NPU(GenericModelWithSpec):
         layers += {f'{idx}' : dict(type='AdaptiveAvgPoolLayer', output_size=(1,1))}; idx += 1
         layers += {f'{idx}' : dict(type='ReshapeLayer',         ndim=2)};           idx += 1
         # Classifier: in_features=1280
-        layers += {f'{idx}' : dict(type='LinearLayer',          in_features=None,  out_features=self.num_classes)}
+        layers += {f'{idx}' : dict(type='LinearLayer',          in_features=1280, out_features=self.num_classes)}
         return dict(model_spec=layers)
-        
+
 # Export all image classification models
 __all__ = [
     'CNN_LENET5',
     'CNN_IMG_MOBILENETV1_58K_NPU',
+    'CNN_IMG_MOBILENETV2_58K_NPU',
 ]

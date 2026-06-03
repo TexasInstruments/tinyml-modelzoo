@@ -32,6 +32,7 @@
 
 from ..utils import py_utils
 from .base import GenericModelWithSpec
+import torch
 
 class CNN_LENET5(GenericModelWithSpec):
     def __init__(self, config, input_features=(28,28), variables=1, num_classes=10):
@@ -132,54 +133,162 @@ class CNN_IMG_MOBILENETV2_58K_NPU(GenericModelWithSpec):
     - ReLU6
     - Linear projection without ReLU
     """
+# class MobileNetV2_Inspired_NPU(GenericModelWithSpec):
+#     """
+#     MobileNetV2-inspired model.
+
+#     Similar to MobileNetV2:
+#     - Uses inverted residual blocks
+#     - 1x1 expansion conv -> 3x3 depthwise conv -> 1x1 projection conv
+#     - Uses residual add when stride=1 and input/output channels match
+#     - Uses canonical MobileNetV2 channel schedule
+
+#     Differences from exact MobileNetV2:
+#     - Uses ReLU instead of ReLU6
+#     - Projection uses Conv+BN without ReLU
+#     - Written as direct PyTorch module, not model_spec, because residual add needs custom forward()
+#     """
+
     def __init__(self, config, input_features=(128, 128), variables=3, num_classes=4):
-        super().__init__(config, input_features=input_features, variables=variables, num_classes=num_classes)
-        self.model_spec = self.gen_model_spec()
-        self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables, input_features=self.input_features, num_classes=self.num_classes)
+        super().__init__(
+            config,
+            input_features=input_features,
+            variables=variables,
+            num_classes=num_classes,
+        )
 
-    def _add_inverted_bottleneck(self, layers, idx, in_ch, exp_ch, out_ch, stride):
-        # 1x1 expansion
-        layers += {f'{idx}a': dict(type='ConvBNReLULayer', in_channels=in_ch,  out_channels=exp_ch, kernel_size=(1,1), stride=(1,1),        padding=(0,0))}
-        # 3x3 depthwise
-        layers += {f'{idx}b': dict(type='ConvBNReLULayer', in_channels=exp_ch, out_channels=exp_ch, kernel_size=(3,3), stride=(stride,stride), padding=(1,1), groups=exp_ch)}
-        # 1x1 projection
-        # NOTE: Ideally this should be ConvBNLayer (linear projection). Using ConvBNReLULayer first to test compiler/NPU support.
-        layers += {f'{idx}c': dict(type='ConvBNReLULayer', in_channels=exp_ch, out_channels=out_ch, kernel_size=(1,1), stride=(1,1),        padding=(0,0))}
-        return out_ch
+        self.layers = torch.nn.ModuleList()
 
-    def gen_model_spec(self):
-        layers = py_utils.DictPlus()
-        # Input: variables x 128 x 128
-        layers += {'0' : dict(type='BatchNormLayer', num_features=self.variables)}
-        # Stem conv: 128x128 -> 64x64
-        layers += {'1' : dict(type='ConvBNReLULayer', in_channels=self.variables, out_channels=32, kernel_size=(3,3), stride=(2,2), padding=(1,1))}
-        in_ch = 32
-        # MobileNetV2 canonical blocks: t=expansion ratio, c=output channels, n=repeats, s=stride
-        cfg = [
-            (1,  16, 1, 1),
-            (6,  24, 2, 2),
-            (6,  32, 3, 2),
-            (6,  64, 4, 2),
-            (6,  96, 3, 1),
-            (6, 160, 3, 2),
-            (6, 320, 1, 1),
+        input_channel = 16
+        last_channel = 128
+
+        self.stem = torch.nn.Sequential(
+            torch.nn.BatchNorm2d(num_features=self.variables),
+            torch.nn.Conv2d(
+                in_channels=self.variables,
+                out_channels=input_channel,
+                kernel_size=(3, 3),
+                stride=(2, 2),
+                padding=(1, 1),
+                bias=False,
+            ),
+            torch.nn.BatchNorm2d(input_channel),
+            torch.nn.ReLU(),
+        )
+
+        # t, c, n, s
+        inverted_residual_setting = [
+            (1, 16, 1, 1),
+            (2, 24, 2, 2),
+            (2, 32, 2, 2),
+            (2, 48, 2, 2),
+            (2, 64, 2, 1),
         ]
-        idx = 2
-        for t, c, n, s in cfg:
-            for i in range(n):
-                stride = s if i == 0 else 1
-                exp_ch = in_ch * t
-                in_ch = self._add_inverted_bottleneck(layers, idx, in_ch, exp_ch, c, stride)
-                idx += 1
-        # Final 1x1 conv
-        layers += {f'{idx}' : dict(type='ConvBNReLULayer',      in_channels=in_ch, out_channels=1280, kernel_size=(1,1), stride=(1,1), padding=(0,0))}; idx += 1
-        # Global average pooling -> 1280 x 1 x 1
-        layers += {f'{idx}' : dict(type='AdaptiveAvgPoolLayer', output_size=(1,1))}; idx += 1
-        layers += {f'{idx}' : dict(type='ReshapeLayer',         ndim=2)};           idx += 1
-        # Classifier: in_features=1280
-        layers += {f'{idx}' : dict(type='LinearLayer',          in_features=1280, out_features=self.num_classes)}
-        return dict(model_spec=layers)
 
+        for expansion_ratio, output_channel, num_blocks, stride in inverted_residual_setting:
+            for block_idx in range(num_blocks):
+                block_stride = stride if block_idx == 0 else 1
+
+                self.layers.append(
+                    InvertedResidualBlock(
+                        in_channels=input_channel,
+                        out_channels=output_channel,
+                        stride=block_stride,
+                        expansion_ratio=expansion_ratio,
+                        use_residual=False
+                    )
+                )
+
+                input_channel = output_channel
+
+        self.head = torch.nn.Sequential(
+            torch.nn.Conv2d(
+                in_channels=input_channel,
+                out_channels=last_channel,
+                kernel_size=(1, 1),
+                stride=(1, 1),
+                padding=(0, 0),
+                bias=False,
+            ),
+            torch.nn.BatchNorm2d(last_channel),
+            torch.nn.ReLU(),
+            torch.nn.AdaptiveAvgPool2d((1, 1)),
+            torch.nn.Flatten(start_dim=1),
+            torch.nn.Linear(last_channel, self.num_classes),
+        )
+
+    def forward(self, x):
+        x = self.stem(x)
+
+        for layer in self.layers:
+            x = layer(x)
+
+        x = self.head(x)
+        return x
+
+
+class InvertedResidualBlock(torch.nn.Module):
+    def __init__(self, in_channels, out_channels, stride, expansion_ratio, use_residual=False):
+        super().__init__()
+
+        hidden_dim = in_channels * expansion_ratio
+
+        self.use_residual = (
+            use_residualstride == 1 and in_channels == out_channels
+        )
+
+        layers = []
+
+        if expansion_ratio != 1:
+            layers += [
+                torch.nn.Conv2d(
+                    in_channels=in_channels,
+                    out_channels=hidden_dim,
+                    kernel_size=(1, 1),
+                    stride=(1, 1),
+                    padding=(0, 0),
+                    bias=False,
+                ),
+                torch.nn.BatchNorm2d(hidden_dim),
+                torch.nn.ReLU(),
+            ]
+
+        layers += [
+            torch.nn.Conv2d(
+                in_channels=hidden_dim,
+                out_channels=hidden_dim,
+                kernel_size=(3, 3),
+                stride=(stride, stride),
+                padding=(1, 1),
+                groups=hidden_dim,
+                bias=False,
+            ),
+            torch.nn.BatchNorm2d(hidden_dim),
+            torch.nn.ReLU(),
+        ]
+
+        # Linear projection: no ReLU after this
+        layers += [
+            torch.nn.Conv2d(
+                in_channels=hidden_dim,
+                out_channels=out_channels,
+                kernel_size=(1, 1),
+                stride=(1, 1),
+                padding=(0, 0),
+                bias=False,
+            ),
+            torch.nn.BatchNorm2d(out_channels),
+        ]
+
+        self.block = torch.nn.Sequential(*layers)
+
+    def forward(self, x):
+        out = self.block(x)
+
+        if self.use_residual:
+            out = out + x
+
+        return out
 # Export all image classification models
 __all__ = [
     'CNN_LENET5',

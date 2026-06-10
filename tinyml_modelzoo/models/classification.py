@@ -679,7 +679,6 @@ class CNN_TS_GEN_BASE_55K_NPU(GenericModelWithSpec):
         layers += {'8': dict(type='MaxPoolLayer', kernel_size=(4, 1), stride=(2, 1))}
 
         # Stage 5: Final feature extraction
-        # layers += {'9': dict(type='ConvBNReLULayer', in_channels=64, out_channels=64, kernel_size=(5, 1), stride=(1, 1))}
         layers += {'9a': dict(type='ConvBNReLULayer', in_channels=64, out_channels=48, kernel_size=(1, 1), stride=(1, 1))}
         layers += {'9b': dict(type='ConvBNReLULayer', in_channels=48, out_channels=64, kernel_size=(5, 1), stride=(1, 1))}
         layers += {'10': dict(type='MaxPoolLayer', kernel_size=(2, 1), stride=(2, 1))}

@@ -9,7 +9,6 @@ dataset:
     # enable/disable dataset loading
     enable: True #False
     dataset_name: motor_fault_example_dsk
-    input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/01_03_00/datasets/fan_blower_imbalance_dsi.zip
 
 data_processing: # One or more can be cascaded in the list
     # transforms: 'DownSample SimpleWindow'
@@ -26,7 +25,7 @@ data_processing_feature_extraction:
    feature_extraction_name: MotorFault_128Input_RAW_128Feature_1Frame_3InputChannel_removeDC_2D1
 
 training:
-    model_name: 'MotorFault_model_2_t'
+    model_name: 'CLS_1k_NPU'
     training_epochs: 20
     num_gpus: 0
     quantization_method: 'QAT'  # QAT/PTQ

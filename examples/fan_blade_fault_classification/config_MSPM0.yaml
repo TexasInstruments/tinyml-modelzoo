@@ -26,7 +26,7 @@ data_processing_feature_extraction:
    feature_extraction_name: MotorFault_256Input_FE_RFFT_16Feature_8Frame_3InputChannel_removeDC_2D1
 
 training:
-    model_name: 'MotorFault_model_1_t'
+    model_name: 'CLS_1k_NPU'
     training_epochs: 20
     num_gpus: 0
     quantization_method: 'QAT'  # QAT/PTQ

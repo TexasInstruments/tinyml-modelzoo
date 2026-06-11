@@ -7,6 +7,7 @@
 **⚠️ Device Support:** While this documentation focuses on the **MSPM0G5187**, the following device are also fully supported:
   - **CC35X1**
   - **CC1312** 
+  - **CC1314**
   - **CC1352**
   - **CC1354** 
   - **CC2755**
@@ -114,6 +115,7 @@ Data was captured using the EdgeAI Sensor Boosterpack with motion recorded from 
  
   - config_MSPM0.yaml - MSPM0G5187
   - config_CC1312.yaml - CC1312
+  - config_CC1314.yaml - CC1314
   - config_CC1352.yaml - CC1352
   - config_CC1354.yaml - CC1354
   - config_CC2755.yaml - CC2755

@@ -1,7 +1,7 @@
 
 common:
     target_module: 'timeseries'
-    task_type: 'hand_gesture_classification'
+    task_type: 'generic_timeseries_classification'
     target_device: 'MSPM0G5187'
     run_name: '{date-time}/{model_name}'
 
@@ -33,6 +33,7 @@ training:
     training_epochs: 40
     num_gpus: 0
     gof_test: True
+    auto_quantization: False
 
 testing:
     enable: True

@@ -1,7 +1,7 @@
 
 common:
     target_module: 'timeseries'
-    task_type: 'ecg_classification'
+    task_type: 'hand_gesture_classification'
     target_device: 'MSPM0G5187'
     run_name: '{date-time}/{model_name}'
 

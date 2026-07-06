@@ -1305,6 +1305,31 @@ _model_descriptions = {
                         dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
+    'SimpleCNN2D_BN_t': deep_update_dict(deepcopy(template_model_description), {
+    'common': dict(
+        task_type=constants.TASK_TYPE_GENERIC_TS_CLASSIFICATION,
+        generic_model=False,
+        model_details='Simple CNN model for Wifi CSI occupancy detection, 4.7k params',
+    ),
+    'training': dict(
+        model_training_id='SimpleCNN2D_BN',
+        model_name='SimpleCNN2D_BN_t',
+            target_devices={
+                constants.TARGET_DEVICE_CC2755: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC2755]),
+                constants.TARGET_DEVICE_CC1312: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC1312]),
+                constants.TARGET_DEVICE_CC1314: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC1314]),
+                constants.TARGET_DEVICE_CC1352: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC1352]),
+                constants.TARGET_DEVICE_CC1354: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC1354]),
+                constants.TARGET_DEVICE_CC35X1: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_CC35X1]),
+                constants.TARGET_DEVICE_MSPM0G3507: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_MSPM0G3507]),
+                constants.TARGET_DEVICE_MSPM0G3519: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_MSPM0G3519]),
+                constants.TARGET_DEVICE_MSPM0G5187: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_MSPM0G5187]),
+                constants.TARGET_DEVICE_MSPM33C32: dict(model_selection_factor=0) | (DEVICE_RUN_INFO['PIRDetection_model_1_t'][constants.TARGET_DEVICE_MSPM33C32]),
+            },
+        properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                    dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
+    ),
+}),
 }
 
 enabled_models_list = [
@@ -1332,7 +1357,7 @@ enabled_models_list = [
     'ArcFault_model_200_t', 'ArcFault_model_300_t', 'ArcFault_model_700_t', 'ArcFault_model_1400_t',
     'MotorFault_model_1_t', 'MotorFault_model_2_t', 'MotorFault_model_3_t', 'PIRDetection_model_1_t',
     'FanImbalance_model_1_t', 'FanImbalance_model_2_t', 'FanImbalance_model_3_t', 'ElectricalFault_model_40k_t',
-    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t',
+    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t', 'SimpleCNN2D_BN_t'
 ]
 
 

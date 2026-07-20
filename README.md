@@ -78,6 +78,7 @@ tinyml-modelzoo/
 | F28004 | No | C2000 32-bit MCU, 100 MHz | Cost-optimized |
 | F280013 | No | C2000 32-bit MCU, 100 MHz | Entry-level |
 | F280015 | No | C2000 32-bit MCU, 120 MHz | Entry-level |
+| F28E12 | No | C2000 32-bit MCU, 160 MHz, 64 KB flash | Entry-level |
 
 ### MSPM0 Family (Arm Cortex-M0+)
 

@@ -211,33 +211,25 @@ class NeuralNetworkWithPreprocess(torch.nn.Module):
 
 
 class FilterBank(GenericModelWithSpec):
-    def __init__(self, config=None, input_features=16000, in_channels=1, conv_kernel=(64, 1), stride=4,
-                 pool_kernel=(160, 1), pool_type='max', bnorm=True, n_out_channel=64):
+    def __init__(self, config=None, input_features=16000, in_channels=1, conv_kernel=(64, 1),
+                 n_out_channel=64, fb_bitwidth=None):
         super().__init__(config, input_features=input_features, in_channels=in_channels,
-                         conv_kernel=conv_kernel, stride=stride, pool_kernel=pool_kernel,
-                         pool_type=pool_type, bnorm=bnorm, n_out_channel=n_out_channel)
+                         conv_kernel=conv_kernel, n_out_channel=n_out_channel)
         self.model_spec = self.gen_model_spec()
         self._init_model_from_spec(model_spec=self.model_spec, variables=self.in_channels,
                                    input_features=self.input_features)
-        # self.mixed_precision_config = {
-        #     8: [],
-        #     4: [],
-        #     2: ['conv']
-        # }
+        effective_bitwidth = fb_bitwidth if fb_bitwidth is not None else 8
+        self.mixed_precision_config = {
+            8: ['conv'] if effective_bitwidth == 8 else [],
+            4: ['conv'] if effective_bitwidth == 4 else [],
+            2: ['conv'] if effective_bitwidth == 2 else [],
+        }
 
     def gen_model_spec(self):
-        effective_pool_kernel = (self.pool_kernel[0] // self.stride, 1)
         layers = py_utils.DictPlus()
         layers += {'conv': dict(type='ConvLayer', in_channels=self.in_channels, out_channels=self.n_out_channel,
-                                kernel_size=self.conv_kernel, stride=self.stride, padding=(0, 0))}
-        if self.bnorm:
-            layers += {'bn': dict(type='BatchNormLayer', num_features=self.n_out_channel)}
-        if self.pool_type == 'max':
-            layers += {'pool': dict(type='MaxPoolLayer', kernel_size=effective_pool_kernel,
-                                    stride=effective_pool_kernel, padding=(0, 0))}
-        elif self.pool_type == 'avg':
-            layers += {'pool': dict(type='AvgPoolLayer', kernel_size=effective_pool_kernel,
-                                    stride=effective_pool_kernel, padding=(0, 0))}
+                                kernel_size=self.conv_kernel, stride=4, padding=(0, 0))}
+        layers += {'pool': dict(type='MaxPoolLayer', kernel_size=(40, 1), stride=(40, 1), padding=(0, 0))}
         layers += {'act_FE': dict(type='ReLULayer')}
         model_spec = dict(model_spec=layers)
         return model_spec

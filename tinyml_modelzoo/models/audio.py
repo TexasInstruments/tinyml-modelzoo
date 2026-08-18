@@ -281,7 +281,7 @@ class CNN_AUDIO_TCDS_ResNet_NPU(GenericModelWithSpec):
 
 
 
-class CNN_AUDIO_TCDSResnet(GenericModelWithSpec):
+class CNN_AUDIO_TCDS_ResNet_FB_NPU(GenericModelWithSpec):
     """
     Temporal CNN with Depthwise-Separable residual blocks (TCDSResNet).
 
@@ -296,11 +296,11 @@ class CNN_AUDIO_TCDSResnet(GenericModelWithSpec):
         super().__init__(config, input_features=input_features, variables=variables, num_classes=num_classes)
         self.model_spec = self.gen_model_spec()
         self._init_model_from_spec(model_spec=self.model_spec, variables=self.variables, input_features=self.input_features, num_classes=self.num_classes)
-        # self.mixed_precision_config = {
-        #     8: ['1', '4'],
-        #     4: [], 
-        #     2: ['block0', 'block1', 'block2']
-        # }
+        self.mixed_precision_config = {
+            8: ['1', '4'],
+            4: [], 
+            2: ['block0', 'block1', 'block2']
+        }
 
     def gen_model_spec(self):
         num_blocks=3
@@ -324,6 +324,6 @@ __all__ = [
     'CNN_AUDIO_DSCNN',
     'CNN_AUDIO_DSCNN_32K_NPU',
     'CNN_AUDIO_TCDS_ResNet_NPU',
-    'CNN_AUDIO_TCDSResnet',
+    'CNN_AUDIO_TCDS_ResNet_FB_NPU',
 ]
 

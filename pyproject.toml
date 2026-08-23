@@ -23,6 +23,9 @@ dependencies = [
     "torch==2.7.1",
     "PyYAML==6.0.3",
     "numpy==2.2.6",
+    # Pulls in tinyverse + torchmodelopt transitively. Hosted wheel, not git -
+    # modelzoo installs itself editable, so this must NOT also depend on modelzoo.
+    "tinyml_modelmaker @ http://uda0484689.dhcp.ti.com:8100/tinyml_docker_images/tinyml_modelmaker-1.4.0-py3-none-any.whl",
 ]
 
 [[project.authors]]

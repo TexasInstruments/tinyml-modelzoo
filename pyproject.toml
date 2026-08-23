@@ -23,6 +23,10 @@ dependencies = [
     "torch==2.7.1",
     "PyYAML==6.0.3",
     "numpy==2.2.6",
+    # Pulls in tinyverse + torchmodelopt transitively. Same public-mirror
+    # convention modelmaker/tinyverse use for their own sibling deps -
+    # modelzoo installs itself editable, so this must NOT also depend on modelzoo.
+    "tinyml_modelmaker @ git+https://github.com/TexasInstruments/tinyml-tensorlab.git@r1.4#subdirectory=tinyml-modelmaker",
 ]
 
 [[project.authors]]

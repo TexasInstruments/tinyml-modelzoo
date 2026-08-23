@@ -132,8 +132,15 @@ tinyml-modelzoo/
 
 ### Prerequisites
 
-1. Python 3.10 environment with the Tiny ML toolchain installed
-2. Clone the [tinyml-tensorlab](https://github.com/TexasInstruments/tinyml-tensorlab) repository
+1. Python 3.10 environment
+2. Clone **only** this repository, then install it:
+   ```bash
+   cd tinyml-modelzoo
+   pip install -e .
+   ```
+   This pulls in `tinyml-modelmaker` (and transitively `tinyml-tinyverse` +
+   `tinyml-modeloptimization`) as prebuilt wheels - no need to clone the
+   other toolchain repos.
 
 ### Running an Example
 
@@ -148,13 +155,16 @@ cd tinyml-modelzoo
 ./run_tinyml_modelzoo.sh examples/generic_timeseries_classification/config.yaml
 ```
 
-**Windows:**
-```powershell
-# Navigate to modelzoo
+**Windows (cmd):**
+```bat
 cd tinyml-modelzoo
-
-# Run an example
 run_tinyml_modelzoo.bat examples\generic_timeseries_classification\config.yaml
+```
+
+**Windows (PowerShell):**
+```powershell
+cd tinyml-modelzoo
+./run_tinyml_modelzoo.ps1 examples/generic_timeseries_classification/config.yaml
 ```
 
 ### What Happens When You Run an Example?
@@ -165,7 +175,9 @@ run_tinyml_modelzoo.bat examples\generic_timeseries_classification\config.yaml
 4. **Quantization** - The model is optimized for MCU deployment
 5. **Compilation** - TI's Neural Network Compiler generates device-ready code
 
-* Output artifacts are saved to `../tinyml-modelmaker/data/projects/<project_name>/`.
+* Output artifacts are saved to `./data/projects/<project_name>/`, relative to
+  whichever directory you ran `run_tinyml_modelzoo.sh`/`.bat`/`.ps1` from -
+  not to wherever `tinyml-modelmaker` happens to be installed.
 
 * You can choose to save the output artifacts in your own custom directory, by specifying in the respective `config.yaml` by adding this under the common section:
     ```yaml

@@ -1376,7 +1376,7 @@ DEVICE_RUN_INFO = {
         'MSPM0G3519': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
         'MSPM0G5187': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'}
     },
-    'DSCNN_NPU_32K': {
+    'DSCNN_32K_NPU': {
         'MSPM0G3507': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
         'MSPM0G3519': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
         'MSPM0G5187': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'}

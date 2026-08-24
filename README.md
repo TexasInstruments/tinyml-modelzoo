@@ -1,63 +1,92 @@
 # Tiny ML ModelZoo
 
-Welcome to the **Tiny ML ModelZoo** - Texas Instruments' central repository for AI models, examples, and configurations for microcontroller (MCU) applications.
+Texas Instruments' central repository for AI models, examples, and configurations for microcontroller (MCU) applications. Clone this repo, install it, and run any example config against your target device — training, quantization, and compilation all happen automatically underneath.
+
+Detailed User Guide: [TI Tiny ML Tensorlab User Guide](https://software-dl.ti.com/C2000/esd/mcu_ai/user_guide/index.html)
+
+```
+tinyml-modelzoo/
+├── examples/               # Ready-to-run example configurations
+├── tinyml_modelzoo/
+│   ├── models/             # Neural network model definitions
+│   ├── model_descriptions/ # Model metadata for GUI integration
+│   └── device_info/        # Target device performance data
+├── run_tinyml_modelzoo.sh  # Training wrapper (Linux)
+├── run_tinyml_modelzoo.bat # Training wrapper (Windows)
+└── ADDING_NEW_MODELS.md    # Guide for adding custom models
+```
 
 ---
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Supported Target Devices](#supported-target-devices)
 - [Quick Start](#quick-start)
+- [Supported Target Devices](#supported-target-devices)
 - [Supported Task Categories](#supported-task-categories)
-- [Example Applications](#example-applications)
-  - [Generic Timeseries Applications](#generic-timeseries-applications)
-  - [Application-Specific Examples](#application-specific-examples)
-  - [Detailed Examples by Task Type](#detailed-examples-by-task-type)
-    - [Classification Examples](#classification-examples)
-    - [Regression Examples](#regression-examples)
-    - [Forecasting Examples](#forecasting-examples)
-    - [Anomaly Detection Examples](#anomaly-detection-examples)
-    - [Audio Classification Examples](#audio-classification-examples)
-    - [Image Classification Examples](#image-classification-examples)
+- [Choosing an Example](#choosing-an-example)
+- [Examples Reference](#examples-reference)
+  - [Classification](#classification)
+  - [Regression](#regression)
+  - [Forecasting](#forecasting)
+  - [Anomaly Detection](#anomaly-detection)
+  - [Audio Classification](#audio-classification)
+  - [Image Classification](#image-classification)
+  - [Radar Point Cloud Classification](#radar-point-cloud-classification)
 - [Available Models](#available-models)
 - [Adding New Models](#adding-new-models)
+- [About the Task Types](#about-the-task-types)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
 ---
 
-## Introduction
+## Quick Start
 
-### Texas Instruments MCU AI Toolchain
+### Prerequisites
 
-Texas Instruments provides a comprehensive toolchain for developing, training, and deploying machine learning models on resource-constrained microcontrollers. The toolchain consists of three main components:
-<hr>
+1. Python 3.10 environment
+2. Clone **only** this repository, then install it:
+   ```bash
+   cd tinyml-modelzoo
+   pip install -e .
+   ```
+   This pulls in the rest of the toolchain as prebuilt wheels automatically -
+   no need to clone anything else.
 
-Detailed User Guide: [TI Tiny ML Tensorlab User Guide](https://software-dl.ti.com/C2000/esd/mcu_ai/user_guide/index.html)
-<hr>
+### Running an Example
 
-| Component                       | Purpose                                | Who Should Use It                               |
-|---------------------------------|----------------------------------------|-------------------------------------------------|
-| **tinyml-modelzoo** (this repo) | Models, examples, and configurations   | **End customers** - This is your starting point |
-| tinyml-modelmaker               | Training orchestration and compilation | Developers extending the toolchain              |
-| tinyml-tinyverse                | Core training scripts and utilities    | Advanced developers only                        |
-| tinyml-modeloptimization        | Quantization scripts and utilities     | Advanced developers only                        |
-
-**As an end customer, you only need to work with `tinyml-modelzoo`.** The example configurations here will automatically use the underlying toolchain components to train and compile models for your target MCU.
-
-### What's in ModelZoo?
-
+**Linux:**
+```bash
+cd tinyml-modelzoo
+./run_tinyml_modelzoo.sh examples/generic_timeseries_classification/config.yaml
 ```
-tinyml-modelzoo/
-├── examples/              # Ready-to-run example configurations
-├── tinyml_modelzoo/
-│   ├── models/            # Neural network model definitions
-│   ├── model_descriptions/ # Model metadata for GUI integration
-│   └── device_info/       # Target device performance data
-├── run_tinyml_modelzoo.sh        # Training wrapper (Linux)
-├── run_tinyml_modelzoo.bat       # Training wrapper (Windows)
-└── ADDING_NEW_MODELS.md   # Guide for adding custom models
+
+**Windows (cmd):**
+```bat
+cd tinyml-modelzoo
+run_tinyml_modelzoo.bat examples\generic_timeseries_classification\config.yaml
+```
+
+**Windows (PowerShell):**
+```powershell
+cd tinyml-modelzoo
+./run_tinyml_modelzoo.ps1 examples/generic_timeseries_classification/config.yaml
+```
+
+### What Happens When You Run an Example?
+
+1. **Dataset Download** - the required dataset is downloaded if not already present
+2. **Data Processing** - feature extraction and preprocessing are applied
+3. **Model Training** - the neural network is trained on your data
+4. **Quantization** - the model is optimized for MCU deployment
+5. **Compilation** - TI's Neural Network Compiler generates device-ready code
+
+Output artifacts are saved to `./data/projects/<project_name>/`, relative to
+whichever directory you ran `run_tinyml_modelzoo.sh`/`.bat`/`.ps1` from. To use
+a different location, add this to the config's `common` section:
+```yaml
+common:
+    projects_path: './your/choice'  # or an absolute path
 ```
 
 ---
@@ -100,11 +129,10 @@ tinyml-modelzoo/
 | MSPM33C32 | No | 160 MHz Arm Cortex-M33, TrustZone | 1MB flash, 256kB SRAM |
 | MSPM33C34 | No | 160 MHz Arm Cortex-M33 | High performance |
 
-
 ### AM13 Family (Arm Cortex-M33)
 
-| Device | NPU | Description        | Notes                     |
-|--------|-----|--------------------|---------------------------|
+| Device | NPU | Description | Notes |
+|--------|-----|-------------|-------|
 | AM13E2 | Yes | Arm Cortex-M33 MCU | NPU-accelerated |
 
 ### AM26x Family (Arm Cortex-R5)
@@ -126,256 +154,127 @@ tinyml-modelzoo/
 | CC1354 | No | Arm Cortex-M33 wireless MCU | Sub-1GHz |
 | CC35X1 | CDE | Arm Cortex-M33 wireless MCU | Wi-Fi + BLE combo |
 
----
-
-## Quick Start
-
-### Prerequisites
-
-1. Python 3.10 environment
-2. Clone **only** this repository, then install it:
-   ```bash
-   cd tinyml-modelzoo
-   pip install -e .
-   ```
-   This pulls in `tinyml-modelmaker` (and transitively `tinyml-tinyverse` +
-   `tinyml-modeloptimization`) as prebuilt wheels - no need to clone the
-   other toolchain repos.
-
-### Running an Example
-
-**Linux:**
-```bash
-# Activate your Python environment
-
-# Navigate to modelzoo
-cd tinyml-modelzoo
-
-# Run an example (e.g., generic_timeseries_classification)
-./run_tinyml_modelzoo.sh examples/generic_timeseries_classification/config.yaml
-```
-
-**Windows (cmd):**
-```bat
-cd tinyml-modelzoo
-run_tinyml_modelzoo.bat examples\generic_timeseries_classification\config.yaml
-```
-
-**Windows (PowerShell):**
-```powershell
-cd tinyml-modelzoo
-./run_tinyml_modelzoo.ps1 examples/generic_timeseries_classification/config.yaml
-```
-
-### What Happens When You Run an Example?
-
-1. **Dataset Download** - The toolchain downloads the required dataset (if not already present)
-2. **Data Processing** - Feature extraction and preprocessing are applied
-3. **Model Training** - The neural network is trained on your data
-4. **Quantization** - The model is optimized for MCU deployment
-5. **Compilation** - TI's Neural Network Compiler generates device-ready code
-
-* Output artifacts are saved to `./data/projects/<project_name>/`, relative to
-  whichever directory you ran `run_tinyml_modelzoo.sh`/`.bat`/`.ps1` from -
-  not to wherever `tinyml-modelmaker` happens to be installed.
-
-* You can choose to save the output artifacts in your own custom directory, by specifying in the respective `config.yaml` by adding this under the common section:
-    ```yaml
-  common:
-      projects_path: './your/choice'  # or absolute path
-      # ... other settings
-    ```
+The example tables further down reference these devices via short, named
+sets (Set A, Set B, ...) rather than repeating full device lists — see
+[Examples Reference](#examples-reference).
 
 ---
 
 ## Supported Task Categories
 
-Tiny ML ModelZoo supports the following AI task categories:
+| Task Category | Description | Use Cases |
+|----------------|-------------|-----------|
+| **Time Series Classification** | Categorize time-series data into discrete classes | Fault detection, activity recognition, anomaly classification |
+| **Time Series Regression** | Predict continuous values from time-series inputs | Torque estimation, speed prediction, load measurement |
+| **Time Series Forecasting** | Predict future values based on historical patterns | Temperature prediction, demand forecasting |
+| **Time Series Anomaly Detection** | Identify abnormal patterns using autoencoder-based models | Equipment health monitoring, predictive maintenance |
+| **Audio Classification** | Classify audio signals from MFCC features | Keyword spotting, voice commands, sound event detection |
+| **Image Classification** | Categorize images into classes | Visual inspection, object recognition |
+| **Radar Point Cloud Classification** | Classify point-cloud frames from radar sensors | Human pose detection, fall detection |
 
-| Task Category                     | Description                                               | Use Cases                                                     |
-|-----------------------------------|-----------------------------------------------------------|---------------------------------------------------------------|
-| **Time Series Classification**    | Categorize time-series data into discrete classes         | Fault detection, activity recognition, anomaly classification |
-| **Time Series Regression**        | Predict continuous values from time-series inputs         | Torque estimation, speed prediction, load measurement         |
-| **Time Series Forecasting**       | Predict future values based on historical patterns        | Temperature prediction, demand forecasting                    |
-| **Time Series Anomaly Detection** | Identify abnormal patterns using autoencoder-based models | Equipment health monitoring, predictive maintenance           |
-| **Audio Classification**          | Classify audio signals from MFCC features                 | Keyword spotting, voice commands, sound event detection       |
-| **Image Classification**          | Categorize images into classes                            | Visual inspection, object recognition                         |
-
-### Understanding Each Task
-
-**Classification** - The model outputs a probability distribution over predefined classes. Best for: "Is this a A fault or B fault or C fault?", "Which type of activity is this?"
-
-**Regression** - The model outputs a continuous numerical value. Best for: "What is the current torque?", "What will the temperature be?"
-
-**Forecasting** - Predicts future values in a time series. Best for: "What will happen next?"
-
-**Anomaly Detection** - Uses autoencoders to learn "normal" patterns. Reconstruction error indicates anomalies. Best for: "Is this behavior normal?"
-
-* The main difference between Anomaly Detection v/s Classification can be understood with the below example:
-  * Is it Normal? or an anomaly? --> Anomaly Detection (binary outcome)
-  * Is it Normal? or anomaly type A? or anomaly type B? or anomaly type C? --> Classification (multiple categories)
-
-* The main difference between Classification v/s Regression can be understood with the below example:
-  * Using independent variables Xa, Xb, Xc to predict dependent **discrete** variable (target) Y --> Classification 
-    * Y can produce discrete values that indicate if it stands for Class A / Class B / Class C .... so on
-  * Using independent variables Xa, Xb, Xc to predict dependent **continuous** variable (target) Y --> Regression
-
-* The main difference between Regression v/s Forecasting can be understood with the below example:
-  * Using independent variables Xa, Xb, Xc to predict dependent continuous variable (target) **Y** at the **same** time instant --> Regression
-  * Using independent variables Xa, Xb, Xc to predict dependent continuous variable (target) **Xa** (or Xb or Xc) for the **next** time instant--> Forecasting
-
-**Audio Classification** - Extracts MFCC features from a fixed-length audio window and classifies into keyword or sound categories. Best for: "What keyword was spoken?", "What sound event occurred?"
+For the reasoning behind how these categories differ from one another, see
+[About the Task Types](#about-the-task-types).
 
 ---
 
-There are two ways to proceed using this toolchain. 
-1. If you, as a user, find that there is an application under the `Example Applications` section below, then you can proceed with it.
-2. However, if you do not find any applications that are of your direct interest, you may as well use the toolchain to do either of the [Supported Task Categories](#supported-task-categories) as mentioned above referring to the generic example for each of them:
+## Choosing an Example
 
-
-| Generic Example Type         | Example                                                                              | Description                                                                     |
-|------------------------------|--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| Timeseries Classification    | [generic_timeseries_classification](examples/generic_timeseries_classification/)     | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
-| Timeseries Regression        | [generic_timeseries_regression](examples/generic_timeseries_regression/)             | Generic regression example for continuous value prediction.                     |
-| Timeseries Forecasting       | [generic_timeseries_forecasting](examples/generic_timeseries_forecasting/)           | Generic forecasting example for time series prediction.                         |
-| Timeseries Anomaly Detection | [generic_timeseries_anomalydetection](examples/generic_timeseries_anomalydetection/) | Generic anomaly detection example using autoencoders.                           |
+1. **Look for your use case** in the [Examples Reference](#examples-reference) tables below. If one matches (e.g. `motor_bearing_fault`, `pir_detection`), start there — it ships with a dataset, a tuned model, and a device-specific config.
+2. **If nothing matches**, use the generic example for your task type instead (the first row in each table below, e.g. [generic_timeseries_classification](examples/generic_timeseries_classification/)) and point it at your own dataset. This is also the recommended **first example to run** to learn the toolchain.
 
 ---
 
-## Example Applications
+## Examples Reference
 
-The following ready-to-use examples demonstrate various AI applications for MCUs, organized by task type.
+Each example links to its config directory under `examples/`. The **Config**
+column marks whether it's a **Generic** example (a `generic_timeseries_*`
+config, meant to be adapted to your own dataset) or a **Dedicated** example
+(a purpose-built config/model for that specific use case).
 
-### Generic Timeseries Applications
+**Device sets** (referenced by name below, instead of repeating device lists):
 
-These applications use generic task types that can be adapted to your custom datasets.
+| Set | Devices |
+|-----|---------|
+| **A** | F280013, F280015, F28003, F28004, F2807x, F28002x, F2837, F2837xS, F2838x, F28P55, F28P65, F28P551x, F29H85, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, AM13E2, AM263 |
+| **B** | Set A + Connectivity devices (CC1312, CC1314, CC1352, CC1354, CC2755, CC2745, CC35X1) |
+| **C** | MSPM0G5187 only |
+| **D** | MSPM0G3507, MSPM0G3519, MSPM0G5187 |
+| **E** | MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32 |
+| **F** | CC2755, CC1312, CC1314, CC1352, CC1354, CC35X1, MSPM0G5187, MSPM0G3507, MSPM0G3519, MSPM33C32 |
+| **G** | All devices listed under [Supported Target Devices](#supported-target-devices) |
+| **H** | C2000, MSPM0, MSPM33C, AM26x, and AM13 families (all except Connectivity devices) |
 
-> **Device support for generic timeseries tasks:**
-> - **Classification** — all 27 devices: F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, F29P58, F29P32, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, CC2755, CC2745, CC1312, CC1314, CC1352, CC1354, CC35X1, AM263, AM263P, AM261, AM13E2
-> - **Regression, Forecasting, Anomaly Detection** — C2000 (including F2807x, F28002x, F28P551x, F2837xS, F2838x), MSPM0, MSPM33C, AM26x, AM13 families. Connectivity devices do **not** support these task types.
+### Classification
 
-| Example Name                                                                 | Task Type | Description |
-|------------------------------------------------------------------------------|-----------|-------------|
-| **generic_timeseries_classification**                                        | generic_timeseries_classification | Classify sine/square/sawtooth waveforms - **Start here** to learn the toolchain |
-| **generic_timeseries_regression**                                            | generic_timeseries_regression | Generic regression example for continuous value prediction |
-| **generic_timeseries_forecasting**                                           | generic_timeseries_forecasting | Generic forecasting example for time series prediction |
-| **generic_timeseries_anomalydetection**                                      | generic_timeseries_anomalydetection | Generic anomaly detection example using autoencoders |
-| The below examples demonstrate the above AI task types with real world data: |                                     |                                                      |
-| **branched_model_parameters**                                                | generic_timeseries_classification | Human Activity Recognition from accelerometer/gyroscope data |
-| **electrical_fault**                                                         | generic_timeseries_classification | Classify transmission line faults using voltage and current (2-class and 6-class variants) |
-| **gas_sensor**                                                               | generic_timeseries_classification | Identify gas type and concentration from sensor array data |
-| **grid_fault_detection**                                                     | generic_timeseries_classification | Detect electrical grid faults from sensor data |
-| **grid_stability**                                                           | generic_timeseries_classification | Predict power grid stability from node parameters |
-| **nilm_appliance_usage_classification**                                      | generic_timeseries_classification | Non-Intrusive Load Monitoring - identify active appliances |
-| **PLAID_nilm_classification**                                                | generic_timeseries_classification | Appliance identification using the PLAID dataset |
-| **induction_motor_speed_prediction**                                         | generic_timeseries_regression | Predict induction motor speed from electrical signals |
-| **mosfet_temp_prediction**                                                   | generic_timeseries_regression | Predict MOSFET temperature from electrical parameters |
-| **reg_washing_machine**                                                      | generic_timeseries_regression | Predict washing machine load weight |
-| **torque_measurement_regression**                                            | generic_timeseries_regression | Predict PMSM motor torque from current measurements |
-| **forecasting_pmsm_rotor_temp**                                              | generic_timeseries_forecasting | Forecast PMSM rotor winding temperature |
-| **hvac_indoor_temp_forecast**                                                | generic_timeseries_forecasting | Predict indoor temperature for HVAC control |
-| **dc_arc_fault** (anomaly detection - DSI)                                   | generic_timeseries_anomalydetection | Detect anomalous DC arc patterns using autoencoder (DSI dataset) |
-| **dc_arc_fault** (anomaly detection - DSK)                                   | generic_timeseries_anomalydetection | Detect anomalous DC arc patterns using autoencoder (DSK dataset) |
-| **ecg_classification** (anomaly detection)                                   | generic_timeseries_anomalydetection | Detect anomalous heartbeat patterns from ECG signals |
-| **fan_blade_fault_classification** (anomaly detection)                       | generic_timeseries_anomalydetection | Detect anomalous fan blade behavior from accelerometer data |
-| **motor_bearing_fault** (anomaly detection)                                  | generic_timeseries_anomalydetection | Detect anomalous bearing behavior from vibration data |
+| Example | Config | Data Type | Devices | Description |
+|---------|--------|-----------|---------|--------------|
+| [generic_timeseries_classification](examples/generic_timeseries_classification/) | Generic | — | Set G | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
+| [dc_arc_fault](examples/dc_arc_fault/) | Dedicated | Univariate | Set A | Detect DC arc faults from current waveforms for electrical safety. |
+| [ac_arc_fault](examples/ac_arc_fault/) | Dedicated | Univariate | Set A | Detect AC arc faults in electrical systems. |
+| [motor_bearing_fault](examples/motor_bearing_fault/) | Dedicated | Multivariate | Set A | Classify 5 bearing fault types + normal operation from vibration data. |
+| [blower_imbalance](examples/blower_imbalance/) | Dedicated | Multivariate | Set A | Detect blade imbalance in HVAC blowers using 3-phase motor currents. |
+| [fan_blade_fault_classification](examples/fan_blade_fault_classification/) | Dedicated | Multivariate | Set B | Detect faults in BLDC fans from accelerometer data. |
+| [gearbox_fault_detection](examples/gearbox_fault_detection/) | Dedicated | Multivariate | Set D | Classify gearbox operating conditions (healthy vs broken tooth) from vibration data. |
+| [grid_fault_detection](examples/grid_fault_detection/) | Dedicated | Multivariate | Set A | Detect electrical grid faults from sensor data. |
+| [ecg_classification](examples/ecg_classification/) | Dedicated | Multivariate | Set D | Classify normal vs anomalous heartbeats from ECG signals. |
+| [pir_detection](examples/pir_detection/) | Dedicated | Multivariate | Set F | Detect presence/motion using PIR sensor data. |
+| [fall_detection_classification](examples/fall_detection_classification/) | Dedicated | Multivariate | Set C | Detect and classify Human Fall vs Activities of Daily Living (ADL). |
+| [dynamic_hand_gesture_recognition](examples/dynamic_hand_gesture_recognition/) | Dedicated | Multivariate | Set C | Classify 4 dynamic hand gestures (circle, wave, tap, other) from 3-axis accelerometer data. |
+| [electrical_fault](examples/electrical_fault/) | Generic | Multivariate | Set H | Classify transmission line faults using voltage and current (2-class and 6-class variants). |
+| [grid_stability](examples/grid_stability/) | Generic | Multivariate | Set H | Predict power grid stability from node parameters. |
+| [gas_sensor](examples/gas_sensor/) | Generic | Multivariate | Set H | Identify gas type and concentration from sensor array data. |
+| [branched_model_parameters](examples/branched_model_parameters/) | Generic | Multivariate | Set H | Human Activity Recognition from accelerometer/gyroscope data. |
+| [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Generic | Multivariate | Set H | Non-Intrusive Load Monitoring - identify active appliances. |
+| [PLAID_nilm_classification](examples/PLAID_nilm_classification/) | Generic | Multivariate | Set H | Appliance identification using the PLAID dataset. |
 
+### Regression
 
-### Application-Specific Examples
+| Example | Config | Data Type | Devices | Description |
+|---------|--------|-----------|---------|--------------|
+| [generic_timeseries_regression](examples/generic_timeseries_regression/) | Generic | — | Set H | Generic regression example for continuous value prediction. |
+| [mosfet_temp_prediction](examples/mosfet_temp_prediction/) | Dedicated | Multivariate | Set A | Predict MOSFET temperature from electrical parameters. |
+| [torque_measurement_regression](examples/torque_measurement_regression/) | Generic | Multivariate | Set H | Predict PMSM motor torque from current measurements. |
+| [induction_motor_speed_prediction](examples/induction_motor_speed_prediction/) | Generic | Multivariate | Set H | Predict induction motor speed from electrical signals. |
+| [reg_washing_machine](examples/reg_washing_machine/) | Generic | Multivariate | Set H | Predict washing machine load weight. |
 
-These applications are designed for specific use cases with optimized models and datasets.
+### Forecasting
 
-| Example Name | Task Type | Supported Devices | Description |
-|-------------|-----------|-------------------|-------------|
-| **ac_arc_fault** | arc_fault | F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, AM13E2, AM263 | Detect AC arc faults in electrical systems |
-| **dc_arc_fault** | arc_fault | F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, AM13E2, AM263 | Detect DC arc faults from current waveforms for electrical safety |
-| **ecg_classification** | ecg_classification | MSPM0G3507, MSPM0G5187, MSPM0G3519 | Classify normal vs anomalous heartbeats from ECG signals |
-| **fall_detection_classification** | classification | MSPM0G5187 | Detect and classify Human Fall vs Activities of Daily Living (ADL) |
-| **gearbox_fault_detection** | classification | MSPM0G3507, MSPM0G3519, MSPM0G5187 | Classify gearbox operating conditions (healthy vs broken tooth) from vibration data |
-| **blower_imbalance** | motor_fault | F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, AM13E2, AM263 | Detect blade imbalance in HVAC blowers using 3-phase motor currents |
-| **fan_blade_fault_classification** | motor_fault | F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, AM13E2, AM263, CC1312, CC1314, CC1352, CC1354, CC2755, CC2745, CC35X1 | Detect faults in BLDC fans from accelerometer data |
-| **motor_bearing_fault** | motor_fault | F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, AM13E2, AM263 | Classify 5 bearing fault types + normal operation from vibration data |
-| **grid_fault_detection** | classification | F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, AM13E2, AM263 | Detect electrical grid faults from sensor data |
-| **mosfet_temp_prediction** | regression | F280013, F280015, F28003, F28004, F2837, F2837xS, F2838x, F2807x, F28002x, F28P55, F28P65, F28P551x, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, F29H85, AM13E2, AM263 | Predict MOSFET temperature from electrical parameters |
-| **pir_detection** | pir_detection | CC2755, CC1312, CC1314, CC1352, CC1354, CC35X1, MSPM0G5187, MSPM0G3507, MSPM0G3519, MSPM33C32 | Detect presence/motion using PIR sensor data |
-| **dynamic_hand_gesture_recognition** | ecg_classification | MSPM0G5187 | Classify 4 dynamic hand gestures from 3-axis accelerometer data |
-| **google_speech_command** | audio_classification | MSPM0G5187 | 12-class keyword spotting from audio using MFCC features |
-| **machine_readable_code_classification** | image_classification | MSPM0G5187 | Classify QR codes, barcodes, and other symbols from 28×28 images |
-| **coffee_bean_classification** | image_classification | MSPM0G5187 | Classify coffee bean quality from images |
-| **MNIST_image_classification** | image_classification | MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32 | Handwritten digit recognition (MNIST dataset) |
+| Example | Config | Data Type | Devices | Description |
+|---------|--------|-----------|---------|--------------|
+| [generic_timeseries_forecasting](examples/generic_timeseries_forecasting/) | Generic | — | Set H | Generic forecasting example for time series prediction. |
+| [forecasting_pmsm_rotor_temp](examples/forecasting_pmsm_rotor_temp/) | Generic | Multivariate | Set H | Forecast PMSM rotor winding temperature. |
+| [hvac_indoor_temp_forecast](examples/hvac_indoor_temp_forecast/) | Generic | Multivariate | Set H | Predict indoor temperature for HVAC control. |
 
-### Summary by Task Type:
-- **Generic Timeseries Tasks** (22 examples): Adaptable to custom datasets
-  - Classification: 8 examples (1 base + 7 real-world applications) — all 22 devices
-  - Regression: 5 examples (1 base + 4 real-world applications) — C2000/MSPM0/AM families only
-  - Forecasting: 3 examples (1 base + 2 real-world applications) — C2000/MSPM0/AM families only
-  - Anomaly Detection: 6 examples (1 base + 5 application variants) — C2000/MSPM0/AM families only
-- **Application-Specific Tasks** (16 examples): arc_fault (2), motor_fault (3), grid_fault_detection (1), gearbox_fault_detection (1), mosfet_temp_prediction (1), pir_detection (1), ecg_classification (1), hand_gesture_recognition (1), audio_classification (1), image_classification (3), fall_detection_classification (1)
+### Anomaly Detection
 
----
+| Example | Config | Data Type | Devices | Description |
+|---------|--------|-----------|---------|--------------|
+| [generic_timeseries_anomalydetection](examples/generic_timeseries_anomalydetection/) | Generic | — | Set H | Generic anomaly detection example using autoencoders. |
+| [dc_arc_fault (DSI)](examples/dc_arc_fault/config_anomaly_detection_dsi.yaml) | Dedicated | Univariate | Set A | Detect anomalous DC arc patterns using autoencoder (DSI dataset). |
+| [dc_arc_fault (DSK)](examples/dc_arc_fault/config_anomaly_detection_dsk.yaml) | Dedicated | Univariate | Set A | Detect anomalous DC arc patterns using autoencoder (DSK dataset). |
+| [ecg_classification](examples/ecg_classification/config_anomaly_detection.yaml) | Dedicated | Multivariate | Set D | Detect anomalous heartbeat patterns from ECG signals. |
+| [fan_blade_fault_classification](examples/fan_blade_fault_classification/config_anomaly_detection.yaml) | Dedicated | Multivariate | Set B | Detect anomalous fan blade behavior from accelerometer data. |
+| [motor_bearing_fault](examples/motor_bearing_fault/config_anomaly_detection.yaml) | Dedicated | Multivariate | Set A | Detect anomalous bearing behavior from vibration data. |
 
-### Detailed Examples by Task Type
+### Audio Classification
 
-### Classification Examples
+| Example | Config | Data Type | Devices | Description |
+|---------|--------|-----------|---------|--------------|
+| [google_speech_command](examples/google_speech_command/) | Dedicated | Audio | Set C | 12-class keyword spotting from audio using MFCC + DSCNN model. |
 
-| No. | Example                                                                              | Data Type    | Description                                                                     |
-|-----|--------------------------------------------------------------------------------------|--------------|---------------------------------------------------------------------------------|
-| 1   | [dc_arc_fault](examples/dc_arc_fault/)                                               | Univariate   | Detect DC arc faults from current waveforms for electrical safety.              |
-| 2   | [ac_arc_fault](examples/ac_arc_fault/)                                               | Univariate   | Detect AC arc faults in electrical systems.                                     |
-| 3   | [motor_bearing_fault](examples/motor_bearing_fault/)                                 | Multivariate | Classify 5 bearing fault types + normal operation from vibration data.          |
-| 4   | [blower_imbalance](examples/blower_imbalance/)                                       | Multivariate | Detect blade imbalance in HVAC blowers using 3-phase motor currents.            |
-| 5   | [fan_blade_fault_classification](examples/fan_blade_fault_classification/)           | Multivariate | Detect faults in BLDC fans from accelerometer data.                             |
-| 6   | [gearbox_fault_detection](examples/gearbox_fault_detection/)                         | Multivariate | Classify gearbox operating conditions (healthy vs broken tooth) from vibration. |
-| 7   | [electrical_fault](examples/electrical_fault/)                                       | Multivariate | Classify transmission line faults using voltage and current (2-class and 6-class variants). |
-| 8   | [grid_stability](examples/grid_stability/)                                           | Multivariate | Predict power grid stability from node parameters.                              |
-| 9   | [gas_sensor](examples/gas_sensor/)                                                   | Multivariate | Identify gas type and concentration from sensor array data.                     |
-| 10  | [branched_model_parameters](examples/branched_model_parameters/)                     | Multivariate | Human Activity Recognition from accelerometer/gyroscope data.                   |
-| 11  | [ecg_classification](examples/ecg_classification/)                                   | Multivariate | Classify normal vs anomalous heartbeats from ECG signals.                       |
-| 12  | [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Multivariate | Non-Intrusive Load Monitoring - identify active appliances.                     |
-| 13  | [PLAID_nilm_classification](examples/PLAID_nilm_classification/)                     | Multivariate | Appliance identification using the PLAID dataset.                               |
-| 14  | [pir_detection](examples/pir_detection/)                                             | Multivariate | Detect presence/motion using PIR sensor data.                                   |
-| 15  | [fall_detection_classification](examples/fall_detection_classification/)             | Multivariate | Detect and classify Human Fall vs Activities of Daily Living (ADL).             |
-| 16  | [dynamic_hand_gesture_recognition](examples/dynamic_hand_gesture_recognition/)       | Multivariate | Classify 4 dynamic hand gestures (circle, wave, tap, other) from 3-axis accelerometer. |
+### Image Classification
 
-### Regression Examples
+| Example | Config | Data Type | Devices | Description |
+|---------|--------|-----------|---------|--------------|
+| [MNIST_image_classification](examples/MNIST_image_classification/) | Dedicated | Image | Set E | Handwritten digit recognition (MNIST dataset). |
+| [machine_readable_code_classification](examples/machine_readable_code_classification/) | Dedicated | Image | Set C | Classify QR codes, barcodes, and other symbols (28×28 images). |
+| [coffee_bean_classification](examples/coffee_bean_classification/) | Dedicated | Image | Set C | Classify coffee bean quality from images. |
 
-| No. | Example                                                                        | Data Type    | Description                                            |
-|-----|--------------------------------------------------------------------------------|--------------|--------------------------------------------------------|
-| 1   | [torque_measurement_regression](examples/torque_measurement_regression/)       | Multivariate | Predict PMSM motor torque from current measurements.   |
-| 2   | [induction_motor_speed_prediction](examples/induction_motor_speed_prediction/) | Multivariate | Predict induction motor speed from electrical signals. |
-| 3   | [reg_washing_machine](examples/reg_washing_machine/)                           | Multivariate | Predict washing machine load weight.                   |
+### Radar Point Cloud Classification
 
-### Forecasting Examples
-
-| No. | Example                                                                        | Data Type    | Description                                  |
-|-----|--------------------------------------------------------------------------------|--------------|----------------------------------------------|
-| 1   | [forecasting_pmsm_rotor_temp](examples/forecasting_pmsm_rotor_temp/)           | Multivariate | Forecast PMSM rotor winding temperature.     |
-| 2   | [hvac_indoor_temp_forecast](examples/hvac_indoor_temp_forecast/)               | Multivariate | Predict indoor temperature for HVAC control. |
-
-### Anomaly Detection Examples
-
-| No. | Example                                                                                                 | Data Type    | Description                                                       |
-|-----|---------------------------------------------------------------------------------------------------------|--------------|-------------------------------------------------------------------|
-| 1   | [dc_arc_fault (DSI)](examples/dc_arc_fault/config_anomaly_detection_dsi.yaml)                           | Univariate   | Detect anomalous DC arc patterns using autoencoder (DSI dataset). |
-| 2   | [dc_arc_fault (DSK)](examples/dc_arc_fault/config_anomaly_detection_dsk.yaml)                           | Univariate   | Detect anomalous DC arc patterns using autoencoder (DSK dataset). |
-| 3   | [ecg_classification](examples/ecg_classification/config_anomaly_detection.yaml)                         | Multivariate | Detect anomalous heartbeat patterns from ECG signals.             |
-| 4   | [fan_blade_fault_classification](examples/fan_blade_fault_classification/config_anomaly_detection.yaml) | Multivariate | Detect anomalous fan blade behavior from accelerometer data.      |
-| 5   | [motor_bearing_fault](examples/motor_bearing_fault/config_anomaly_detection.yaml)                       | Multivariate | Detect anomalous bearing behavior from vibration data.            |
-
-
-### Audio Classification Examples
-
-| No. | Example                                                          | Data Type | Description                                                     |
-|-----|------------------------------------------------------------------|-----------|-----------------------------------------------------------------|
-| 1   | [google_speech_command](examples/google_speech_command/)         | Audio     | 12-class keyword spotting from audio using MFCC + DSCNN model. |
-
-### Image Classification Examples
-
-| No. | Example                                                                                            | Data Type | Description                                                    |
-|-----|----------------------------------------------------------------------------------------------------|-----------|----------------------------------------------------------------|
-| 1   | [MNIST_image_classification](examples/MNIST_image_classification/)                                 | Image     | Handwritten digit recognition (MNIST dataset).                 |
-| 2   | [machine_readable_code_classification](examples/machine_readable_code_classification/)             | Image     | Classify QR codes, barcodes, and other symbols (28×28 images). |
-| 3   | [coffee_bean_classification](examples/coffee_bean_classification/)                                 | Image     | Classify coffee bean quality from images.                      |
+| Example | Config | Data Type | Devices | Description |
+|---------|--------|-----------|---------|--------------|
+| [radar_point_cloud_classification](examples/radar_point_cloud_classification/) | Dedicated | Point Cloud | MSPM0G3507 | Human pose and fall detection from radar point-cloud frames. |
 
 ---
 
@@ -502,6 +401,12 @@ Note: LSTM models are not NPU-supported.
 | `MobileNetV1_58k_NPU` | ~58K | MobileNetV1-style DW-Sep | Yes | Compact NPU-optimized image classifier |
 | `MobileNetV2_58k_NPU` | ~58K | MobileNetV2-style DW-Sep | Yes | Inverted residual image classifier |
 
+### Radar Point Cloud Classification Models
+
+| Model Name | Parameters | Architecture | NPU | Description |
+|------------|------------|--------------|-----|-------------|
+| `Pose_and_Fall_model` | Varies | Linear (4-layer) | No | Human pose and fall detection from radar point-cloud data |
+
 ---
 
 ## Adding New Models
@@ -514,7 +419,27 @@ Key steps:
 3. (Optional) Add device performance info to `device_info/run_info.py`
 4. (Optional) Add model description to `model_descriptions/` for GUI integration
 
-**No changes required in tinyml-tinyverse or tinyml-modelmaker!**
+No changes required outside this repo.
+
+---
+
+## About the Task Types
+
+**Classification** outputs a probability distribution over predefined classes. Best for: "Is this an A fault, B fault, or C fault?", "Which type of activity is this?"
+
+**Regression** outputs a continuous numerical value. Best for: "What is the current torque?", "What will the temperature be?"
+
+**Forecasting** predicts future values in a time series. Best for: "What will happen next?"
+
+**Anomaly Detection** uses autoencoders to learn "normal" patterns; reconstruction error indicates anomalies. Best for: "Is this behavior normal?"
+
+**Audio Classification** extracts MFCC features from a fixed-length audio window and classifies into keyword or sound categories. Best for: "What keyword was spoken?", "What sound event occurred?"
+
+These categories can look similar from a distance, so here's how to tell them apart:
+
+- **Anomaly Detection vs. Classification** — "Is it normal, or an anomaly?" is anomaly detection (binary outcome). "Is it normal, anomaly type A, type B, or type C?" is classification (multiple categories).
+- **Classification vs. Regression** — predicting a **discrete** target (Class A / B / C, ...) from independent variables is classification; predicting a **continuous** target is regression.
+- **Regression vs. Forecasting** — predicting a continuous target **Y** at the **same** time instant as its inputs is regression; predicting a variable's value at a **future** time instant is forecasting.
 
 ---
 

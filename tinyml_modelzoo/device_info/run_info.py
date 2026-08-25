@@ -2284,6 +2284,7 @@ DEVICE_RUN_INFO = {
     },
     'Pose_and_Fall_model': {
         'F28P55': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
-        'F28P65': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'}
+        'F28P65': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'},
+        'IWRL6432': {'flash': 'TBD', 'inference_time_us': 'TBD', 'sram': 'TBD'}
     }
 }

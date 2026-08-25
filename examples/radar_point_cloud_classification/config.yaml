@@ -1,7 +1,7 @@
 common:
   task_type: radar_classification
   target_module: radar
-  target_device: MSPM0G3507
+  target_device: IWRL6432
 dataset:
   dataset_name: radar_human_pose_detection
   # Public dataset URL. If download fails on corporate network,

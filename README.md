@@ -93,66 +93,42 @@ common:
 
 ## Supported Target Devices
 
-### C2000 DSP Family (Texas Instruments)
+### C2000 F28x
 
-| Device | NPU | Description | Notes |
-|--------|-----|-------------|-------|
-| F28P55 | Yes | C2000 32-bit MCU | Recommended for complex models |
-| F28P65 | No | C2000 32-bit MCU, 150 MHz | High performance |
-| F29H85 | No | C2000 64-bit MCU with C29x core | High capacity |
-| F29P58 | No | C2000 64-bit MCU with C29x core | High capacity |
-| F29P32 | No | C2000 64-bit MCU with C29x core | High capacity |
-| F2837 | No | C2000 32-bit dual-core MCU, 200 MHz (xD) | General purpose |
-| F2837xS | No | C2000 32-bit single-core MCU, 200 MHz (xS) | General purpose |
-| F2838x | No | C2000 32-bit dual-core MCU, 200 MHz C28x+Cortex-M4 | Heterogeneous dual-core |
-| F28P551x | No | C2000 32-bit MCU, 150 MHz C28x+CLA, 1.1-MB Flash | High performance |
-| F28003 | No | C2000 32-bit MCU, 100 MHz | Cost-optimized |
-| F28004 | No | C2000 32-bit MCU, 100 MHz | Cost-optimized |
-| F2807x | No | C2000 32-bit MCU, 120 MHz C28x+CLA, 512-KB Flash | General purpose |
-| F28002x | No | C2000 32-bit MCU, 100 MHz C28x+CLA, 256-KB Flash | Cost-optimized |
-| F280013 | No | C2000 32-bit MCU, 100 MHz | Entry-level |
-| F280015 | No | C2000 32-bit MCU, 120 MHz | Entry-level |
-| F28E12 | No | C2000 32-bit MCU, 160 MHz, 64 KB flash | Entry-level |
+F2837, F2837xS, F2838x, F28P551x, F28003, F28004, F2807x, F28002x, F280013, F280015, F28E12, F28P65, F28P55
+**TinyEngine NPU:** F28P55
 
-### MSPM0 Family (Arm Cortex-M0+)
+### C2000 F29x
 
-| Device | NPU | Description | Notes |
-|--------|-----|-------------|-------|
-| MSPM0G3507 | No | 80 MHz Arm Cortex-M0+ | Ultra-low power, classification only |
-| MSPM0G3519 | No | 80 MHz Arm Cortex-M0+ | Ultra-low power |
-| MSPM0G5187 | Yes | 80 MHz Arm Cortex-M0+ | Ultra-low power, NPU-accelerated |
+F29H85, F29P58, F29P32
 
-### MSPM33C Family (Arm Cortex-M33)
+### MSPM0 (Arm Cortex-M0+)
 
-| Device | NPU | Description | Notes |
-|--------|-----|-------------|-------|
-| MSPM33C32 | No | 160 MHz Arm Cortex-M33, TrustZone | 1MB flash, 256kB SRAM |
-| MSPM33C34 | No | 160 MHz Arm Cortex-M33 | High performance |
+MSPM0G3507, MSPM0G3519, MSPM0G5187
+**TinyEngine NPU:** MSPM0G5187
 
-### AM13 Family (Arm Cortex-M33)
+### MSPM33C (Arm Cortex-M33)
 
-| Device | NPU | Description | Notes |
-|--------|-----|-------------|-------|
-| AM13E2 | Yes | Arm Cortex-M33 MCU | NPU-accelerated |
+MSPM33C32, MSPM33C34
 
-### AM26x Family (Arm Cortex-R5)
+### AM13 (Arm Cortex-M33)
 
-| Device | NPU | Description | Notes |
-|--------|-----|-------------|-------|
-| AM263 | No | Quad-core Arm Cortex-R5F, 400 MHz | High performance |
-| AM263P | No | Quad-core Arm Cortex-R5F, 400 MHz | High performance |
-| AM261 | No | Single-core Arm Cortex-R5F, 400 MHz | Cost-optimized |
+AM13E2
+**TinyEngine NPU:** AM13E2
 
-### Connectivity Devices (Wireless)
+### AM26x (Arm Cortex-R5)
 
-| Device | Hardware Accelerator | Description | Notes |
-|--------|-----|-------------|-------|
-| CC2755 | CDE | 96 MHz Arm Cortex-M33 wireless MCU | Optimized for PIR/wireless apps |
-| CC1312 | No | Arm Cortex-M4F wireless MCU | Sub-1GHz |
-| CC1314 | No | Arm Cortex-M33 wireless MCU | Sub-1GHz |
-| CC1352 | No | Arm Cortex-M4F wireless MCU | Sub-1GHz |
-| CC1354 | No | Arm Cortex-M33 wireless MCU | Sub-1GHz |
-| CC35X1 | CDE | Arm Cortex-M33 wireless MCU | Wi-Fi + BLE combo |
+AM263, AM263P, AM261
+
+### Connectivity (Wireless)
+
+CC2755, CC2745, CC1312, CC1314, CC1352, CC1354, CC35X1
+
+### Radar
+
+IWRL6432
+
+---
 
 The example tables further down reference these devices via short, named
 sets (Set A, Set B, ...) rather than repeating full device lists — see
@@ -274,7 +250,7 @@ config, meant to be adapted to your own dataset) or a **Dedicated** example
 
 | Example | Config | Data Type | Devices | Description |
 |---------|--------|-----------|---------|--------------|
-| [radar_point_cloud_classification](examples/radar_point_cloud_classification/) | Dedicated | Point Cloud | MSPM0G3507 | Human pose and fall detection from radar point-cloud frames. |
+| [radar_point_cloud_classification](examples/radar_point_cloud_classification/) | Dedicated | Point Cloud | IWRL6432 | Human pose and fall detection from radar point-cloud frames. |
 
 ---
 

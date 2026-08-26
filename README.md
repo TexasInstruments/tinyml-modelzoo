@@ -442,10 +442,7 @@ component repos.
     - DEVICE_TASK_SUPPORT.md and NPU_CONFIGURATION_GUIDELINES.md updated
     - New how-to: publishing shared wheels
   - Special Acknowledgement:
-    - Shoutout to @musicalplatypus for contributing towards a better, neater and more feature-rich toolchain by their additions such as full macOS/Apple Silicon (MPS) support, torch.compile+AMP 
-  ▎ training-performance optimizations, and NAS bug fixes. They also hardened the codebase with security fixes for unsafe deserialization/YAML loading, overhauled CI so tests actually run across all 
-  ▎ four packages, and expanded the test suite and architecture docs.
-
+    - Shoutout to [@musicalplatypus](https://github.com/musicalplatypus) for contributing towards a better, neater and more feature-rich toolchain by their additions such as full macOS/Apple Silicon (MPS) support, torch.compile+AMP training-performance optimizations, and NAS bug fixes. They also hardened the codebase with security fixes for unsafe deserialization/YAML loading, overhauled CI so tests actually run across all four packages, and expanded the test suite and architecture docs.
 
   </details>
 - [2026-Jun] Release version 1.4.0 of the software

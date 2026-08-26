@@ -35,6 +35,7 @@ tinyml-modelzoo/
 - [Available Models](#available-models)
 - [Adding New Models](#adding-new-models)
 - [About the Task Types](#about-the-task-types)
+- [Release History](#release-history)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
@@ -399,6 +400,184 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 ---
 
+## Release History
+
+Until **1.4.0** (2026-Jun), this history lived in the [tinyml-tensorlab](https://github.com/TexasInstruments/tinyml-tensorlab)
+repository on GitHub; that repository's source is now private. Starting with
+**1.5.0** (2026-Sep), `tinyml-modelzoo` (this repo) is the standalone, pip-installable
+entry point to TI's MCU AI flow — a simplified, easy-to-install replacement
+for what previously required cloning `tinyml-tensorlab`'s full set of
+component repos.
+
+- [2026-Sep] Release version 1.5.0 of the software
+  <details>
+
+  - Device Support:
+    - Added AM13E2 support for vision classification and radar tasks
+    - Added fel_memory support (feature-extraction library) for AM13 and C28x (F280013x, F280015x, F28002x) devices — enables on-device RAM/Flash estimation
+  - Models:
+    - Added TCDSResNet and a compressed DSCNN for audio classification (cough detection), both NPU-compliant
+    - Compressed MobileNet_v1 to fit AM13 memory budget
+    - Added Radar Point Cloud Classification support (new model + dataset flow across ModelMaker/TinyVerse/ModelZoo)
+  - Flows:
+    - ModelMaker can now report estimated RAM & Flash usage for Feature Extraction before training
+    - Support for preprocessing and publicly-available datasets in audio/radar flows
+    - NAS: can now accept a NAS model id directly
+  - Model Optimization:
+    - Residual connection support added to quantization (TINPU)
+    - Replaced qconfig_dict with a cleaner API to toggle auto-quantization on/off
+    - Hessian-aware auto-quantization bug fixes
+  - Reliability & Compatibility:
+    - Python 3.14 / PyTorch 2.13 compatibility across ModelMaker, ModelOptimization, TinyVerse
+    - macOS ARM64 (MPS/Apple Silicon) compatibility fixes across training, evaluation, and quantization
+    - torch.compile safety: unwraps compiled models correctly before ONNX/checkpoint export, falls back to eager on failure
+    - Security/robustness hardening: safe checkpoint deserialization, safe YAML loading, safer cache-dataset handling
+    - Training performance: torch.compile, AMP, persistent workers, more efficient eval loop
+    - Large expansion of automated test coverage (functional test tiers, pytest suites) across all repos
+  - Packaging:
+    - Added build_wheels.sh to build TinyVerse/ModelOptimization/ModelMaker wheels from local source
+    - ModelZoo and TinyVerse examples now runnable standalone via published ModelMaker wheel dependency (TI official wheel CDN)
+    - `tinyml-tensorlab` deprecated as the public entry point; `tinyml-modelzoo` takes over as the standalone, pip-installable way to use TI's MCU AI flow
+  - Documentation:
+    - DEVICE_TASK_SUPPORT.md and NPU_CONFIGURATION_GUIDELINES.md updated
+    - New how-to: publishing shared wheels
+
+  </details>
+- [2026-Jun] Release version 1.4.0 of the software
+  <details>
+
+    - Agent Skills with Claude Code supported for users to solve Edge AI/Tiny ML problems using natural language!
+    - Device Support: 40 MCU devices supported:
+      - AM1x: AM13E2
+      - C2000 F28: F280013, F280015, F28003, F28004, F2837, F28P55, F28P65
+      - C2000 F29: F29H85, F29P58, F29P32
+      - MSP M0: MSPM0G3507, MSPM0G3519, MSPM0G5187
+      - MSP M33: MSPM33C32,
+      - Connectivity: CC2755, CC1352, CC1354, CC35X1, CC1312, CC1314
+      - AM26x: AM263, AM263P, AM261
+  - Flows:
+    - Timeseries Anomaly Detection flow - More models
+    - On Device Learning Mode Enabled - Expansive functionalities
+  - Applications Supported
+    - 31 (4 generic + 27 specific applications)
+  - Models:
+    - 50+ generic models added over classification, regression, forecasting and anomaly detection tasks.
+  - Model Optimization:
+    - Hessian Aware Quantization for automatic recommendation of quantization bitwidths for weights.
+  - Compilation:
+      - Upgraded TI MCU Neural Network Compiler for MCUs to 2.1.2
+
+  </details>
+- [2026-Feb] Release version 1.3.0 of the software
+  <details>
+
+  - Device Support: 22 MCU devices supported:
+    - AM1x: AM13E2
+    - C2000 F28: F280013, F280015, F28003, F28004, F2837, F28P55, F28P65
+    - C2000 F29: F29H85, F29P58, F29P32
+    - MSP M0: MSPM0G3507, MSPM0G3519, MSPM0G5187
+    - MSP M33: MSPM33C32,
+    - Connectivity: CC2755, CC1352, CC1354, CC35X1,
+    - AM26x: AM263, AM263P, AM261
+  - Flows:
+    - Timeseries Anomaly Detection flow supported
+    - On Device Learning Mode Enabled
+  - Applications Supported
+    - 22 (4 generic + 18 specific applications)
+  - Models:
+    - 50+ generic models added over classification, regression, forecasting and anomaly detection tasks.
+  - Model Optimization:
+    - Partial Quantization Supported to enable best of precision and latency for regression models.
+  - Compilation:
+      - Upgraded TI MCU Neural Network Compiler for MCUs to 2.1.1 LTS
+
+  </details>
+- [2025-Nov] Release version 1.2.0 of the software
+
+    <details>
+
+    - Device Support:
+      - Added MSPM0 based MCUs: MSPM0G3507, MSPM0G5187
+      - Added Connectivity device: CC2745R10-Q1, CC2755R10
+    - General:
+      - Supports simple gain augmentation for classification tasks
+      - Prints dataset file level confusion matrix for classification tasks
+      - Golden Test Vectors for Regression tasks
+      - Run modelmaker with only the config, no more target device required in the input.
+    - Flows:
+      - Timeseries Forecasting flows supported
+      - L1, L2 normalization can be enabled in regression using lambda_reg param
+    - Model Optimization:
+      - How to use: Documentation updated.
+      - Example code for performing regression in modeloptimization
+      - Fixing clipping of input data to int8 or uint8 based on dataset (zero_point) (only the input zero point is fixed and not the intermediate layers)
+      - BatchNorm is supported by GENERIC quantization
+      - Experimental features like additional QDQ at input of model and floating bias can be enabled individually
+      - Residual Add supported for different scales, zero points, but not optimised for TINPU
+    - Compilation:
+      - Upgraded TI MCU Neural Network Compiler for MCUs to 2.1.0 LTS
+      - Supported all layer configs with 8-bit activations and 8-/4-/2-bit weights that can be offloaded to TI-NPU
+      - Supported all layer configs with 8-bit activations and 8-bit weights that can be accelerated using the M33 Custom Datapath Extension (CDE).
+
+  </details>
+- [2025-Aug] Release version 1.1.0 of the software
+  <details>
+
+  - General:
+    - Generic Timeseries Classification is available with fixed point reference dataset.
+    - Compatible with C2000Ware 6.0.0
+  - Model Optimization:
+    - Aggressive Quantization Modes for Weights & Activation: 2W8A, 4W4A, 4W8A --> massive speedup and memory saved
+    - Neural network Architecture Search for generating a TINPU compatible model directly based on user's dataset
+  - Dataset:
+    - Dataset can be split into train-test-val on a file-by-file basis or within-a-file basis
+  - Device Support:
+    - Full Support for F280013x
+    - Preliminary Support for F29H85x and MSPM0G3507x
+  - Compilation:
+    - Upgraded TI MCU Neural Network Compiler for MCUs to 2.0.0
+  - Windows Platform Specific:
+    - Major quantization accuracy improvements
+  - Miscellaneous:
+    - Fixed model performance data that appears on the terminal when a training is initiated
+    - Added Model Descriptions for all models
+    - Setup of the repos is now smoother and cleaner
+
+  </details>
+- [2025-Apr] Major feature updates (version 1.0.0) of the software
+  <details>
+
+  - General:
+    - Tiny ML Modelmaker is now a pip installable package!
+    - Existing models can be modified on the fly through a config file (check Tiny ML Modelmaker docs)
+    - MPS (Metal Performance Shaders) backend support for Mac host devices!
+  - Technology:
+    - PTQ and QAT flows supported in tinyml-modelmaker, tinyml-modeloptimization
+    - Ternary, 4 bit Quantization support in tinyml-modelmaker
+  - Flows:
+    - Regression ML tasks supported
+    - Autoencoder based Anomaly Detection task supported
+  - Feature Extraction:
+    - Feature Extraction transforms are now modular and compatible with C2000Ware 5.05 only
+    - Supports Haar and Hadamard Transform
+    - Golden test vectors file has one set uncommented by default to work OOB
+  - Data Visualisation:
+    - Multiclass ROC-AUC graphs are autogenerated for better explainability of reports and help select thresholds based on false alarm/ sensitivity preference
+    - PCA graphs are auto plotted for feature extracted data - Helps in identifying if the feature extraction actually helped
+    - Run now begins with displaying inference time, sram usage and flash usage for all the devices for any model.
+  - Dataset
+    - Goodness of Fit of dataset now enabled.
+  - Extensive Documentation & Know-How Examples to use Modelmaker
+
+  </details>
+- [2024-November] Updated (version 0.9.0) of the software
+- [2024-August] Release version 0.8.0 of the software
+- [2024-July] Release version 0.7.0 of the software
+- [2024-June] Release version 0.6.0 of the software
+- [2024-May] First public release (version 0.5.0) of the software
+
+---
+
 ## Additional Resources
 
 - [TI's Neural Network Compiler Documentation](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/)
@@ -411,6 +590,3 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 BSD 3-Clause License. See [LICENSE](LICENSE) for details.
 
----
-
-**Questions or Issues?** Open an issue on [GitHub](https://github.com/TexasInstruments/tinyml-tensorlab/issues).

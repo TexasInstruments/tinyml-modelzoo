@@ -374,11 +374,11 @@ buffers, and future model improvements.
 
 ### Step 1 — Prepare the dataset (if using your own recordings)
 
-Edit `DATA_DIR` and `OUTPUT_DIR` in `prepare_dataset.py` to point to your
-EdgeAI Studio CSV exports and desired output location, then run:
+Run `prepare_dataset.py` with `--data-dir` pointing to your EdgeAI Studio CSV
+exports and `--output-dir` for the output location:
 
 ```bash
-python prepare_dataset.py
+python prepare_dataset.py --data-dir /path/to/csvs --output-dir /path/to/output
 ```
 
 The script prints a summary of clips per class and an RMS distribution table.

@@ -5,7 +5,7 @@ common:
 
 dataset:
   dataset_name: wifi_csi_occupancy_detection
-  input_data_path: /path/to/wifi_presence_detection_dsi/
+  input_data_path: /home/tushxr16/tinyml-tensorlab/tinyml-modelzoo/preprocessed_wifi_presence_detection_dsk
 
 data_processing_feature_extraction:
   # Downsample: 128 Hz -> 64 Hz  (factor = sampling_rate / new_sr = 128 / 64 = 2)
@@ -37,7 +37,6 @@ data_processing_feature_extraction:
   num_frame_concat: 1         # single frame per sample; no temporal concatenation
   frame_skip: 1
   min_bin: 0
-  gof_test: True
 
   # Log transform parameters  (log10(1.0 + |F|))
   log_threshold: 1.0

@@ -5,7 +5,10 @@ from pathlib import Path
 from sklearn.model_selection import GroupShuffleSplit
 
 # Input CSI recordings and output directory
-IN_ROOT  = Path(r"/path/to/wifi_presence_detection/")
+# Download wifi_presence_detection_dsk.zip from:
+#   https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wifi_presence_detection_dsi.zip
+# Then extract the zip file and pass the path to the directory as IN_ROOT below
+IN_ROOT  = Path(r"/path/to/wifi_presence_detection_dsi/")
 OUT_ROOT = Path("preprocessed_wifi_presence_detection")
 
 LABEL_TO_FOLDER = {0: "class_0_no_presence", 1: "class_1_presence"}

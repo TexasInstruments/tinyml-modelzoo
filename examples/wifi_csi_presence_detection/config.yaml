@@ -42,8 +42,6 @@ data_processing_feature_extraction:
   log_threshold: 1.0
   log_mul: 1
   log_base: 10
-  offset: 0
-  scale: 1
 
 training:
   model_name: SimpleCNN2D_BN_t

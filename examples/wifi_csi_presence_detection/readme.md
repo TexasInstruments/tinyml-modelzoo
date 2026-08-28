@@ -68,6 +68,8 @@ Larger, more diverse dataset intended for robust model evaluation. Requires runn
 5. Resamples each session to a uniform grid at 128 Hz via linear interpolation
 6. Writes output CSVs with 52 subcarrier magnitude columns
 
+**Note:** The provided `wifi_presence_detection_dsi/` dataset is already preprocessed and ready to use — no need to run  `preprocess.py` on it again.
+
 **DSK dataset — `preprocess_dsk.py`:**
 
 1. Reads CSVs recursively; parses label and date from filename tokens (13 activity classes collapsed to binary)

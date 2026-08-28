@@ -1,12 +1,34 @@
 import re
+import zipfile
 import numpy as np
 import pandas as pd
 from pathlib import Path
 from sklearn.model_selection import GroupShuffleSplit
 
-# Input CSI recordings and output directory
-IN_ROOT  = Path(r"/path/to/wifi_presence_detection_dsk/")
+# Input CSI recordings and output directory.
+# Download wifi_presence_detection_dsk.zip from:
+#   https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wifi_presence_detection_dsk.zip
+# Then set IN_ROOT to either:
+#   - the path to the downloaded .zip  (zip file will be auto-extracted on first run)
+#   - the already-extracted wifi_presence_detection_dsk/Lab/ directory
+IN_ROOT  = Path(r"/path/to/wifi_presence_detection_dsk.zip")
 OUT_ROOT = Path("preprocessed_wifi_presence_detection_dsk")
+
+
+def _resolve_input_root(path: Path) -> Path:
+    if path.suffix.lower() != ".zip":
+        return path
+    if not path.exists():
+        raise FileNotFoundError(f"Zip not found: {path}")
+    extract_to = path.parent / path.stem
+    extract_to.mkdir(parents=True, exist_ok=True)
+    print(f"Extracting {path.name} -> {extract_to} ...")
+    with zipfile.ZipFile(path) as zf:
+        zf.extractall(extract_to)
+    lab_dir = extract_to / "Lab"
+    if not lab_dir.exists():
+        raise FileNotFoundError(f"Expected Lab/ dir not found after extraction: {lab_dir}")
+    return lab_dir
 
 # All 13 activity tokens; only no_presence_np_empty maps to class 0
 TOKENS_ALL = (
@@ -179,6 +201,10 @@ def build_entries_from_output():
 
 
 def main(annotations_only=False):
+    global IN_ROOT
+    if not annotations_only:
+        IN_ROOT = _resolve_input_root(IN_ROOT)
+
     classes_root     = OUT_ROOT / "classes"
     annotations_root = OUT_ROOT / "annotations"
     classes_root.mkdir(parents=True, exist_ok=True)

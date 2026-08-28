@@ -5,7 +5,7 @@ common:
 
 dataset:
   dataset_name: wifi_csi_occupancy_detection
-  input_data_path: /path/to/wifi_presence_detection_dsi/
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wifi_presence_detection_dsi.zip
 
 data_processing_feature_extraction:
   # Downsample: 128 Hz -> 64 Hz  (factor = sampling_rate / new_sr = 128 / 64 = 2)

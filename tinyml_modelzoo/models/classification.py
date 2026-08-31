@@ -399,6 +399,48 @@ class CNN_TS_PIR2D_BASE(GenericModelWithSpec):
         x = self.dropout(x)
         x = self.fc2(x)
         return x
+    
+class SimpleCNN2D_BN(torch.nn.Module):
+
+    def __init__(self, config=None, input_features=(26, 64), variables=26, num_classes=2):
+        # Input from framework: (N, 26, 64, 1) after FFT_COL — standard NCHW with C=26.
+        # FFT_COL now outputs channel-first so no permute needed.
+        if config is not None:
+            in_channels = config.get('variables', variables)
+            num_classes = config.get('num_classes', num_classes)
+        super(SimpleCNN2D_BN, self).__init__()
+        c1, c2 = 16, 32
+        dropout_p, channel_drop_p = 0.2, 0.1
+        k = 3
+
+        self.bn0      = torch.nn.BatchNorm2d(in_channels)
+        self.conv1    = torch.nn.Conv2d(in_channels, c1, kernel_size=(1, k), padding=(0, k // 2), bias=False)
+        self.bn1      = torch.nn.BatchNorm2d(c1)
+        self.relu1    = torch.nn.ReLU(inplace=True)
+        self.conv2    = torch.nn.Conv2d(c1, c2, kernel_size=(1, k), padding=(0, k // 2), bias=False)
+        self.bn2      = torch.nn.BatchNorm2d(c2)
+        self.relu2    = torch.nn.ReLU(inplace=True)
+
+        self.dropout2d = torch.nn.Dropout2d(p=channel_drop_p)
+
+        self.pool = torch.nn.AdaptiveMaxPool2d((1, 1))
+        self.dropout   = torch.nn.Dropout(p=dropout_p)
+        self.fc        = torch.nn.Linear(c2, num_classes)
+
+    def forward(self, x):                         # x: (N, 26, 64, 1) — NCHW from dataset
+        x = self.bn0(x)
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu1(x)
+        x = self.conv2(x)
+        x = self.bn2(x)
+        x = self.relu2(x)
+
+        x = self.dropout2d(x)
+        x = self.pool(x).view(x.size(0), -1)
+        x = self.dropout(x)
+        x = self.fc(x) 
+        return x
 
 
 # =============================================================================
@@ -1051,5 +1093,6 @@ __all__ = [
     'CNN_TS_GEN_BASE_13K_NPU',
     'CNN_TS_GEN_BASE_20K_NPU',
     'CNN_TS_GEN_BASE_40K_NPU',
+    'SimpleCNN2D_BN',
     'CNN_TS_GEN_BASE_55K_NPU',
 ]

@@ -183,6 +183,7 @@ purpose-built config for that specific use case.
 | [branched_model_parameters](examples/branched_model_parameters/) | Accelerometer/Gyroscope | Human Activity Recognition from accelerometer/gyroscope data. |
 | [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Voltage/Current | Non-Intrusive Load Monitoring - identify active appliances. |
 | [PLAID_nilm_classification](examples/PLAID_nilm_classification/) | Voltage/Current | Appliance identification using the PLAID dataset. |
+| [wifi_csi_presence_detection](examples/wifi_csi_presence_detection/) | Wi-Fi CSI | Device-free human presence detection from Wi-Fi Channel State Information. |
 
 ### Regression
 
@@ -218,6 +219,7 @@ purpose-built config for that specific use case.
 | Example | Data Type | Description |
 |---------|-----------|--------------|
 | [google_speech_command](examples/google_speech_command/) | Audio | 12-class keyword spotting from audio using MFCC + DSCNN model. |
+| [cough_detection](examples/cough_detection/) | Audio | Binary cough vs. other-sound detection using LPC features + ResNet model. |
 
 ### Image Classification
 
@@ -290,6 +292,7 @@ For detailed guidelines, see [NPU Configuration Guidelines](docs/NPU_CONFIGURATI
 | `FanImbalance_model_2_t` | Varies | Specialized | No | Fan imbalance variant 2 |
 | `FanImbalance_model_3_t` | Varies | Specialized | No | Fan imbalance variant 3 |
 | `PIRDetection_model_1_t` | Varies | Specialized | No | PIR-based presence detection |
+| `SimpleCNN2D_BN_t` | ~3K | CNN | No | Wi-Fi CSI presence detection (2-layer 2D CNN over time-frequency features) |
 
 ### Regression Models
 
@@ -349,6 +352,7 @@ Note: LSTM models are not NPU-supported.
 | Model Name | Parameters | Architecture | NPU | Description |
 |------------|------------|--------------|-----|-------------|
 | `DSCNN_NPU` | ~9K | DSCNN | Yes | Depthwise separable CNN for keyword spotting; input (1, 49, 10) MFCC |
+| `TCDS_ResNet_NPU` | ~24K | Temporal Channel-Decoupled Separable CNN | Yes | Cough detection from LPC features; input (1, 100, 70), SRAM-efficient (no 2D spatial buffers) |
 
 ### Image Classification Models
 

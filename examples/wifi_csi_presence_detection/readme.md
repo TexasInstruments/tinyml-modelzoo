@@ -1,4 +1,5 @@
 # Wi-Fi CSI Presence Detection
+### -Pranav A, Abhijeet Pal, Adithya Thonse
 
 ## Overview
 

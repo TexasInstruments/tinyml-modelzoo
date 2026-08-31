@@ -183,8 +183,20 @@ def get_args_parser():
     parser.add_argument('--num-classes', type=int, default=None,
                          help='override num_classes / model output size (skips cached-dataset resolution)')
     parser.add_argument('--opset-version', type=int, default=18, help='ONNX opset used for the export (default: 18, matching train_base.py)')
-    parser.add_argument('--quantization', type=int, default=0,
-                         help='quantization bits (0=float32, >0 for quantized model)')
+    parser.add_argument('--quantization', type=int, default=None, choices=[0, 1, 2],
+                         help='TinyMLQuantizationVersion to also estimate alongside the float32 baseline: '
+                              '0=NO_QUANTIZATION, 1=QUANTIZATION_GENERIC, 2=QUANTIZATION_TINPU (matches '
+                              "train_base.py's --quantization flag -- this is a quantization SCHEME, not a "
+                              'bitwidth; use --weight-bitwidth/--activation-bitwidth for that). Default: the '
+                              "config's own resolved training.quantization value (usually 2/TINPU); pass "
+                              '--quantization 0 to force float32-only.')
+    parser.add_argument('--quantization-method', type=str, default='QAT', choices=['QAT', 'PTQ'],
+                         help='quantization flavour used when --quantization is non-zero (default: QAT, '
+                              'matching train_base.py)')
+    parser.add_argument('--weight-bitwidth', type=int, default=8, choices=[16, 8, 4, 2],
+                         help='weight bitwidth used when --quantization is non-zero (default: 8)')
+    parser.add_argument('--activation-bitwidth', type=int, default=8,
+                         help='activation bitwidth used when --quantization is non-zero (default: 8)')
     parser.add_argument('--skip-fel', action='store_true',
                          help="don't attempt the Feature Extraction Library memory estimate, only the NN model")
     parser.add_argument('--output-dir', type=str, default=None,
@@ -385,13 +397,19 @@ def main(args):
     # shape first and fall back to the 4D one if the model rejects it.
     candidate_shapes = [(1, variables, input_features), (1, variables, input_features, 1)]
 
-    # Determine which quantization values to test
-    if args.quantization == 0:
+    # --quantization is a TinyMLQuantizationVersion (0/1/2), a quantization SCHEME,
+    # not a bitwidth -- default to the config's own resolved training.quantization
+    # (usually 2/QUANTIZATION_TINPU) unless the user overrode it.
+    quant_version = args.quantization if args.quantization is not None else int(params.training.quantization)
+    quant_label = f"{args.weight_bitwidth}-bit weight / {args.activation_bitwidth}-bit activation"
+
+    if quant_version == 0:
         quantization_values = [0]  # Only base (float32) estimate
         print(f"\nRunning memory pre-flight for base (float32) model...")
     else:
-        quantization_values = [0, args.quantization]  # Both base and quantized estimates
-        print(f"\nRunning memory pre-flight for base (float32) and quantized ({args.quantization}-bit) models...")
+        quantization_values = [0, quant_version]  # Both base and quantized estimates
+        print(f"\nRunning memory pre-flight for base (float32) and quantized "
+              f"(scheme={quant_version}, {quant_label}, method={args.quantization_method}) models...")
 
     results = {}  # Store results for each quantization value
 
@@ -404,7 +422,8 @@ def main(args):
                 target=params.compilation.target, cross_compiler=params.compilation.cross_compiler,
                 cross_compiler_options=params.compilation.cross_compiler_options,
                 target_c_mcpu=params.compilation.target_c_mcpu, opset_version=args.opset_version,
-                quantization=quant_val,
+                quantization=quant_val, quantization_method=args.quantization_method,
+                weight_bitwidth=args.weight_bitwidth, activation_bitwidth=args.activation_bitwidth,
                 fel_config=fel_config, logger=logger)
             if result.get('model') is not None:
                 break
@@ -426,26 +445,31 @@ def main(args):
     print("MEMORY PRE-FLIGHT RESULTS")
     print("="*60)
 
+    def _print_block(label, info):
+        print(f"\n{label}:")
+        print(f"  Code: {info['code']} bytes ({info['code']/1024:.2f} KB)")
+        print(f"  RO Data: {info['ro_data']} bytes ({info['ro_data']/1024:.2f} KB)")
+        print(f"  RW Data: {info['rw_data']} bytes ({info['rw_data']/1024:.2f} KB)")
+        print(f"  Total: {info['total']} bytes ({info['total']/1024:.2f} KB)")
+
     # Print base (float32) results
     base_result = results[0]
     if base_result.get('model'):
-        model_info = base_result['model']
-        print(f"\nBase Model (float32):")
-        print(f"  Code: {model_info['code']} bytes ({model_info['code']/1024:.2f} KB)")
-        print(f"  RO Data: {model_info['ro_data']} bytes ({model_info['ro_data']/1024:.2f} KB)")
-        print(f"  RW Data: {model_info['rw_data']} bytes ({model_info['rw_data']/1024:.2f} KB)")
-        print(f"  Total: {model_info['total']} bytes ({model_info['total']/1024:.2f} KB)")
+        _print_block("Base Model (float32)", base_result['model'])
+    # FEL's compiled artifacts depend on the paired NN model's own compiled
+    # I/O format (skip_normalize/output_int differ float32 vs. quantized), so
+    # print it once per model variant rather than a single shared number.
+    if fel_config is not None:
+        if base_result.get('fel'):
+            _print_block("Feature Extraction Library (FEL, paired with float32 model)", base_result['fel'])
+        else:
+            print(f"\nFeature Extraction Library (FEL, paired with float32 model): Not available for this device")
 
-    if args.quantization > 0 and 0 in results and args.quantization in results:
+    if quant_version > 0 and 0 in results and quant_version in results:
         # Print quantized results
-        quant_result = results[args.quantization]
+        quant_result = results[quant_version]
         if quant_result.get('model'):
-            model_info = quant_result['model']
-            print(f"\nQuantized Model ({args.quantization}-bit):")
-            print(f"  Code: {model_info['code']} bytes ({model_info['code']/1024:.2f} KB)")
-            print(f"  RO Data: {model_info['ro_data']} bytes ({model_info['ro_data']/1024:.2f} KB)")
-            print(f"  RW Data: {model_info['rw_data']} bytes ({model_info['rw_data']/1024:.2f} KB)")
-            print(f"  Total: {model_info['total']} bytes ({model_info['total']/1024:.2f} KB)")
+            _print_block(f"Quantized Model ({quant_label}, scheme={quant_version})", quant_result['model'])
 
             # Calculate savings
             base_total = base_result['model']['total']
@@ -454,18 +478,11 @@ def main(args):
                 savings = ((base_total - quant_total) / base_total) * 100
                 print(f"\nMemory Savings: {savings:.1f}% reduction")
 
-    # Print FEL results (same for both quantization values since FEL doesn't change with quantization)
-    if fel_config is not None:
-        # Use FEL results from base run (they should be identical)
-        fel_result = results[0].get('fel')
-        if fel_result:
-            print(f"\nFeature Extraction Library (FEL):")
-            print(f"  Code: {fel_result['code']} bytes ({fel_result['code']/1024:.2f} KB)")
-            print(f"  RO Data: {fel_result['ro_data']} bytes ({fel_result['ro_data']/1024:.2f} KB)")
-            print(f"  RW Data: {fel_result['rw_data']} bytes ({fel_result['rw_data']/1024:.2f} KB)")
-            print(f"  Total: {fel_result['total']} bytes ({fel_result['total']/1024:.2f} KB)")
-        else:
-            print(f"\nFeature Extraction Library (FEL): Not available for this device")
+        if fel_config is not None:
+            if quant_result.get('fel'):
+                _print_block(f"Feature Extraction Library (FEL, paired with quantized model)", quant_result['fel'])
+            else:
+                print(f"\nFeature Extraction Library (FEL, paired with quantized model): Not available for this device")
 
     print("="*60)
 

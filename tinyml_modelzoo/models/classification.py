@@ -423,7 +423,8 @@ class SimpleCNN2D_BN(torch.nn.Module):
 
         self.dropout2d = torch.nn.Dropout2d(p=channel_drop_p)
 
-        self.pool = torch.nn.AdaptiveMaxPool2d((1, 1))
+        self.pool = torch.nn.MaxPool2d(kernel_size=(1, 64))
+        self.flat = torch.nn.Flatten()
         self.dropout   = torch.nn.Dropout(p=dropout_p)
         self.fc        = torch.nn.Linear(c2, num_classes)
 
@@ -436,8 +437,9 @@ class SimpleCNN2D_BN(torch.nn.Module):
         x = self.bn2(x)
         x = self.relu2(x)
 
-        x = self.dropout2d(x)
-        x = self.pool(x).view(x.size(0), -1)
+        # x = self.dropout2d(x)
+        x = self.pool(x)
+        x = self.flat(x)
         x = self.dropout(x)
         x = self.fc(x) 
         return x

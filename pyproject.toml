@@ -26,7 +26,7 @@ dependencies = [
     # Pulls in tinyverse + torchmodelopt transitively. Hosted on TI's official
     # CDN (same host modelmaker/tinyverse use for their own sibling deps) -
     # modelzoo installs itself editable, so this must NOT also depend on modelzoo.
-    "tinyml_modelmaker @ https://software-dl.ti.com/C2000/esd/mcu_ai/wheel/tinyml_modelmaker-1.4.0-py3-none-any.whl",
+    # "tinyml_modelmaker @ https://software-dl.ti.com/C2000/esd/mcu_ai/wheel/tinyml_modelmaker-1.5.0-py3-none-any.whl",
 ]
 
 [[project.authors]]

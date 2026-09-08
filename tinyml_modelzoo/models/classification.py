@@ -402,9 +402,10 @@ class CNN_TS_PIR2D_BASE(GenericModelWithSpec):
     
 class SimpleCNN2D_BN(torch.nn.Module):
 
-    def __init__(self, config=None, input_features=(26, 64), variables=26, num_classes=2):
-        # Input from framework: (N, 26, 64, 1) after FFT_COL — standard NCHW with C=26.
+    def __init__(self, config=None, input_features=(1, 64), variables=26, num_classes=2):
+        # Input from framework: (N, 26, 1, 64) after FFT_COL — standard NCHW with C=26.
         # FFT_COL now outputs channel-first so no permute needed.
+        in_channels = variables
         if config is not None:
             in_channels = config.get('variables', variables)
             num_classes = config.get('num_classes', num_classes)
@@ -421,14 +422,30 @@ class SimpleCNN2D_BN(torch.nn.Module):
         self.bn2      = torch.nn.BatchNorm2d(c2)
         self.relu2    = torch.nn.ReLU(inplace=True)
 
-        self.dropout2d = torch.nn.Dropout2d(p=channel_drop_p)
+        # self.dropout2d = torch.nn.Dropout2d(p=channel_drop_p)
 
-        self.pool = torch.nn.MaxPool2d(kernel_size=(1, 64))
-        self.flat = torch.nn.Flatten()
+        k1h, k1w = self.conv1.kernel_size
+        s1h, s1w = self.conv1.stride
+        p1h, p1w = self.conv1.padding
+        d1h, d1w = self.conv1.dilation
+
+        k2h, k2w = self.conv2.kernel_size
+        s2h, s2w = self.conv2.stride
+        p2h, p2w = self.conv2.padding
+        d2h, d2w = self.conv2.dilation
+
+        H, W = input_features
+        H1 = (H + 2*p1h - d1h*(k1h-1) - 1) // s1h + 1
+        W1 = (W + 2*p1w - d1w*(k1w-1) - 1) // s1w + 1
+        H2 = (H1 + 2*p2h - d2h*(k2h-1) - 1) // s2h + 1
+        W2 = (W1 + 2*p2w - d2w*(k2w-1) - 1) // s2w + 1
+
+        self.pool = torch.nn.MaxPool2d(kernel_size=(H2, W2))
+        self.flatten = torch.nn.Flatten()
         self.dropout   = torch.nn.Dropout(p=dropout_p)
         self.fc        = torch.nn.Linear(c2, num_classes)
 
-    def forward(self, x):                         # x: (N, 26, 64, 1) — NCHW from dataset
+    def forward(self, x):                         # x: (N, 26, 1, 64) — NCHW from dataset
         x = self.bn0(x)
         x = self.conv1(x)
         x = self.bn1(x)
@@ -438,8 +455,9 @@ class SimpleCNN2D_BN(torch.nn.Module):
         x = self.relu2(x)
 
         # x = self.dropout2d(x)
+        # x = self.pool(x).view(x.size(0), -1)
         x = self.pool(x)
-        x = self.flat(x)
+        x = self.flatten(x)
         x = self.dropout(x)
         x = self.fc(x) 
         return x

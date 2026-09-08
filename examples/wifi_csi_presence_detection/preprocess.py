@@ -10,7 +10,6 @@ from sklearn.model_selection import GroupShuffleSplit
 # Then extract the zip file and pass the path to the directory as IN_ROOT below
 IN_ROOT  = Path(r"/path/to/wifi_presence_detection_dsi/")
 OUT_ROOT = Path("preprocessed_wifi_presence_detection")
-WIN_SEC     = 2.0  
 
 LABEL_TO_FOLDER = {0: "class_0_no_presence", 1: "class_1_presence"}
 LABEL_TO_PREFIX = {0: "no_presence", 1: "presence"}
@@ -106,7 +105,7 @@ def process_file(csv_path):
     for s, e in find_sessions(t):
         if e - s < 2:
             continue
-        Xi = interpolate_to_grid(t[s:e], Xc[s:e], Fs, WIN_SEC)
+        Xi = interpolate_to_grid(t[s:e], Xc[s:e], Fs, t[e - 1] - t[s])
         if Xi is not None:
             segments.append(Xi)
     return np.concatenate(segments, axis=0) if segments else None

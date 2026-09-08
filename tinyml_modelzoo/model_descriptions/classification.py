@@ -853,6 +853,46 @@ _model_descriptions = {
                         dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
+    'CLS_24k_NPU': deep_update_dict(deepcopy(template_model_description), {
+        'common': dict(
+            model_details='ODL-Compatible Classification Model with ~24K params.\n',
+        ),
+        'training': dict(
+            model_training_id='CNN_TS_GEN_BASE_24K_NPU',
+            model_name='CLS_24k_NPU',
+            target_devices=[
+                constants.TARGET_DEVICE_F2807x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2837xS,
+                constants.TARGET_DEVICE_F2838x,
+                constants.TARGET_DEVICE_F28003,
+                constants.TARGET_DEVICE_F28004,
+                constants.TARGET_DEVICE_F2837,
+                constants.TARGET_DEVICE_F28P65,
+                constants.TARGET_DEVICE_F28P55,
+                constants.TARGET_DEVICE_F29H85,
+                constants.TARGET_DEVICE_F29P58,
+                constants.TARGET_DEVICE_F29P32,
+                constants.TARGET_DEVICE_MSPM0G3507,
+                constants.TARGET_DEVICE_MSPM0G3519,
+                constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_MSPM33C32,
+                constants.TARGET_DEVICE_AM13E2,
+                constants.TARGET_DEVICE_CC2755,
+                constants.TARGET_DEVICE_CC2745,
+                constants.TARGET_DEVICE_CC1312,
+                constants.TARGET_DEVICE_CC1314,
+                constants.TARGET_DEVICE_CC1352,
+                constants.TARGET_DEVICE_CC1354,
+                constants.TARGET_DEVICE_CC35X1,
+                constants.TARGET_DEVICE_AM263,
+                constants.TARGET_DEVICE_AM263P,
+                constants.TARGET_DEVICE_AM261,
+            ],
+            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                        dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
+        ),
+    }),
     'CLS_40k_NPU': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             task_type=constants.TASK_TYPE_GENERIC_TS_CLASSIFICATION,
@@ -1528,6 +1568,7 @@ enabled_models_list = [
     'CLS_13k_NPU',
     'CLS_40k_NPU',
     'CLS_20k_NPU', 'CLS_55k_NPU', 'ECG_55k_NPU',
+    'CLS_24k_NPU',
     # Application-specific models
     'ArcFault_model_200_t', 'ArcFault_model_300_t', 'ArcFault_model_700_t', 'ArcFault_model_1400_t',
     'MotorFault_model_1_t', 'MotorFault_model_2_t', 'MotorFault_model_3_t', 'PIRDetection_model_1_t',

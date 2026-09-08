@@ -647,6 +647,36 @@ class CNN_TS_GEN_BASE_13K_NPU(GenericModelWithSpec):
         return model_spec
 
 
+class CNN_TS_GEN_BASE_24K_NPU(torch.nn.Module):
+    """
+    NPU-Optimized 24K-parameter model.
+    """
+    def __init__(self, config, input_features=128, variables=1, num_classes=2):
+        super().__init__()
+        input_features = config.get('input_features', input_features)
+        variables      = config.get('variables',      variables)
+        num_classes    = config.get('num_classes',    num_classes)
+        conv_filters   = 3
+        conv_kernel    = 80
+        fc1_in         = conv_filters * (input_features - conv_kernel + 1)
+        self.bn0   = torch.nn.BatchNorm2d(variables)
+        self.conv1 = torch.nn.Conv2d(variables, conv_filters, kernel_size=(conv_kernel, 1))
+        self.bn1   = torch.nn.BatchNorm2d(conv_filters)
+        self.relu1 = torch.nn.ReLU()
+        self.fc1   = torch.nn.Linear(fc1_in, 160)
+        self.relu2 = torch.nn.ReLU()
+        self.fc2   = torch.nn.Linear(160, num_classes)
+
+    def forward(self, x):
+        B = x.size(0)
+        x = self.bn0(x)
+        x = self.relu1(self.bn1(self.conv1(x)))  
+        x = x.view(B, -1)                        
+        x = self.relu2(self.fc1(x))              
+        x = self.fc2(x)                          
+        return x
+
+
 class CNN_TS_GEN_BASE_20K_NPU(GenericModelWithSpec):
     """
     NPU-Optimized ~20K-parameter model.
@@ -1112,6 +1142,7 @@ __all__ = [
     'CNN_TS_GEN_BASE_8K_NPU',
     'CNN_TS_GEN_BASE_13K_NPU',
     'CNN_TS_GEN_BASE_20K_NPU',
+    'CNN_TS_GEN_BASE_24K_NPU',
     'CNN_TS_GEN_BASE_40K_NPU',
     'SimpleCNN2D_BN',
     'CNN_TS_GEN_BASE_55K_NPU',

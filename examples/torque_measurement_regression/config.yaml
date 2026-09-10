@@ -17,5 +17,6 @@ training:
   num_gpus: 0
   learning_rate: 0.001
   output_int: false
+  auto_quantization: true
 testing: {}
 compilation: {}

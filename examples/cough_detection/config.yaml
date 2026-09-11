@@ -18,7 +18,7 @@ training:
   training_epochs: 40       # Increase from 20 to 50 for better convergence with small dataset
   early_stopping: true
   early_stopping_patience: 5
-  num_gpus: 0                # CPU training (set to 1 if you have a CUDA GPU)
+  num_gpus: 1                # CPU training (set to 1 if you have a CUDA GPU)
   learning_rate: 0.01        # Reduced from 0.1 for fine-tuning with limited data
   weight_decay: 4e-4
 

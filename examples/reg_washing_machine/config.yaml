@@ -19,7 +19,7 @@ training:
   early_stopping: true
   early_stopping_patience: 5
   lambda_reg: 0.01
-  num_gpus: 0
+  num_gpus: 1
   quantization: 2
   auto_quantization : True
 testing: {}

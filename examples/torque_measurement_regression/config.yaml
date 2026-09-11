@@ -16,7 +16,7 @@ training:
   training_epochs: 50
   early_stopping: true
   early_stopping_patience: 5
-  num_gpus: 0
+  num_gpus: 1
   learning_rate: 0.001
   output_int: false
   auto_quantization: true

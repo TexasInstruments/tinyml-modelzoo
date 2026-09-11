@@ -1,7 +1,7 @@
 common:
     target_module: 'timeseries'
     task_type: 'generic_timeseries_anomalydetection'
-    target_device: 'F29H85'
+    target_device: 'F28P55'
     run_name: '{date-time}/{model_name}'
 
 dataset:
@@ -14,21 +14,20 @@ data_processing_feature_extraction:
     data_proc_transforms:
     - SimpleWindow
     - Downsample
-    frame_size: 100
+    frame_size: 128
     sampling_rate: 100
     new_sr: 10
     variables: 1
 
 training:
-    model_name: AD_17k
+    model_name: AD_11k_NPU
     model_config: ''
     batch_size: 64
-    training_epochs: 50
-    early_stopping: true
-    early_stopping_patience: 5
+    training_epochs: 30
     num_gpus: 0
-    quantization: 1
-    output_int: false
+    quantization: 2
+    auto_quantization: False
+    output_int: False
 
 testing:
     enable: True

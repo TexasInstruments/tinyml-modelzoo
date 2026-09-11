@@ -35,6 +35,7 @@ tinyml-modelzoo/
 - [Available Models](#available-models)
 - [Adding New Models](#adding-new-models)
 - [About the Task Types](#about-the-task-types)
+- [Release History](#release-history)
 - [Additional Resources](#additional-resources)
 - [License](#license)
 
@@ -93,46 +94,39 @@ common:
 
 ## Supported Target Devices
 
-### C2000 F28x
+### AM13 (Arm Cortex-M33)
 
-F2837, F2837xS, F2838x, F28P551x, F28003, F28004, F2807x, F28002x, F280013, F280015, F28E12, F28P65, F28P55
-**TinyEngine NPU:** F28P55
-
-### C2000 F29x
-
-F29H85, F29P58, F29P32
+* Devices with **TinyEngine NPU** (hardware accelerator): AM13E2
 
 ### MSPM0 (Arm Cortex-M0+)
 
-MSPM0G3507, MSPM0G3519, MSPM0G5187
-**TinyEngine NPU:** MSPM0G5187
+* Devices with **TinyEngine NPU** (hardware accelerator): MSPM0G5187
+* MSPM0G3507, MSPM0G3519
+
+### Connectivity (Arm Cortex-M33/M4)
+
+* CC2755, CC2745, CC1312, CC1314, CC1352, CC1354, CC35X1
+
+### C2000 (C28 DSP)
+
+* Devices with **TinyEngine NPU** (hardware accelerator): F28P55
+* F2837, F2837xS, F2838x, F28P551x, F28003, F28004, F2807x, F28002x, F280013, F280015, F28E12, F28P65
+
+### C2000 (C29 DSP)
+
+* F29H85, F29P58, F29P32
 
 ### MSPM33C (Arm Cortex-M33)
 
-MSPM33C32, MSPM33C34
-
-### AM13 (Arm Cortex-M33)
-
-AM13E2
-**TinyEngine NPU:** AM13E2
+* MSPM33C32, MSPM33C34
 
 ### AM26x (Arm Cortex-R5)
 
-AM263, AM263P, AM261
+* AM263, AM263P, AM261
 
-### Connectivity (Wireless)
+### Radar (Arm Cortex-M4)
 
-CC2755, CC2745, CC1312, CC1314, CC1352, CC1354, CC35X1
-
-### Radar
-
-IWRL6432
-
----
-
-The example tables further down reference these devices via short, named
-sets (Set A, Set B, ...) rather than repeating full device lists — see
-[Examples Reference](#examples-reference).
+* IWRL6432
 
 ---
 
@@ -162,95 +156,84 @@ For the reasoning behind how these categories differ from one another, see
 
 ## Examples Reference
 
-Each example links to its config directory under `examples/`. The **Config**
-column marks whether it's a **Generic** example (a `generic_timeseries_*`
-config, meant to be adapted to your own dataset) or a **Dedicated** example
-(a purpose-built config/model for that specific use case).
-
-**Device sets** (referenced by name below, instead of repeating device lists):
-
-| Set | Devices |
-|-----|---------|
-| **A** | F280013, F280015, F28003, F28004, F2807x, F28002x, F2837, F2837xS, F2838x, F28P55, F28P65, F28P551x, F29H85, MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32, AM13E2, AM263 |
-| **B** | Set A + Connectivity devices (CC1312, CC1314, CC1352, CC1354, CC2755, CC2745, CC35X1) |
-| **C** | MSPM0G5187 only |
-| **D** | MSPM0G3507, MSPM0G3519, MSPM0G5187 |
-| **E** | MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32 |
-| **F** | CC2755, CC1312, CC1314, CC1352, CC1354, CC35X1, MSPM0G5187, MSPM0G3507, MSPM0G3519, MSPM33C32 |
-| **G** | All devices listed under [Supported Target Devices](#supported-target-devices) |
-| **H** | C2000, MSPM0, MSPM33C, AM26x, and AM13 families (all except Connectivity devices) |
+Each example links to its config directory under `examples/`. The first row
+in each table is the **generic** example (a `generic_timeseries_*` config,
+meant to be adapted to your own dataset); every other row is a **dedicated**,
+purpose-built config for that specific use case.
 
 ### Classification
 
-| Example | Config | Data Type | Devices | Description |
-|---------|--------|-----------|---------|--------------|
-| [generic_timeseries_classification](examples/generic_timeseries_classification/) | Generic | — | Set G | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
-| [dc_arc_fault](examples/dc_arc_fault/) | Dedicated | Univariate | Set A | Detect DC arc faults from current waveforms for electrical safety. |
-| [ac_arc_fault](examples/ac_arc_fault/) | Dedicated | Univariate | Set A | Detect AC arc faults in electrical systems. |
-| [motor_bearing_fault](examples/motor_bearing_fault/) | Dedicated | Multivariate | Set A | Classify 5 bearing fault types + normal operation from vibration data. |
-| [blower_imbalance](examples/blower_imbalance/) | Dedicated | Multivariate | Set A | Detect blade imbalance in HVAC blowers using 3-phase motor currents. |
-| [fan_blade_fault_classification](examples/fan_blade_fault_classification/) | Dedicated | Multivariate | Set B | Detect faults in BLDC fans from accelerometer data. |
-| [gearbox_fault_detection](examples/gearbox_fault_detection/) | Dedicated | Multivariate | Set D | Classify gearbox operating conditions (healthy vs broken tooth) from vibration data. |
-| [grid_fault_detection](examples/grid_fault_detection/) | Dedicated | Multivariate | Set A | Detect electrical grid faults from sensor data. |
-| [ecg_classification](examples/ecg_classification/) | Dedicated | Multivariate | Set D | Classify normal vs anomalous heartbeats from ECG signals. |
-| [pir_detection](examples/pir_detection/) | Dedicated | Multivariate | Set F | Detect presence/motion using PIR sensor data. |
-| [fall_detection_classification](examples/fall_detection_classification/) | Dedicated | Multivariate | Set C | Detect and classify Human Fall vs Activities of Daily Living (ADL). |
-| [dynamic_hand_gesture_recognition](examples/dynamic_hand_gesture_recognition/) | Dedicated | Multivariate | Set C | Classify 4 dynamic hand gestures (circle, wave, tap, other) from 3-axis accelerometer data. |
-| [electrical_fault](examples/electrical_fault/) | Generic | Multivariate | Set H | Classify transmission line faults using voltage and current (2-class and 6-class variants). |
-| [grid_stability](examples/grid_stability/) | Generic | Multivariate | Set H | Predict power grid stability from node parameters. |
-| [gas_sensor](examples/gas_sensor/) | Generic | Multivariate | Set H | Identify gas type and concentration from sensor array data. |
-| [branched_model_parameters](examples/branched_model_parameters/) | Generic | Multivariate | Set H | Human Activity Recognition from accelerometer/gyroscope data. |
-| [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Generic | Multivariate | Set H | Non-Intrusive Load Monitoring - identify active appliances. |
-| [PLAID_nilm_classification](examples/PLAID_nilm_classification/) | Generic | Multivariate | Set H | Appliance identification using the PLAID dataset. |
+| Example | Data Type | Description |
+|---------|-----------|--------------|
+| [generic_timeseries_classification](examples/generic_timeseries_classification/) | — | Classify sine/square/sawtooth waveforms. **Start here** to learn the toolchain. |
+| [dc_arc_fault](examples/dc_arc_fault/) | Current | Detect DC arc faults from current waveforms for electrical safety. |
+| [ac_arc_fault](examples/ac_arc_fault/) | Current | Detect AC arc faults in electrical systems. |
+| [motor_bearing_fault](examples/motor_bearing_fault/) | Vibration | Classify 5 bearing fault types + normal operation from vibration data. |
+| [blower_imbalance](examples/blower_imbalance/) | Current | Detect blade imbalance in HVAC blowers using 3-phase motor currents. |
+| [fan_blade_fault_classification](examples/fan_blade_fault_classification/) | Accelerometer | Detect faults in BLDC fans from accelerometer data. |
+| [gearbox_fault_detection](examples/gearbox_fault_detection/) | Vibration | Classify gearbox operating conditions (healthy vs broken tooth) from vibration data. |
+| [grid_fault_detection](examples/grid_fault_detection/) | Current | Detect electrical grid faults from sensor data. |
+| [ecg_classification](examples/ecg_classification/) | ECG | Classify normal vs anomalous heartbeats from ECG signals. |
+| [pir_detection](examples/pir_detection/) | PIR | Detect presence/motion using PIR sensor data. |
+| [fall_detection_classification](examples/fall_detection_classification/) | Accelerometer | Detect and classify Human Fall vs Activities of Daily Living (ADL). |
+| [dynamic_hand_gesture_recognition](examples/dynamic_hand_gesture_recognition/) | Accelerometer | Classify 4 dynamic hand gestures (circle, wave, tap, other) from 3-axis accelerometer data. |
+| [electrical_fault](examples/electrical_fault/) | Voltage/Current | Classify transmission line faults using voltage and current (2-class and 6-class variants). |
+| [grid_stability](examples/grid_stability/) | Simulated grid parameters | Predict power grid stability from node parameters. |
+| [gas_sensor](examples/gas_sensor/) | Gas sensor array | Identify gas type and concentration from sensor array data. |
+| [branched_model_parameters](examples/branched_model_parameters/) | Accelerometer/Gyroscope | Human Activity Recognition from accelerometer/gyroscope data. |
+| [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Voltage/Current | Non-Intrusive Load Monitoring - identify active appliances. |
+| [PLAID_nilm_classification](examples/PLAID_nilm_classification/) | Voltage/Current | Appliance identification using the PLAID dataset. |
+| [wifi_csi_presence_detection](examples/wifi_csi_presence_detection/) | Wi-Fi CSI | Device-free human presence detection from Wi-Fi Channel State Information. |
 
 ### Regression
 
-| Example | Config | Data Type | Devices | Description |
-|---------|--------|-----------|---------|--------------|
-| [generic_timeseries_regression](examples/generic_timeseries_regression/) | Generic | — | Set H | Generic regression example for continuous value prediction. |
-| [mosfet_temp_prediction](examples/mosfet_temp_prediction/) | Dedicated | Multivariate | Set A | Predict MOSFET temperature from electrical parameters. |
-| [torque_measurement_regression](examples/torque_measurement_regression/) | Generic | Multivariate | Set H | Predict PMSM motor torque from current measurements. |
-| [induction_motor_speed_prediction](examples/induction_motor_speed_prediction/) | Generic | Multivariate | Set H | Predict induction motor speed from electrical signals. |
-| [reg_washing_machine](examples/reg_washing_machine/) | Generic | Multivariate | Set H | Predict washing machine load weight. |
+| Example | Data Type | Description |
+|---------|-----------|--------------|
+| [generic_timeseries_regression](examples/generic_timeseries_regression/) | — | Generic regression example for continuous value prediction. |
+| [mosfet_temp_prediction](examples/mosfet_temp_prediction/) | Temperature/Power | Predict MOSFET temperature from electrical parameters. |
+| [torque_measurement_regression](examples/torque_measurement_regression/) | Voltage/Current/Speed/Temperature | Predict PMSM motor torque from current measurements. |
+| [induction_motor_speed_prediction](examples/induction_motor_speed_prediction/) | Voltage/Current | Predict induction motor speed from electrical signals. |
+| [reg_washing_machine](examples/reg_washing_machine/) | Voltage/Current/Speed | Predict washing machine load weight. |
 
 ### Forecasting
 
-| Example | Config | Data Type | Devices | Description |
-|---------|--------|-----------|---------|--------------|
-| [generic_timeseries_forecasting](examples/generic_timeseries_forecasting/) | Generic | — | Set H | Generic forecasting example for time series prediction. |
-| [forecasting_pmsm_rotor_temp](examples/forecasting_pmsm_rotor_temp/) | Generic | Multivariate | Set H | Forecast PMSM rotor winding temperature. |
-| [hvac_indoor_temp_forecast](examples/hvac_indoor_temp_forecast/) | Generic | Multivariate | Set H | Predict indoor temperature for HVAC control. |
+| Example | Data Type | Description |
+|---------|-----------|--------------|
+| [generic_timeseries_forecasting](examples/generic_timeseries_forecasting/) | — | Generic forecasting example for time series prediction. |
+| [forecasting_pmsm_rotor_temp](examples/forecasting_pmsm_rotor_temp/) | Voltage/Current | Forecast PMSM rotor winding temperature. |
+| [hvac_indoor_temp_forecast](examples/hvac_indoor_temp_forecast/) | Temperature | Predict indoor temperature for HVAC control. |
 
 ### Anomaly Detection
 
-| Example | Config | Data Type | Devices | Description |
-|---------|--------|-----------|---------|--------------|
-| [generic_timeseries_anomalydetection](examples/generic_timeseries_anomalydetection/) | Generic | — | Set H | Generic anomaly detection example using autoencoders. |
-| [dc_arc_fault (DSI)](examples/dc_arc_fault/config_anomaly_detection_dsi.yaml) | Dedicated | Univariate | Set A | Detect anomalous DC arc patterns using autoencoder (DSI dataset). |
-| [dc_arc_fault (DSK)](examples/dc_arc_fault/config_anomaly_detection_dsk.yaml) | Dedicated | Univariate | Set A | Detect anomalous DC arc patterns using autoencoder (DSK dataset). |
-| [ecg_classification](examples/ecg_classification/config_anomaly_detection.yaml) | Dedicated | Multivariate | Set D | Detect anomalous heartbeat patterns from ECG signals. |
-| [fan_blade_fault_classification](examples/fan_blade_fault_classification/config_anomaly_detection.yaml) | Dedicated | Multivariate | Set B | Detect anomalous fan blade behavior from accelerometer data. |
-| [motor_bearing_fault](examples/motor_bearing_fault/config_anomaly_detection.yaml) | Dedicated | Multivariate | Set A | Detect anomalous bearing behavior from vibration data. |
+| Example | Data Type | Description |
+|---------|-----------|--------------|
+| [generic_timeseries_anomalydetection](examples/generic_timeseries_anomalydetection/) | — | Generic anomaly detection example using autoencoders. |
+| [dc_arc_fault (DSI)](examples/dc_arc_fault/config_anomaly_detection_dsi.yaml) | Current | Detect anomalous DC arc patterns using autoencoder (DSI dataset). |
+| [dc_arc_fault (DSK)](examples/dc_arc_fault/config_anomaly_detection_dsk.yaml) | Current | Detect anomalous DC arc patterns using autoencoder (DSK dataset). |
+| [ecg_classification](examples/ecg_classification/config_anomaly_detection.yaml) | ECG | Detect anomalous heartbeat patterns from ECG signals. |
+| [fan_blade_fault_classification](examples/fan_blade_fault_classification/config_anomaly_detection.yaml) | Accelerometer | Detect anomalous fan blade behavior from accelerometer data. |
+| [motor_bearing_fault](examples/motor_bearing_fault/config_anomaly_detection.yaml) | Vibration | Detect anomalous bearing behavior from vibration data. |
 
 ### Audio Classification
 
-| Example | Config | Data Type | Devices | Description |
-|---------|--------|-----------|---------|--------------|
-| [google_speech_command](examples/google_speech_command/) | Dedicated | Audio | Set C | 12-class keyword spotting from audio using MFCC + DSCNN model. |
+| Example | Data Type | Description |
+|---------|-----------|--------------|
+| [google_speech_command](examples/google_speech_command/) | Audio | 12-class keyword spotting from audio using MFCC + DSCNN model. |
+| [cough_detection](examples/cough_detection/) | Audio | Binary cough vs. other-sound detection using LPC features + ResNet model. |
 
 ### Image Classification
 
-| Example | Config | Data Type | Devices | Description |
-|---------|--------|-----------|---------|--------------|
-| [MNIST_image_classification](examples/MNIST_image_classification/) | Dedicated | Image | Set E | Handwritten digit recognition (MNIST dataset). |
-| [machine_readable_code_classification](examples/machine_readable_code_classification/) | Dedicated | Image | Set C | Classify QR codes, barcodes, and other symbols (28×28 images). |
-| [coffee_bean_classification](examples/coffee_bean_classification/) | Dedicated | Image | Set C | Classify coffee bean quality from images. |
+| Example | Data Type | Description |
+|---------|-----------|--------------|
+| [MNIST_image_classification](examples/MNIST_image_classification/) | Image | Handwritten digit recognition (MNIST dataset). |
+| [machine_readable_code_classification](examples/machine_readable_code_classification/) | Image | Classify QR codes, barcodes, and other symbols (28×28 images). |
+| [coffee_bean_classification](examples/coffee_bean_classification/) | Image | Classify coffee bean quality from images. |
 
 ### Radar Point Cloud Classification
 
-| Example | Config | Data Type | Devices | Description |
-|---------|--------|-----------|---------|--------------|
-| [radar_point_cloud_classification](examples/radar_point_cloud_classification/) | Dedicated | Point Cloud | IWRL6432 | Human pose and fall detection from radar point-cloud frames. |
+| Example | Data Type | Description |
+|---------|-----------|--------------|
+| [radar_point_cloud_classification](examples/radar_point_cloud_classification/) | Radar point cloud | Human pose and fall detection from radar point-cloud frames. |
 
 ---
 
@@ -309,6 +292,7 @@ For detailed guidelines, see [NPU Configuration Guidelines](docs/NPU_CONFIGURATI
 | `FanImbalance_model_2_t` | Varies | Specialized | No | Fan imbalance variant 2 |
 | `FanImbalance_model_3_t` | Varies | Specialized | No | Fan imbalance variant 3 |
 | `PIRDetection_model_1_t` | Varies | Specialized | No | PIR-based presence detection |
+| `SimpleCNN2D_BN_t` | ~3K | CNN | No | Wi-Fi CSI presence detection (2-layer 2D CNN over time-frequency features) |
 
 ### Regression Models
 
@@ -368,6 +352,7 @@ Note: LSTM models are not NPU-supported.
 | Model Name | Parameters | Architecture | NPU | Description |
 |------------|------------|--------------|-----|-------------|
 | `DSCNN_NPU` | ~9K | DSCNN | Yes | Depthwise separable CNN for keyword spotting; input (1, 49, 10) MFCC |
+| `TCDS_ResNet_NPU` | ~24K | Temporal Channel-Decoupled Separable CNN | Yes | Cough detection from LPC features; input (1, 100, 70), SRAM-efficient (no 2D spatial buffers) |
 
 ### Image Classification Models
 
@@ -419,6 +404,186 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 ---
 
+## Release History
+
+Until **1.4.0** (2026-Jun), this history lived in the [tinyml-tensorlab](https://github.com/TexasInstruments/tinyml-tensorlab)
+repository on GitHub; that repository's source is now private. Starting with
+**1.5.0** (2026-Sep), `tinyml-modelzoo` (this repo) is the standalone, pip-installable
+entry point to TI's MCU AI flow — a simplified, easy-to-install replacement
+for what previously required cloning `tinyml-tensorlab`'s full set of
+component repos.
+
+- [2026-Sep] Release version 1.5.0 of the software
+  <details>
+
+  - Device Support:
+    - Added AM13E2 support for vision classification and radar tasks
+    - Added fel_memory support (feature-extraction library) for AM13 and C28x (F280013x, F280015x, F28002x) devices — enables on-device RAM/Flash estimation
+  - Models:
+    - Added TCDSResNet and a compressed DSCNN for audio classification (cough detection), both NPU-compliant
+    - Compressed MobileNet_v1 to fit AM13 memory budget
+    - Added Radar Point Cloud Classification support (new model + dataset flow across ModelMaker/TinyVerse/ModelZoo)
+  - Flows:
+    - ModelMaker can now report estimated RAM & Flash usage for Feature Extraction before training
+    - Support for preprocessing and publicly-available datasets in audio/radar flows
+    - NAS: can now accept a NAS model id directly
+  - Model Optimization:
+    - Residual connection support added to quantization (TINPU)
+    - Replaced qconfig_dict with a cleaner API to toggle auto-quantization on/off
+    - Hessian-aware auto-quantization bug fixes
+  - Reliability & Compatibility:
+    - Python 3.14 / PyTorch 2.13 compatibility across ModelMaker, ModelOptimization, TinyVerse
+    - macOS ARM64 (MPS/Apple Silicon) compatibility fixes across training, evaluation, and quantization
+    - torch.compile safety: unwraps compiled models correctly before ONNX/checkpoint export, falls back to eager on failure
+    - Security/robustness hardening: safe checkpoint deserialization, safe YAML loading, safer cache-dataset handling
+    - Training performance: torch.compile, AMP, persistent workers, more efficient eval loop
+    - Large expansion of automated test coverage (functional test tiers, pytest suites) across all repos
+  - Packaging:
+    - Added build_wheels.sh to build TinyVerse/ModelOptimization/ModelMaker wheels from local source
+    - ModelZoo and TinyVerse examples now runnable standalone via published ModelMaker wheel dependency (TI official wheel CDN)
+    - `tinyml-tensorlab` deprecated as the public entry point; `tinyml-modelzoo` takes over as the standalone, pip-installable way to use TI's MCU AI flow
+  - Documentation:
+    - DEVICE_TASK_SUPPORT.md and NPU_CONFIGURATION_GUIDELINES.md updated
+    - New how-to: publishing shared wheels
+  - Special Acknowledgement:
+    - Shoutout to [@musicalplatypus](https://github.com/musicalplatypus) for contributing towards a better, neater and more feature-rich toolchain by their additions such as full macOS/Apple Silicon (MPS) support, torch.compile+AMP training-performance optimizations, and NAS bug fixes. They also hardened the codebase with security fixes for unsafe deserialization/YAML loading, overhauled CI so tests actually run across all four packages, and expanded the test suite and architecture docs.
+
+  </details>
+- [2026-Jun] Release version 1.4.0 of the software
+  <details>
+
+    - Agent Skills with Claude Code supported for users to solve Edge AI/Tiny ML problems using natural language!
+    - Device Support: 40 MCU devices supported:
+      - AM1x: AM13E2
+      - C2000 F28: F280013, F280015, F28003, F28004, F2837, F28P55, F28P65
+      - C2000 F29: F29H85, F29P58, F29P32
+      - MSP M0: MSPM0G3507, MSPM0G3519, MSPM0G5187
+      - MSP M33: MSPM33C32,
+      - Connectivity: CC2755, CC1352, CC1354, CC35X1, CC1312, CC1314
+      - AM26x: AM263, AM263P, AM261
+  - Flows:
+    - Timeseries Anomaly Detection flow - More models
+    - On Device Learning Mode Enabled - Expansive functionalities
+  - Applications Supported
+    - 31 (4 generic + 27 specific applications)
+  - Models:
+    - 50+ generic models added over classification, regression, forecasting and anomaly detection tasks.
+  - Model Optimization:
+    - Hessian Aware Quantization for automatic recommendation of quantization bitwidths for weights.
+  - Compilation:
+      - Upgraded TI MCU Neural Network Compiler for MCUs to 2.1.2
+
+  </details>
+- [2026-Feb] Release version 1.3.0 of the software
+  <details>
+
+  - Device Support: 22 MCU devices supported:
+    - AM1x: AM13E2
+    - C2000 F28: F280013, F280015, F28003, F28004, F2837, F28P55, F28P65
+    - C2000 F29: F29H85, F29P58, F29P32
+    - MSP M0: MSPM0G3507, MSPM0G3519, MSPM0G5187
+    - MSP M33: MSPM33C32,
+    - Connectivity: CC2755, CC1352, CC1354, CC35X1,
+    - AM26x: AM263, AM263P, AM261
+  - Flows:
+    - Timeseries Anomaly Detection flow supported
+    - On Device Learning Mode Enabled
+  - Applications Supported
+    - 22 (4 generic + 18 specific applications)
+  - Models:
+    - 50+ generic models added over classification, regression, forecasting and anomaly detection tasks.
+  - Model Optimization:
+    - Partial Quantization Supported to enable best of precision and latency for regression models.
+  - Compilation:
+      - Upgraded TI MCU Neural Network Compiler for MCUs to 2.1.1 LTS
+
+  </details>
+- [2025-Nov] Release version 1.2.0 of the software
+
+    <details>
+
+    - Device Support:
+      - Added MSPM0 based MCUs: MSPM0G3507, MSPM0G5187
+      - Added Connectivity device: CC2745R10-Q1, CC2755R10
+    - General:
+      - Supports simple gain augmentation for classification tasks
+      - Prints dataset file level confusion matrix for classification tasks
+      - Golden Test Vectors for Regression tasks
+      - Run modelmaker with only the config, no more target device required in the input.
+    - Flows:
+      - Timeseries Forecasting flows supported
+      - L1, L2 normalization can be enabled in regression using lambda_reg param
+    - Model Optimization:
+      - How to use: Documentation updated.
+      - Example code for performing regression in modeloptimization
+      - Fixing clipping of input data to int8 or uint8 based on dataset (zero_point) (only the input zero point is fixed and not the intermediate layers)
+      - BatchNorm is supported by GENERIC quantization
+      - Experimental features like additional QDQ at input of model and floating bias can be enabled individually
+      - Residual Add supported for different scales, zero points, but not optimised for TINPU
+    - Compilation:
+      - Upgraded TI MCU Neural Network Compiler for MCUs to 2.1.0 LTS
+      - Supported all layer configs with 8-bit activations and 8-/4-/2-bit weights that can be offloaded to TI-NPU
+      - Supported all layer configs with 8-bit activations and 8-bit weights that can be accelerated using the M33 Custom Datapath Extension (CDE).
+
+  </details>
+- [2025-Aug] Release version 1.1.0 of the software
+  <details>
+
+  - General:
+    - Generic Timeseries Classification is available with fixed point reference dataset.
+    - Compatible with C2000Ware 6.0.0
+  - Model Optimization:
+    - Aggressive Quantization Modes for Weights & Activation: 2W8A, 4W4A, 4W8A --> massive speedup and memory saved
+    - Neural network Architecture Search for generating a TINPU compatible model directly based on user's dataset
+  - Dataset:
+    - Dataset can be split into train-test-val on a file-by-file basis or within-a-file basis
+  - Device Support:
+    - Full Support for F280013x
+    - Preliminary Support for F29H85x and MSPM0G3507x
+  - Compilation:
+    - Upgraded TI MCU Neural Network Compiler for MCUs to 2.0.0
+  - Windows Platform Specific:
+    - Major quantization accuracy improvements
+  - Miscellaneous:
+    - Fixed model performance data that appears on the terminal when a training is initiated
+    - Added Model Descriptions for all models
+    - Setup of the repos is now smoother and cleaner
+
+  </details>
+- [2025-Apr] Major feature updates (version 1.0.0) of the software
+  <details>
+
+  - General:
+    - Tiny ML Modelmaker is now a pip installable package!
+    - Existing models can be modified on the fly through a config file (check Tiny ML Modelmaker docs)
+    - MPS (Metal Performance Shaders) backend support for Mac host devices!
+  - Technology:
+    - PTQ and QAT flows supported in tinyml-modelmaker, tinyml-modeloptimization
+    - Ternary, 4 bit Quantization support in tinyml-modelmaker
+  - Flows:
+    - Regression ML tasks supported
+    - Autoencoder based Anomaly Detection task supported
+  - Feature Extraction:
+    - Feature Extraction transforms are now modular and compatible with C2000Ware 5.05 only
+    - Supports Haar and Hadamard Transform
+    - Golden test vectors file has one set uncommented by default to work OOB
+  - Data Visualisation:
+    - Multiclass ROC-AUC graphs are autogenerated for better explainability of reports and help select thresholds based on false alarm/ sensitivity preference
+    - PCA graphs are auto plotted for feature extracted data - Helps in identifying if the feature extraction actually helped
+    - Run now begins with displaying inference time, sram usage and flash usage for all the devices for any model.
+  - Dataset
+    - Goodness of Fit of dataset now enabled.
+  - Extensive Documentation & Know-How Examples to use Modelmaker
+
+  </details>
+- [2024-November] Updated (version 0.9.0) of the software
+- [2024-August] Release version 0.8.0 of the software
+- [2024-July] Release version 0.7.0 of the software
+- [2024-June] Release version 0.6.0 of the software
+- [2024-May] First public release (version 0.5.0) of the software
+
+---
+
 ## Additional Resources
 
 - [TI's Neural Network Compiler Documentation](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/)
@@ -431,6 +596,3 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 BSD 3-Clause License. See [LICENSE](LICENSE) for details.
 
----
-
-**Questions or Issues?** Open an issue on [GitHub](https://github.com/TexasInstruments/tinyml-tensorlab/issues).

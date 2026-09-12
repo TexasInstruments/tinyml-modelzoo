@@ -2,8 +2,13 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-IN_ROOT  = Path("/home/tushxr16/tinyml-tensorlab/csi_dataset_og")
-OUT_ROOT = Path("preprocessed_wifi_presence_detection_3")
+# This preprocessing script was used to preprocess the wifi_presence_detection_dsi dataset.
+
+# NOTE: You don't have to run this script again on the wifi_presence_detection_dsi dataset since it has already been preprocessed.
+# This script is provided as a reference for the user to understand how the dsi dataset was preprocessed prior to model training.
+
+IN_ROOT  = Path("/path/to/captured/csi/dataset")
+OUT_ROOT = Path("preprocessed_wifi_presence_detection")
 
 LABEL_TO_FOLDER = {0: "class_0_no_presence", 1: "class_1_presence"}
 FOLDER_TO_LABEL = {"no_presence": 0, "presence": 1}

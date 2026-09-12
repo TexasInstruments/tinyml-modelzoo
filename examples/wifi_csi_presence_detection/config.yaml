@@ -5,7 +5,7 @@ common:
 
 dataset:
   dataset_name: wifi_csi_occupancy_detection
-  input_data_path: /home/tushxr16/tinyml-tensorlab/tinyml-modelzoo/preprocessed_wifi_presence_detection_3
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wifi_presence_detection_dsi.zip
 
 data_processing_feature_extraction:
   feature_extraction_name: WiFiCSI_128Input_L2Norm2DFFT_64x26Feature_1Frame_52Subcarriers

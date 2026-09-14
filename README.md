@@ -193,7 +193,7 @@ purpose-built config for that specific use case.
 | [mosfet_temp_prediction](examples/mosfet_temp_prediction/) | Temperature/Power | Predict MOSFET temperature from electrical parameters. |
 | [torque_measurement_regression](examples/torque_measurement_regression/) | Voltage/Current/Speed/Temperature | Predict PMSM motor torque from current measurements. |
 | [induction_motor_speed_prediction](examples/induction_motor_speed_prediction/) | Voltage/Current | Predict induction motor speed from electrical signals. |
-| [reg_washing_machine](examples/reg_washing_machine/) | Voltage/Current/Speed | Predict washing machine load weight. |
+| [washing_machine_load_weighing](examples/washing_machine_load_weighing/) | Voltage/Current/Speed | Predict washing machine load weight. |
 
 ### Forecasting
 

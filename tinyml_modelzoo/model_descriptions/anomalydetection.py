@@ -74,6 +74,7 @@ _model_descriptions = {
             model_name='AD_17k',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -91,6 +92,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -105,6 +109,7 @@ _model_descriptions = {
             model_name='AD_11k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -122,6 +127,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -136,6 +144,7 @@ _model_descriptions = {
             model_name='Ondevice_Trainable_AD_Linear',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -153,6 +162,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -167,6 +179,7 @@ _model_descriptions = {
             model_name='AD_Linear',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -184,6 +197,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -198,6 +214,7 @@ _model_descriptions = {
             model_name='AD_16k',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -215,6 +232,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -229,6 +249,7 @@ _model_descriptions = {
             model_name='AD_4k',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -246,6 +267,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -260,6 +284,7 @@ _model_descriptions = {
             model_name='AD_1k',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -277,6 +302,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -292,6 +320,7 @@ _model_descriptions = {
             model_name='AD_500_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -309,6 +338,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -323,6 +355,7 @@ _model_descriptions = {
             model_name='AD_2k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -340,6 +373,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -354,6 +390,7 @@ _model_descriptions = {
             model_name='AD_6k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -371,6 +408,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -385,6 +425,7 @@ _model_descriptions = {
             model_name='AD_8k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -402,6 +443,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -416,6 +460,7 @@ _model_descriptions = {
             model_name='AD_10k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -433,6 +478,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]
@@ -447,6 +495,7 @@ _model_descriptions = {
             model_name='AD_20k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -464,6 +513,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesanomalydetection.py", name="train_group", label="Training Parameters", default=[])]

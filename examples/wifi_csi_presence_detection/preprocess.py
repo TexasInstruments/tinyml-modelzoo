@@ -1,44 +1,29 @@
-import re
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from sklearn.model_selection import GroupShuffleSplit
 
-# Input CSI recordings and output directory
-# Download wifi_presence_detection_dsk.zip from:
-#   https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wifi_presence_detection_dsi.zip
-# Then extract the zip file and pass the path to the directory as IN_ROOT below
-IN_ROOT  = Path(r"/path/to/wifi_presence_detection_dsi/")
+# This preprocessing script was used to preprocess the wifi_presence_detection_dsi dataset.
+
+# NOTE: You don't have to run this script again on the wifi_presence_detection_dsi dataset since it has already been preprocessed.
+# This script is provided as a reference for the user to understand how the dsi dataset was preprocessed prior to model training.
+
+IN_ROOT  = Path("/path/to/captured/csi/dataset")
 OUT_ROOT = Path("preprocessed_wifi_presence_detection")
 
 LABEL_TO_FOLDER = {0: "class_0_no_presence", 1: "class_1_presence"}
-LABEL_TO_PREFIX = {0: "no_presence", 1: "presence"}
-
-# Folder name -> label for wifi_dataset_mini_final structure (classes/no_presence, classes/presence)
 FOLDER_TO_LABEL = {"no_presence": 0, "presence": 1}
 
-# Signal parameters
-Fs              = 128.0
-SESSION_GAP_SEC = 0.5   # gap threshold to detect session boundaries
+Fs          = 128.0
+WIN_SEC     = 2.0
 DROP_COLS   = {"tx_mac", "rx_mac", "packet_no", "hw_seq"}
 
-# 52 usable subcarriers — hardware index 26 is the DC subcarrier, so we skip it
 CSI_USED_IDX = np.array(list(range(0, 26)) + list(range(27, 53)), dtype=int)
 N_SC         = len(CSI_USED_IDX)  # 52
 
-def find_sessions(t):
-    """Return (start, end) index pairs for each continuous segment in t (seconds)."""
-    dt     = np.diff(t)
-    breaks = np.where((dt < 0) | (dt > SESSION_GAP_SEC))[0] + 1
-    starts = np.concatenate([[0], breaks])
-    ends   = np.concatenate([breaks, [len(t)]])
-    return list(zip(starts.tolist(), ends.tolist()))
-
 
 def interpolate_to_grid(tw, Xw_cplx, fs, win_sec):
-    """Resample |CSI| magnitude onto a uniform time grid of (win_sec * fs) points."""
     if len(tw) < 2:
-        return None
+        return None, None
 
     order = np.argsort(tw)
     tw, Xw_cplx = tw[order], Xw_cplx[order]
@@ -46,7 +31,6 @@ def interpolate_to_grid(tw, Xw_cplx, fs, win_sec):
     Xm = np.abs(Xw_cplx).astype(np.float64)
     T, S = Xm.shape
 
-    # fill any NaN gaps with linear interpolation before resampling
     for s in range(S):
         bad = np.isnan(Xm[:, s])
         if bad.any():
@@ -62,8 +46,8 @@ def interpolate_to_grid(tw, Xw_cplx, fs, win_sec):
 
     return Xi.astype(np.float32)
 
+
 def extract_csi(df):
-    """Pull complex CSI columns and select the 52 usable subcarriers."""
     sub_cols = [c for c in df.columns if c.startswith("sub_")]
     if not sub_cols:
         return None
@@ -83,41 +67,35 @@ def extract_csi(df):
 
 
 def process_file(csv_path):
-    """Drop metadata cols, extract 52-subcarrier CSI magnitudes, resample to uniform grid."""
     df = pd.read_csv(csv_path, low_memory=False)
-    # if "timestamp" not in df.columns:
-    #     return []
+
     ts_col = next((c for c in ("timestamp", "mcu_timestamp") if c in df.columns), None)
     if ts_col is None:
-        return None
+        return None, None
 
     df.drop(columns=[c for c in DROP_COLS if c in df.columns], errors="ignore", inplace=True)
 
     t_raw = df[ts_col].to_numpy(dtype=float)
-    # timestamps are microseconds when > 1e5, otherwise already in seconds
-    t = (t_raw - t_raw[0]) / 1e6 if np.nanmax(t_raw) > 1e5 else t_raw - t_raw[0]
+    in_microseconds = np.nanmax(t_raw) > 1e5
+    t = (t_raw - t_raw[0]) / 1e6 if in_microseconds else t_raw - t_raw[0]
 
     Xc = extract_csi(df)
     if Xc is None:
-        return None
+        return None, None
 
-    segments = []
-    for s, e in find_sessions(t):
-        if e - s < 2:
-            continue
-        Xi = interpolate_to_grid(t[s:e], Xc[s:e], Fs, t[e - 1] - t[s])
-        if Xi is not None:
-            segments.append(Xi)
-    return np.concatenate(segments, axis=0) if segments else None
+    Xi = interpolate_to_grid(t, Xc, Fs, WIN_SEC)
+    if Xi is None:
+        return None, None
+
+    N   = int(round(WIN_SEC * Fs))
+    step = 1e6 / Fs if in_microseconds else 1.0 / Fs
+    tq  = t_raw[0] + np.arange(N) * step
+    return tq.astype(np.float32), Xi
 
 
 def main():
-    classes_root     = OUT_ROOT / "classes"
+    classes_root = OUT_ROOT / "classes"
     classes_root.mkdir(parents=True, exist_ok=True)
-
-    if not IN_ROOT.exists():
-        print(f"ERROR: Input root not found: {IN_ROOT}")
-        return
 
     csv_files = []
     for class_dir in sorted((IN_ROOT / "classes").iterdir()):
@@ -128,19 +106,19 @@ def main():
     print(f"Found {len(csv_files)} CSV files\n")
 
     n_files = 0
-
     for csv_path, class_name in csv_files:
         label  = FOLDER_TO_LABEL[class_name]
         folder = classes_root / LABEL_TO_FOLDER[label]
         folder.mkdir(exist_ok=True)
 
-        Xi = process_file(csv_path)
+        tq, Xi = process_file(csv_path)
         if Xi is None:
             print(f"  [{class_name}] {csv_path.name}: skipped")
             continue
 
+        cols = ["time"] + [f"sub_{i}" for i in CSI_USED_IDX]
         fname = f"{csv_path.stem}.csv"
-        pd.DataFrame(Xi, columns=[f"sub_{i}" for i in CSI_USED_IDX]).to_csv(folder / fname, index=False)
+        pd.DataFrame(np.column_stack([tq, Xi]), columns=cols).to_csv(folder / fname, index=False)
         n_files += 1
         if n_files % 10 == 0:
             print(f"  {n_files} files processed...")

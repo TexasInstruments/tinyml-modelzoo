@@ -74,6 +74,7 @@ _model_descriptions = {
             model_name='FCST_13k',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -91,6 +92,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -105,6 +109,7 @@ _model_descriptions = {
             model_name='FCST_LSTM10',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -122,6 +127,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -136,6 +144,7 @@ _model_descriptions = {
             model_name='FCST_LSTM8',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -153,6 +162,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -167,6 +179,7 @@ _model_descriptions = {
             model_name='FCST_3k',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -184,6 +197,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -199,6 +215,7 @@ _model_descriptions = {
             model_name='FCST_500_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -216,6 +233,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -230,6 +250,7 @@ _model_descriptions = {
             model_name='FCST_1k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -247,6 +268,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -261,6 +285,7 @@ _model_descriptions = {
             model_name='FCST_2k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -278,6 +303,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -292,6 +320,7 @@ _model_descriptions = {
             model_name='FCST_4k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -309,6 +338,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -323,6 +355,7 @@ _model_descriptions = {
             model_name='FCST_6k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -340,6 +373,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -354,6 +390,7 @@ _model_descriptions = {
             model_name='FCST_8k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -371,6 +408,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -385,6 +425,7 @@ _model_descriptions = {
             model_name='FCST_10k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -402,6 +443,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]
@@ -416,6 +460,7 @@ _model_descriptions = {
             model_name='FCST_20k_NPU',
             target_devices=[
                 constants.TARGET_DEVICE_F280013,
+                constants.TARGET_DEVICE_F28E12,
                 constants.TARGET_DEVICE_F280015,
                 constants.TARGET_DEVICE_F28003,
                 constants.TARGET_DEVICE_F28004,
@@ -433,6 +478,9 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G3507,
                 constants.TARGET_DEVICE_MSPM0G3519,
                 constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F28002x,
+                constants.TARGET_DEVICE_F28P551x,
+                constants.TARGET_DEVICE_F2838x,
             ],
             properties=[dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                         dict(type="group", dynamic=True, script="generictimeseriesforecasting.py", name="train_group", label="Training Parameters", default=[])]

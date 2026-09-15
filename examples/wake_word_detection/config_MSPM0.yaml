@@ -14,11 +14,14 @@ data_processing_feature_extraction:
   normalize_audio: False
   mono: True
   variables: 1
+
   # Filterbank parameters
-  fb_conv_kernel: 32
+  fb_conv_kernel: 64
   fb_output_channel: 64
-  fb_bitwidth: 8
-  input_bit_depth: 14
+  fb_bitwidth: 2
+  fb_context_ms: 20
+  fb_conv_stride: 4
+  input_bit_depth: 16
 
 training:
   model_name: TCDS_ResNet_FB_NPU
@@ -28,6 +31,7 @@ training:
   quantization: 2
   learning_rate: 0.001
   weight_decay: 1e-5
+  auto_quantization: False
 
 testing: {}
 

@@ -43,7 +43,7 @@ Compact in-house dataset and the default for the example `config.yaml`. Point `i
 - Transmitter: TP-Link AC1200 Mesh Wi-Fi Router (Archer C6)
 
 **Collection environment:**
-- Indoor conference room, area < 200 sq ft
+- Indoor conference room, area < 300 sq ft
 
 **Data:**
 - 400 × 2 s windows at 128 Hz per class (800 windows total)
@@ -112,21 +112,19 @@ The model accepts input of shape `(1, 26, 1, 64)` (batch × subcarrier-frequency
 
 **`wifi_presence_detection_dsi.zip`**
 
-| Metric | Float model | AMP quantized (QAT) | Test set |
+| Metric | Float model | 8W8A Quantized (QAT) | Test set |
 |--------|------------|----------------|----------|
-| **Accuracy (Acc@1)** | 98.83% | 96.19% | 92.86% |
-| **F1-Score** | 0.988 | 0.962 | — |
-| **AUC ROC** | 1.000 | 0.995 | 0.913 |
+| **Accuracy (Acc@1)** | 99.17% | 99.17% | 98.75% |
+| **F1-Score** | 0.992 | 0.992 | — |
+| **AUC ROC** | 0.983 | 0.978 | 0.985 |
 
 **`wifi_presence_detection_dsk.zip`**
 
-| Metric | Float model | AMP quantized (QAT) | Test set |
+| Metric | Float model | 8W8A quantized (QAT) | Test set |
 |--------|------------|----------------|----------|
-| **Accuracy (Acc@1)** | 95.12% | 94.71% | 96.98% |
-| **F1-Score** | 0.951 | 0.947 | — |
-| **AUC ROC** | 0.986 | 0.964 | 0.977 |
-
-_AMP quantization here refers to the default quantization setting - Automatic Mixed Precision quantization._
+| **Accuracy (Acc@1)** | 95.58% | 95.62% | 98.90% |
+| **F1-Score** | 0.956 | 0.956 | — |
+| **AUC ROC** | 0.986 | 0.986 | 0.997 |
 
 ## Training and Deployment Process
 
@@ -143,10 +141,10 @@ NOTE: Running the config YAML handles everything including feature extraction, t
    - Training epochs: 50
 
 3. **Quantization:**
-   - Automatic Mixed Precision quantization for reduced model size - default quantization setting.
+   - 8-bit Weight, 8-bit Activation (8W8A) quantization for reduced model size - default quantization setting.
 
 4. **Compilation:**
-   - TI Neural Network Compiler converts the trained model
+   - TI Neural Network Compiler compiles the trained model for M33CDE on CC35X1
    - Generates `model.a` and `tvmgen_default.h` for firmware integration
 
 ## How to Run

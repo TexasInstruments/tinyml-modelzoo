@@ -180,7 +180,7 @@ purpose-built config for that specific use case.
 | [electrical_fault](examples/electrical_fault/) | Voltage/Current | Classify transmission line faults using voltage and current (2-class and 6-class variants). |
 | [grid_stability](examples/grid_stability/) | Simulated grid parameters | Predict power grid stability from node parameters. |
 | [gas_sensor](examples/gas_sensor/) | Gas sensor array | Identify gas type and concentration from sensor array data. |
-| [branched_model_parameters](examples/branched_model_parameters/) | Accelerometer/Gyroscope | Human Activity Recognition from accelerometer/gyroscope data. |
+| [human_activity_recognition](examples/human_activity_recognition/) | Accelerometer/Gyroscope | Human Activity Recognition from accelerometer/gyroscope data. |
 | [nilm_appliance_usage_classification](examples/nilm_appliance_usage_classification/) | Voltage/Current | Non-Intrusive Load Monitoring - identify active appliances. |
 | [PLAID_nilm_classification](examples/PLAID_nilm_classification/) | Voltage/Current | Appliance identification using the PLAID dataset. |
 | [wifi_csi_presence_detection](examples/wifi_csi_presence_detection/) | Wi-Fi CSI | Device-free human presence detection from Wi-Fi Channel State Information. |
@@ -233,7 +233,7 @@ purpose-built config for that specific use case.
 
 | Example | Data Type | Description |
 |---------|-----------|--------------|
-| [radar_point_cloud_classification](examples/radar_point_cloud_classification/) | Radar point cloud | Human pose and fall detection from radar point-cloud frames. |
+| [radar_pose_and_fall_detection](examples/radar_pose_and_fall_detection/) | Radar point cloud | Human pose and fall detection from radar point-cloud frames. |
 
 ---
 
@@ -416,25 +416,35 @@ component repos.
 - [2026-Sep] Release version 1.5.0 of the software
   <details>
 
-  - Device Support:
+  - Device Support: 30 MCU/wireless devices supported (up from 40 named in 1.4.0's list, several of which — e.g. AM26x, F29P58/F29P32, MSPM33C32 — are not yet wired into any model's `target_devices` and were dropped from the count until verified runnable)
     - Added AM13E2 support for vision classification and radar tasks
     - Added fel_memory support (feature-extraction library) for AM13 and C28x (F280013x, F280015x, F28002x) devices — enables on-device RAM/Flash estimation
-  - Models:
+    - Gen3 F28x device support reconciled: F2838x, F28P551x, F28002x, and new F28E12x device profile added across regression, forecasting, and anomaly-detection models; over-broad device lists tightened (e.g. arc fault, generic timeseries classification) to match verified per-model support
+    - Task-level target device lists for radar, image, and audio classification are now derived from each model's real device support instead of a hand-maintained list, fixing several tasks (e.g. radar classification) that had advertised devices no model actually supported
+  - Applications Supported: 34 example applications (4 generic timeseries tasks + 30 specific applications)
+  - Models: 81 models across classification/regression/forecasting/anomaly-detection (timeseries + radar) plus vision and audio classification
     - Added TCDSResNet and a compressed DSCNN for audio classification (cough detection), both NPU-compliant
     - Compressed MobileNet_v1 to fit AM13 memory budget
     - Added Radar Point Cloud Classification support (new model + dataset flow across ModelMaker/TinyVerse/ModelZoo)
+    - New example applications: cough detection (audio), WiFi CSI presence detection, Google speech command
+    - Re-enabled and renamed the washing machine load weighing regression example (`washing_machine_load_weighing`, was `reg_washing_machine`)
   - Flows:
-    - ModelMaker can now report estimated RAM & Flash usage for Feature Extraction before training
+    - Added early stopping for training (patience + min-delta, on by default) across all task types — timeseries classification/regression/forecasting/anomaly-detection and image classification
+    - ModelMaker can now report estimated RAM & Flash usage for Feature Extraction before training, including a standalone `estimate_memory` CLI that runs without a full training pass
     - Support for preprocessing and publicly-available datasets in audio/radar flows
     - NAS: can now accept a NAS model id directly
+    - NaN-loss detection during training to catch instability early
   - Model Optimization:
     - Residual connection support added to quantization (TINPU)
     - Replaced qconfig_dict with a cleaner API to toggle auto-quantization on/off
-    - Hessian-aware auto-quantization bug fixes
+    - Hessian-aware (HAWQ) automatic mixed-precision quantization, plus bug fixes to the qconfig mapping and mixed-precision paths
+    - Ternary-weight / 8-bit-activation QAT support
+    - NPU quantization enabled for anomaly-detection models
   - Reliability & Compatibility:
     - Python 3.14 / PyTorch 2.13 compatibility across ModelMaker, ModelOptimization, TinyVerse
     - macOS ARM64 (MPS/Apple Silicon) compatibility fixes across training, evaluation, and quantization
     - torch.compile safety: unwraps compiled models correctly before ONNX/checkpoint export, falls back to eager on failure
+    - Fixed ONNX export crashing inside PyInstaller/frozen builds
     - Security/robustness hardening: safe checkpoint deserialization, safe YAML loading, safer cache-dataset handling
     - Training performance: torch.compile, AMP, persistent workers, more efficient eval loop
     - Large expansion of automated test coverage (functional test tiers, pytest suites) across all repos

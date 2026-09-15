@@ -406,18 +406,14 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 ## Release History
 
-Until **1.4.0** (2026-Jun), this history lived in the [tinyml-tensorlab](https://github.com/TexasInstruments/tinyml-tensorlab)
-repository on GitHub; that repository's source is now private. Starting with
-**1.5.0** (2026-Sep), `tinyml-modelzoo` (this repo) is the standalone, pip-installable
-entry point to TI's MCU AI flow — a simplified, easy-to-install replacement
-for what previously required cloning `tinyml-tensorlab`'s full set of
-component repos.
+
 
 - [2026-Sep] Release version 1.5.0 of the software
   <details>
 
-  - Device Support: 30 MCU/wireless devices supported (up from 40 named in 1.4.0's list, several of which — e.g. AM26x, F29P58/F29P32, MSPM33C32 — are not yet wired into any model's `target_devices` and were dropped from the count until verified runnable)
-    - Added AM13E2 support for vision classification and radar tasks
+  - Until **1.4.0** (2026-Jun), this history lived in the [tinyml-tensorlab](https://github.com/TexasInstruments/tinyml-tensorlab) repository on GitHub; that repository's source is now private. Starting with **1.5.0** (2026-Sep), `tinyml-modelzoo` (this repo) is the standalone, pip-installable entry point to TI's MCU AI flow — a simplified, easy-to-install replacement for what previously required cloning `tinyml-tensorlab`'s full set of component repos.
+  - Device Support: 30 MCU/wireless devices supported
+    - Added AM13E2 support for vision classification and added radar tasks
     - Added fel_memory support (feature-extraction library) for AM13 and C28x (F280013x, F280015x, F28002x) devices — enables on-device RAM/Flash estimation
     - Gen3 F28x device support reconciled: F2838x, F28P551x, F28002x, and new F28E12x device profile added across regression, forecasting, and anomaly-detection models; over-broad device lists tightened (e.g. arc fault, generic timeseries classification) to match verified per-model support
     - Task-level target device lists for radar, image, and audio classification are now derived from each model's real device support instead of a hand-maintained list, fixing several tasks (e.g. radar classification) that had advertised devices no model actually supported
@@ -425,23 +421,22 @@ component repos.
   - Models: 81 models across classification/regression/forecasting/anomaly-detection (timeseries + radar) plus vision and audio classification
     - Added TCDSResNet and a compressed DSCNN for audio classification (cough detection), both NPU-compliant
     - Compressed MobileNet_v1 to fit AM13 memory budget
-    - Added Radar Point Cloud Classification support (new model + dataset flow across ModelMaker/TinyVerse/ModelZoo)
+    - Added Radar Point Cloud Classification support (new model + dataset flow )
     - New example applications: cough detection (audio), WiFi CSI presence detection, Google speech command
     - Re-enabled and renamed the washing machine load weighing regression example (`washing_machine_load_weighing`, was `reg_washing_machine`)
   - Flows:
     - Added early stopping for training (patience + min-delta, on by default) across all task types — timeseries classification/regression/forecasting/anomaly-detection and image classification
     - ModelMaker can now report estimated RAM & Flash usage for Feature Extraction before training, including a standalone `estimate_memory` CLI that runs without a full training pass
     - Support for preprocessing and publicly-available datasets in audio/radar flows
-    - NAS: can now accept a NAS model id directly
     - NaN-loss detection during training to catch instability early
   - Model Optimization:
     - Residual connection support added to quantization (TINPU)
     - Replaced qconfig_dict with a cleaner API to toggle auto-quantization on/off
     - Hessian-aware (HAWQ) automatic mixed-precision quantization, plus bug fixes to the qconfig mapping and mixed-precision paths
-    - Ternary-weight / 8-bit-activation QAT support
+    - Automated Ternary-weight / 8-bit-activation QAT support
     - NPU quantization enabled for anomaly-detection models
   - Reliability & Compatibility:
-    - Python 3.14 / PyTorch 2.13 compatibility across ModelMaker, ModelOptimization, TinyVerse
+    - Python 3.14 / PyTorch 2.11 compatibility
     - macOS ARM64 (MPS/Apple Silicon) compatibility fixes across training, evaluation, and quantization
     - torch.compile safety: unwraps compiled models correctly before ONNX/checkpoint export, falls back to eager on failure
     - Fixed ONNX export crashing inside PyInstaller/frozen builds
@@ -452,9 +447,6 @@ component repos.
     - Added build_wheels.sh to build TinyVerse/ModelOptimization/ModelMaker wheels from local source
     - ModelZoo and TinyVerse examples now runnable standalone via published ModelMaker wheel dependency (TI official wheel CDN)
     - `tinyml-tensorlab` deprecated as the public entry point; `tinyml-modelzoo` takes over as the standalone, pip-installable way to use TI's MCU AI flow
-  - Documentation:
-    - DEVICE_TASK_SUPPORT.md and NPU_CONFIGURATION_GUIDELINES.md updated
-    - New how-to: publishing shared wheels
   - Special Acknowledgement:
     - Shoutout to [@musicalplatypus](https://github.com/musicalplatypus) for contributing towards a better, neater and more feature-rich toolchain by their additions such as full macOS/Apple Silicon (MPS) support, torch.compile+AMP training-performance optimizations, and NAS bug fixes. They also hardened the codebase with security fixes for unsafe deserialization/YAML loading, overhauled CI so tests actually run across all four packages, and expanded the test suite and architecture docs.
 

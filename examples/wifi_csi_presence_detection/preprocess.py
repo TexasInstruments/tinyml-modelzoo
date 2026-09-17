@@ -88,9 +88,9 @@ def process_file(csv_path):
         return None, None
 
     N   = int(round(WIN_SEC * Fs))
-    step = 1e6 / Fs if in_microseconds else 1.0 / Fs
-    tq  = t_raw[0] + np.arange(N) * step
-    return tq.astype(np.float32), Xi
+    t_start = t_raw[0] / 1e6 if in_microseconds else t_raw[0]
+    tq  = t_start + np.arange(N) / Fs
+    return (tq).astype(np.float32), Xi
 
 
 def main():

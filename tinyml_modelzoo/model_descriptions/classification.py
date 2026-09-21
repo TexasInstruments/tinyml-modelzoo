@@ -1514,16 +1514,7 @@ _model_descriptions = {
         model_training_id='SimpleCNN2D_BN',
         model_name='SimpleCNN2D_BN_t',
             target_devices=[
-                constants.TARGET_DEVICE_CC2755,
-                constants.TARGET_DEVICE_CC1312,
-                constants.TARGET_DEVICE_CC1314,
-                constants.TARGET_DEVICE_CC1352,
-                constants.TARGET_DEVICE_CC1354,
                 constants.TARGET_DEVICE_CC35X1,
-                constants.TARGET_DEVICE_MSPM0G3507,
-                constants.TARGET_DEVICE_MSPM0G3519,
-                constants.TARGET_DEVICE_MSPM0G5187,
-                constants.TARGET_DEVICE_MSPM33C32,
             ],
         properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                     dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]

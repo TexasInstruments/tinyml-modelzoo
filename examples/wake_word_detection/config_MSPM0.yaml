@@ -8,20 +8,21 @@ dataset:
   input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wake_word_detection.zip
   
 data_processing_feature_extraction:
-  sampling_rate: 8000
-  audio_duration_ms: 2000
-  audio_feature: "FB"
-  normalize_audio: False
-  mono: True
-  variables: 1
+  feature_extraction_name: WakeWordDetection_Filterbank_Default
+  # sampling_rate: 8000
+  # audio_duration_ms: 2000
+  # audio_feature: "FB"
+  # normalize_audio: False
+  # mono: True
+  # variables: 1
 
-  # Filterbank parameters
-  fb_conv_kernel: 64
-  fb_output_channel: 64
-  fb_bitwidth: 2
-  fb_context_ms: 20
-  fb_conv_stride: 4
-  input_bit_depth: 16
+  # # Filterbank parameters
+  # fb_conv_kernel: 64
+  # fb_output_channel: 64
+  # fb_bitwidth: 2
+  # fb_context_ms: 20
+  # fb_conv_stride: 4
+  # input_bit_depth: 16
 
 training:
   model_name: TCDS_ResNet_FB_NPU

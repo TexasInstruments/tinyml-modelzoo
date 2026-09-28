@@ -182,6 +182,78 @@ class CNN_AUDIO_DSCNN_32K_NPU(GenericModelWithSpec):
         return self.layers(x)
 
 
+class CNN_AUDIO_DSCNN_6K_NPU(GenericModelWithSpec):
+    """
+    Lightweight DSCNN for FFT-based audio features (e.g. glass break detection).
+
+    Expected input: (N, 1, 86, 32) [86 time frames x 32 FFT features]
+
+    Architecture:
+        BatchNorm -> Conv8x8/s4 ->
+        [Depthwise4x4 + Pointwise1x1] x 2 ->
+        Dropout -> AdaptiveAvgPool -> FC
+
+    ~6K parameters. dwConv/pwConv layers quantized at 4-bit (see mixed_precision_config).
+
+    Recommended training hyperparameters:
+        num_epochs: 20
+        batch_size: 32
+        learning_rate: 0.001
+    """
+
+    def __init__(self, config, input_features=(86, 32), variables=1, num_classes=3, dropout_rate=0.3):
+        super().__init__(
+            config,
+            input_features=input_features,
+            variables=variables,
+            num_classes=num_classes,
+        )
+
+        filters = 32
+
+        self.bn0 = torch.nn.BatchNorm2d(self.variables)
+        self.conv1 = torch.nn.Sequential(
+            torch.nn.Conv2d(self.variables, filters, kernel_size=8, stride=4, padding=1),
+            torch.nn.BatchNorm2d(filters),
+            torch.nn.ReLU(),
+        )
+        self.dsconv_blocks = torch.nn.Sequential(
+            self._depthwise_separable_conv(filters, filters),
+            self._depthwise_separable_conv(filters, filters),
+        )
+        self.dropout = torch.nn.Dropout(dropout_rate)
+        self.pool = torch.nn.AdaptiveAvgPool2d((1, 1))
+        self.fc2 = torch.nn.Linear(filters, self.num_classes)
+
+        # dwConv and pwConv layers of both DS blocks at 4-bit
+        self.mixed_precision_config = {
+            8: [],
+            4: ['dsconv_blocks.0.0', 'dsconv_blocks.0.3', 'dsconv_blocks.1.0', 'dsconv_blocks.1.3'],
+            2: [],
+        }
+
+    def _depthwise_separable_conv(self, in_channels, out_channels):
+        """Depthwise (groups=in_channels) + Pointwise (1x1) convolution."""
+        return torch.nn.Sequential(
+            torch.nn.Conv2d(in_channels, in_channels, kernel_size=4, padding=1, groups=in_channels),
+            torch.nn.BatchNorm2d(in_channels),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(in_channels, out_channels, kernel_size=1),
+            torch.nn.BatchNorm2d(out_channels),
+            torch.nn.ReLU(),
+        )
+
+    def forward(self, x):
+        x = self.bn0(x)
+        x = self.conv1(x)
+        x = self.dsconv_blocks(x)
+        x = self.dropout(x)
+        x = self.pool(x)
+        x = x.flatten(1)
+        y = self.fc2(x)
+        return y
+
+
 class TCDSBasicBlock(torch.nn.Module):
     """Temporal Channel-Decoupled Separable block (no residual — avoids quantized-add issues)."""
 
@@ -322,6 +394,7 @@ class CNN_AUDIO_TCDS_ResNet_FB_NPU(GenericModelWithSpec):
 # Export all classification models
 __all__ = [
     'CNN_AUDIO_DSCNN',
+    'CNN_AUDIO_DSCNN_6K_NPU',
     'CNN_AUDIO_DSCNN_32K_NPU',
     'CNN_AUDIO_TCDS_ResNet_NPU',
     'CNN_AUDIO_TCDS_ResNet_FB_NPU',

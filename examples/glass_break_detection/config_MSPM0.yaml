@@ -1,0 +1,43 @@
+common:
+  target_module: audio
+  task_type: audio_classification
+  target_device: MSPM0G5187
+
+dataset:
+  dataset_name: glass_break_detection
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/glass_break_detection.zip
+
+data_processing_feature_extraction:
+  feature_extraction_name: GlassBreak_512Input_FE_RFFT_32Feature_1Frame_1InputChannel_removeDC_Full_Bandwidth
+  #feat_ext_transform: [ 'FFT_Q15', 'Q15_SCALE', 'Q15_MAG', 'DC_REMOVE', 'BIN_Q15', 'CONCAT']
+  # frame_size: 512
+  # feature_size_per_frame: 32
+  # num_frame_concat: 1
+  # frame_skip: 1
+  # scale: 1
+  # offset: 0
+  # normalize_bin: True
+  # variables: 1
+  # q15_scale_factor: 8
+  # gof_test: True
+  store_feat_ext_data: false
+
+training:
+  model_name: CNN_AUDIO_DSCNN_6K_NPU
+  num_classes: 3
+  batch_size: 32
+  training_epochs: 20
+  warmup_epochs: 0
+  optimizer: 'adam'
+  learning_rate: 0.001
+  weight_decay: 0.001
+  num_gpus: 0
+  quantization: 2
+  quantization_method: 'QAT'  # QAT/PTQ
+  quantization_weight_bitwidth: 4
+  quantization_activation_bitwidth: 8
+  auto_quantization: False
+
+testing: {}
+
+compilation: {}

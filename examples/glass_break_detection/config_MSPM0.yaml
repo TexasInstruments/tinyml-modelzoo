@@ -9,8 +9,8 @@ dataset:
   
 data_processing_feature_extraction:
   feature_extraction_name: GlassBreakDetection_512FFT_Default
-  # sampling_rate: 44100
-  # audio_duration_ms: 1000
+  sampling_rate: 44100
+  audio_duration_ms: 1000
   # audio_feature: "FFT"
   # mono: True
   # normalize_audio: False

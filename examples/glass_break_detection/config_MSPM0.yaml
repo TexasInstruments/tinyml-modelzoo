@@ -5,23 +5,23 @@ common:
 
 dataset:
   dataset_name: glass_break_detection
-  input_data_path: C:/DevEnv/datasets/glass_break
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/glass_break_detection.zip
   
 data_processing_feature_extraction:
-  # feature_extraction_name: WakeWordDetection_Filterbank_Default
-  sampling_rate: 44100
-  audio_duration_ms: 1000
-  audio_feature: "FFT"
-  mono: True
-  normalize_audio: False
-  variables: 1
+  feature_extraction_name: GlassBreakDetection_512FFT_Default
+  # sampling_rate: 44100
+  # audio_duration_ms: 1000
+  # audio_feature: "FFT"
+  # mono: True
+  # normalize_audio: False
+  # variables: 1
 
-  # FFT parameters
-  feat_ext_transform: ["FFT_Q15", "Q15_SCALE", "Q15_MAG", "BINNING", "CONCAT"]
-  frame_size: 512
-  feature_size_per_frame: 32
-  num_frame_concat: 86
-  q15_scale_factor: 8
+  # # FFT parameters
+  # feat_ext_transform: ["FFT_Q15", "Q15_SCALE", "Q15_MAG", "BINNING", "CONCAT"]
+  # frame_size: 512
+  # feature_size_per_frame: 32
+  # num_frame_concat: 86
+  # q15_scale_factor: 8
 
 training:
   model_name: DSCNN_GB_NPU

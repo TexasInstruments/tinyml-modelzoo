@@ -63,16 +63,18 @@ Larger, more diverse dataset intended for robust model evaluation. Requires runn
 Uniformly sampled subset of `wifi_presence_detection_dsd`, containing 2000 samples split
 evenly among `presence`, and `no_presence` classes. Maintains dataset diversity by sampling equally from each fine-grained activity, while remaining relatively compact for easy testing.
 
-- 111.94 MB compressed; over 0.5 million data points
+- 111.94 MB compressed and post preprocessing; over 0.5 million data points
 - Generalizes well in confined indoor environments
+- Can be used directly, already preprocessed
 
 ## wifi_presence_detection_dsd_4400.zip
 
 Uniformly sampled subset of `wifi_presence_detection_dsd`, containing 4400 samples split
 evenly among `presence`, and `no_presence` classes. Maintains dataset diversity by sampling equally from each fine-grained activity, while remaining relatively compact for easy testing.
 
-- 246.31 MB compressed; over 1.1 million data points
+- 246.31 MB compressed post preprocessing; over 1.1 million data points
 - Generalizes well in confined indoor environments
+- Can be used directly, already preprocessed
 
 ### Preprocessing
 

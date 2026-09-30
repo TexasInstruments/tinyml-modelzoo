@@ -52,7 +52,7 @@ Since this dataset is TI-internal, it is not publicly downloadable and is not so
 | Class | Files |
 |-------|-------|
 | Wake Word ("OK Kilby") | 6000 |
-| Non-Wake-Word / Background | 4800 |
+| Non-Wake-Word / Background | 4600 |
 
 **Note:** This split is a small subset of the actual TI-internal dataset, which exceeds 50GB of data. For production-quality accuracy and robustness (different speakers, accents, distances, microphones, and noise conditions), customers should collect and add their own wake word and background data before training a model for deployment.
 

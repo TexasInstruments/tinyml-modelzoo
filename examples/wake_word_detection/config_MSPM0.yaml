@@ -30,7 +30,7 @@ training:
   training_epochs: 30
   num_gpus: 0
   quantization: 2
-  learning_rate: 0.001
+  learning_rate: 0.01
   weight_decay: 1e-5
   auto_quantization: False
 

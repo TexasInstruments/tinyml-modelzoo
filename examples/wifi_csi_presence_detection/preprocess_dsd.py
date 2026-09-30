@@ -6,13 +6,13 @@ from pathlib import Path
 from sklearn.model_selection import GroupShuffleSplit
 
 # Input CSI recordings and output directory.
-# Download wifi_presence_detection_dsk.zip from:
-#   https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wifi_presence_detection_dsk.zip
+# Download wifi_presence_detection_dsd.zip from:
+#   https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/wifi_presence_detection_dsd.zip
 # Then set IN_ROOT to either:
 #   - the path to the downloaded .zip  (zip file will be auto-extracted on first run)
-#   - the already-extracted wifi_presence_detection_dsk/Lab/ directory
-IN_ROOT  = Path(r"/path/to/wifi_presence_detection_dsk.zip")
-OUT_ROOT = Path("preprocessed_wifi_presence_detection_dsk")
+#   - the already-extracted wifi_presence_detection_dsd/Lab/ directory
+IN_ROOT  = Path(r"/path/to/wifi_presence_detection_dsd.zip")
+OUT_ROOT = Path("preprocessed_wifi_presence_detection_dsd")
 
 
 def _resolve_input_root(path: Path) -> Path:
@@ -160,12 +160,13 @@ def process_file(csv_path):
 
     df = df.loc[keep].reset_index(drop=True)
     t  = t[keep]
-
+    t_raw_trimmed = t_raw[keep]
     Xc = extract_csi(df)
     if Xc is None or Xc.shape[0] < CHUNK_RAW:
         return []
 
     windows = []
+    tqs = []
     for start in range(0, len(t) - CHUNK_RAW + 1, STRIDE):
         t0   = t[start]
         mask = (t >= t0) & (t < t0 + WIN_SEC)
@@ -181,9 +182,18 @@ def process_file(csv_path):
             for s in range(N_SC):
                 tmp[:, s] = np.interp(src, np.arange(Xi.shape[0]), Xi[:, s])
             Xi = tmp
+        
+        N   = int(round(WIN_SEC * Fs))
+        t_start = t_raw_trimmed[start] / 1e6 if np.nanmax(t_raw_trimmed) > 1e5 else t_raw_trimmed[start]
+        tq  = t_start + np.arange(N) / Fs
+        tq = (tq).astype(np.float32)
 
         windows.append(Xi)
-    return windows
+        tqs.append(tq)
+    # N   = int(round(WIN_SEC * Fs))
+    # t_start = t_raw[0] / 1e6 if in_microseconds else t_raw[0]
+    
+    return tqs, windows
 
 def build_entries_from_output():
     """Rebuild entries list by scanning already-processed output files."""
@@ -231,14 +241,15 @@ def main(annotations_only=False):
             folder = classes_root / LABEL_TO_FOLDER[label]
             folder.mkdir(exist_ok=True)
 
-            Xi = process_file(csv_path)
+            tqs, Xi = process_file(csv_path)
             if Xi is None or len(Xi) == 0:
                 print(f"  [{info['token']}] {csv_path.name}: skipped")
                 continue
 
             fname    = f"{csv_path.stem}.csv"
             out_path = folder / fname
-            pd.DataFrame(np.concatenate(Xi, axis=0), columns=[f"sub_{i}" for i in CSI_USED_IDX]).to_csv(out_path, index=False)
+            cols = ["time"] + [f"sub_{i}" for i in CSI_USED_IDX]
+            pd.DataFrame(np.column_stack([np.concatenate(tqs, axis=0), np.concatenate(Xi, axis=0)]), columns=cols).to_csv(out_path, index=False)
 
             rel_path = out_path.relative_to(OUT_ROOT / "classes").as_posix()
             entries.append((rel_path, label, info["token"], info["date"], info.get("prefix", ""), csv_path.name))

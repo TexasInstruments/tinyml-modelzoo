@@ -81,6 +81,7 @@ class CNN_AUDIO_DSCNN(GenericModelWithSpec):
             torch.nn.AdaptiveAvgPool2d((1, 1)),
             torch.nn.Flatten(start_dim=1),
             torch.nn.Linear(filters, self.num_classes),
+            torch.nn.Softmax(dim=1)
         )
 
     def forward(self, x):

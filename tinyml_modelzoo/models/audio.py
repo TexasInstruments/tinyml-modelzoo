@@ -81,6 +81,7 @@ class CNN_AUDIO_DSCNN(GenericModelWithSpec):
             torch.nn.AdaptiveAvgPool2d((1, 1)),
             torch.nn.Flatten(start_dim=1),
             torch.nn.Linear(filters, self.num_classes),
+            torch.nn.Softmax(dim=1)
         )
 
     def forward(self, x):
@@ -180,6 +181,56 @@ class CNN_AUDIO_DSCNN_32K_NPU(GenericModelWithSpec):
 
     def forward(self, x):
         return self.layers(x)
+
+
+class CNN_AUDIO_DSCNN_GB_NPU(GenericModelWithSpec):
+    def __init__(self, config, input_features=(86, 32), variables=1, num_classes=3):
+        super().__init__(
+            config,
+            input_features=input_features,
+            variables=variables,
+            num_classes=num_classes,
+        )
+        self.bn0 = torch.nn.BatchNorm2d(1)
+        self.conv1 = torch.nn.Sequential(
+            torch.nn.Conv2d(1, 32, kernel_size=8, stride=4, padding=1),
+            torch.nn.BatchNorm2d(32),
+            torch.nn.ReLU(),
+        )
+        self.dsconv_blocks = torch.nn.Sequential(
+            self._depthwise_separable_conv(32, 32),
+            self._depthwise_separable_conv(32, 32)
+        )
+        self.dropout = torch.nn.Dropout(0.3)
+        self.pool = torch.nn.AdaptiveAvgPool2d((1, 1))
+        self.flatten = torch.nn.Flatten(start_dim=1)
+        self.fc1 = torch.nn.Linear(32, num_classes)
+        self.mixed_precision_config = {
+            8: ['model.bn0', 'model.conv1'],
+            4: ['model.dsconv_blocks'], 
+            2: []
+        }
+
+    def _depthwise_separable_conv(self, in_channels, out_channels):
+        """Depthwise (groups=in_channels) + Pointwise (1x1) convolution."""
+        return torch.nn.Sequential(
+            torch.nn.Conv2d(in_channels, in_channels, kernel_size=4, padding=1, groups=in_channels),
+            torch.nn.BatchNorm2d(in_channels),
+            torch.nn.ReLU(),
+            torch.nn.Conv2d(in_channels, out_channels, kernel_size=1),
+            torch.nn.BatchNorm2d(out_channels),
+            torch.nn.ReLU()
+        )
+
+    def forward(self, x):
+        x = self.bn0(x)
+        x = self.conv1(x)
+        x = self.dsconv_blocks(x)
+        x = self.dropout(x)  # Dropout for regularization
+        x = self.pool(x)
+        x = self.flatten(x)
+        y = self.fc1(x)
+        return y 
 
 
 class TCDSBasicBlock(torch.nn.Module):
@@ -323,6 +374,7 @@ class CNN_AUDIO_TCDS_ResNet_FB_NPU(GenericModelWithSpec):
 __all__ = [
     'CNN_AUDIO_DSCNN',
     'CNN_AUDIO_DSCNN_32K_NPU',
+    'CNN_AUDIO_DSCNN_GB_NPU',
     'CNN_AUDIO_TCDS_ResNet_NPU',
     'CNN_AUDIO_TCDS_ResNet_FB_NPU',
 ]

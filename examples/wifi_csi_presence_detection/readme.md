@@ -49,9 +49,9 @@ Compact in-house dataset and the default for the example `config.yaml`. Point `i
 - 400 × 2 s windows at 128 Hz per class (800 windows total)
 - Presence class covers 4 activities: sitting, standing, walking, waving — activity labels are discarded; diversity is the only purpose
 
-### wifi_presence_detection_dsk.zip
+### wifi_presence_detection_dsd.zip
 
-Larger, more diverse dataset intended for robust model evaluation. Requires running `preprocess_dsk.py` before training — update `IN_ROOT` and `OUT_ROOT` in the script, run it, then point `input_data_path` in `config.yaml` to the output directory.
+Larger, more diverse dataset intended for robust model evaluation. Requires running `preprocess_dsd.py` before training — update `IN_ROOT` and `OUT_ROOT` in the script, run it, then point `input_data_path` in `config.yaml` to the output directory.
 
 - 650 MB+ compressed; over 6.4 million data points
 - Captured across 8 recording days
@@ -71,7 +71,7 @@ Larger, more diverse dataset intended for robust model evaluation. Requires runn
 
 **Note:** The provided `wifi_presence_detection_dsi/` dataset is already preprocessed and ready to use — no need to run  `preprocess.py` on it again.
 
-**DSK dataset — `preprocess_dsk.py`:**
+**DSD dataset — `preprocess_dsd.py`:**
 
 1. Reads CSVs recursively; parses label and date from filename tokens (13 activity classes collapsed to binary)
 2. Drops metadata columns and skips first **10 seconds** of each recording (transient removal)
@@ -118,7 +118,7 @@ The model accepts input of shape `(1, 26, 1, 64)` (batch × subcarrier-frequency
 | **F1-Score** | 0.992 | 0.992 | — |
 | **AUC ROC** | 0.983 | 0.978 | 0.985 |
 
-**`wifi_presence_detection_dsk.zip`**
+**`wifi_presence_detection_dsd.zip`**
 
 | Metric | Float model | 8W8A quantized (QAT) | Test set |
 |--------|------------|----------------|----------|
@@ -132,7 +132,7 @@ NOTE: Running the config YAML handles everything including feature extraction, t
 
 1. **Preprocessing (one-time):**
    - DSI: `python preprocess.py` (update `IN_ROOT` and `OUT_ROOT` in the script)
-   - DSK: `python preprocess_dsk.py` (update `IN_ROOT` and `OUT_ROOT` in the script)
+   - DSD: `python preprocess_dsd.py` (update `IN_ROOT` and `OUT_ROOT` in the script)
    - Set `input_data_path` in `config.yaml` to the preprocessed output directory
 
 2. **Training:**

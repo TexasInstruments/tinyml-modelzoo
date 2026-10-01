@@ -53,7 +53,7 @@ Compact in-house dataset and the default for the example `config.yaml`. Point `i
 
 Larger, more diverse dataset intended for robust model evaluation. Requires running `preprocess_dsd.py` before training — update `IN_ROOT` and `OUT_ROOT` in the script, run it, then point `input_data_path` in `config.yaml` to the output directory.
 
-- 650 MB+ compressed, prior to pre-processing; over 6.4 million data points
+- 2GB+ compressed; over 6.4 million data points
 - Captured across 8 recording days
 - 13 fine-grained activity conditions collapsed to binary presence/no-presence
 - Generalises well across different indoor rooms regardless of layout or size
@@ -140,7 +140,7 @@ The model accepts input of shape `(1, 26, 1, 64)` (batch × subcarrier-frequency
 
 | Metric | Float model | 8W8A quantized (QAT) | Test set |
 |--------|------------|----------------|----------|
-| **Accuracy (Acc@1)** | 95.58% | 95.62% | 98.90% |
+| **Accuracy (Acc@1)** | 95.47% | 95.60% | 98.85% |
 | **F1-Score** | 0.956 | 0.956 | — |
 | **AUC ROC** | 0.986 | 0.986 | 0.997 |
 

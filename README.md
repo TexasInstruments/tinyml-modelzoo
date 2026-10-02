@@ -596,6 +596,7 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 ## Additional Resources
 
+- [User Guide](docs/user_guide/readme.md) - install methods (wheel or clone), the full applications list, and a per-category (timeseries/audio/image/radar) YAML config reference
 - [TI's Neural Network Compiler Documentation](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/)
 - [NPU Configuration Guidelines](docs/NPU_CONFIGURATION_GUIDELINES.md) - Design models optimized for TI NPU acceleration
 - [Integer On-Device Learning](docs/integer_ondevice_training/readme.md) - Fine-tune a deployed classification model on-device using integer-only arithmetic

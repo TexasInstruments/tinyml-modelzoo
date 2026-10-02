@@ -53,6 +53,10 @@ tinyml-modelzoo/
    ```
    This pulls in the rest of the toolchain as prebuilt wheels automatically -
    no need to clone anything else.
+3. (or) if you want to directly use this as a Python package and plan to make no model additions/changes, you might as well install the python package directly:
+    ```commandline
+    pip install http://software-dl.ti.com/C2000/esd/mcu_ai/wheel/tinyml_modelzoo-1.5.0-py3-none-any.whl
+    ```
 
 ### Running an Example
 

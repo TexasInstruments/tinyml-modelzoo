@@ -132,7 +132,7 @@ To run the result on a board, follow the **[Deploying to an SDK Example](docs/DE
 
 ### Radar (Arm Cortex-M4)
 
-* IWRL6432
+* xWRL6432
 
 ---
 
@@ -399,7 +399,7 @@ Note: LSTM models are not NPU-supported.
 
 | Model Name | Parameters | Architecture | NPU | Description |
 |------------|------------|--------------|-----|-------------|
-| `Pose_and_Fall_model` | Varies | Linear (4-layer) | No | Human pose and fall detection from radar point-cloud data |
+| `RF_MLP_4L_19K` | Varies | Linear (4-layer) | No | Human pose and fall detection from radar point-cloud data |
 
 ---
 

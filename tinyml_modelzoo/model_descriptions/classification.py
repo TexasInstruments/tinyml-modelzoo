@@ -1518,40 +1518,43 @@ _model_descriptions = {
             ],
         properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
                     dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
-        ),
-    }),
-    'Pose_and_Fall_model': deep_update_dict(deepcopy(template_model_description), {
+    ),
+}),
+    'RF_MLP_4L_19K': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             generic_model=False,
             task_type=constants.TASK_TYPE_RADAR_CLASSIFICATION,
-            model_details='Pose and Fall Detection model for Radar Point Cloud data. '
+            task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
+            model_details='ANN Classifier model for Surface Classification and Posture Detection Radar Applications. '
         ),
         'training': dict(
-            model_training_id='LINEAR_4L_PC',  # Must match class name in models/!
-            model_name='Pose_and_Fall_model',
-            properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py",
+            model_training_id='RF_MLP_4L_19K',  # Must match class name in models/!
+            model_name='RF_MLP_4L_19K',
+            properties=[dict(type="group", dynamic=True, script="radarclassification.py",
                            name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,
             target_devices=[
-                constants.TARGET_DEVICE_IWRL6432,
+                constants.TARGET_DEVICE_xWRL6432,
             ],
-        ),
-    }),
-    'MY_CLS_2k_NPU': deep_update_dict(deepcopy(template_model_description), {
-        'common': dict(
-            model_details='My NPU-compliant classification model with ~1.7k params.\n'
-                          '3 Conv+BatchNorm+ReLU layers + Linear layer.',
-        ),
-        'training': dict(
-            model_training_id='MY_CNN_TS_2K_NPU',   # must match the class name exactly
-            model_name='MY_CLS_2k_NPU',             # must match the dict key
-            target_devices=[
-                constants.TARGET_DEVICE_F28P55,
-                constants.TARGET_DEVICE_MSPM0G5187,
-                constants.TARGET_DEVICE_F29H85,
-                # ... any other device you plan to compile for
-            ],
-        ),
-    }),
+    ),
+}),
+    'RF_DualStream_PointCloud_19K': deep_update_dict(deepcopy(template_model_description), {
+            'common': dict(
+                generic_model=False,
+                task_type=constants.TASK_TYPE_RADAR_CLASSIFICATION,
+                task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
+                model_details='Pose and Fall Detection model for Radar Point Cloud data. '
+            ),
+            'training': dict(
+                model_training_id='RF_DualStream_PointCloud_19K',  # Must match class name in models/!
+                model_name='RF_DualStream_PointCloud_19K',
+                properties=[dict(type="group", dynamic=True, script="radarclassification.py",
+                               name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,
+                target_devices=[
+                    constants.TARGET_DEVICE_xWRL6432,
+                ],
+            ),
+        }),
+
 }
 
 enabled_models_list = [
@@ -1579,8 +1582,8 @@ enabled_models_list = [
     # Application-specific models
     'ArcFault_model_200_t', 'ArcFault_model_300_t', 'ArcFault_model_700_t', 'ArcFault_model_1400_t',
     'MotorFault_model_1_t', 'MotorFault_model_2_t', 'MotorFault_model_3_t', 'PIRDetection_model_1_t',
-    'FanImbalance_model_1_t', 'FanImbalance_model_2_t', 'FanImbalance_model_3_t', 'Pose_and_Fall_model', 'ElectricalFault_model_40k_t',
-    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t', 'WiFiPresDet_4.7k_CDE',
+    'FanImbalance_model_1_t', 'FanImbalance_model_2_t', 'FanImbalance_model_3_t', 'ElectricalFault_model_40k_t',
+    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t', 'SimpleCNN2D_BN_t', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K'
 ]
 
 

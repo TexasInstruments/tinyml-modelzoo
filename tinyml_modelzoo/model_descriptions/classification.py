@@ -1485,8 +1485,8 @@ _model_descriptions = {
                 constants.TARGET_DEVICE_MSPM0G5187,
                 constants.TARGET_DEVICE_MSPM33C32,
             ],
-        properties=[dict(type="group", dynamic=True, script="wifipresencedetection.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
-                    dict(type="group", dynamic=True, script="wifipresencedetection.py", name="train_group", label="Training Parameters", default=[])]
+        properties=[dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                    dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
         ),
     }),
     'Pose_and_Fall_model': deep_update_dict(deepcopy(template_model_description), {

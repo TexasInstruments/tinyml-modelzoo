@@ -1,64 +1,134 @@
-# Radar Posture & Fall Detection — Data Preprocessing Pipeline User Guide
+# Tensorlab - Radar Posture & Fall Detection Guide
 
-This guide documents the complete radar data preprocessing pipeline for the xWRL6432 mmWave radar sensor. The pipeline transforms raw CSV captures into model-ready tensor windows through 5 token-gated stages.
+This guide documents the **complete radar data preprocessing, training, quantization, compilation, and deployment pipeline** for **TI mmWave radar sensors**.
 
 ---
 
 ## Quick Start: Choose Your Path
 
-| Your Data Type | Recommended Config | Description |
+| Your Starting Point | Recommended Flow | Description |
 |---|---|---|
-| **Raw CSV from TI capture tools** (bin*, point_*, track_* columns) | `feature_extraction_name: "Generic_392Input_PointCloudWithTrack_SimpleWindow"` | Full pipeline (Stages 2–5) — default preset |
-| **Pre-cleaned / external features** (already windowed or no standard columns) | `feature_extraction_name: "Generic_392Input_SimpleWindowOnly"` | Stage 5 only — windowing + quality index |
-| **Custom pipeline** | Inline `data_proc_transforms` + individual params | Full manual control |
+| **Raw CSV from TI capture tools** (bin*, point_*, track_* columns) | Full pipeline: Preprocessing → Training → Quantization → Compilation | End-to-end with default preset |
+| **Pre-cleaned / external features** (already windowed) | Stage 5 only → Training → Quantization → Compilation | Skip radar-specific processing |
+| **Already trained ONNX model** | Quantization → Compilation → Deployment | Skip training |
 
-> **Example config:** See `pose_and_fall_radar_config.yaml` for a working baseline.
+> **Example config:** See `pose_and_fall_radar_config.yaml` for a working baseline for radar posture and fall detction application.
 
 ---
 
-## Pipeline Overview
+## Complete Pipeline Overview
 
 ```
-Raw CSV/NPY/PKL/TXT
-        │
-        ▼
-┌──────────────────┐
-│ Stage 0: Load    │  (auto header detection)
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐     "Radar Point Cloud Data"  → point_cloud_* params
-│ Stage 2: Point   │ ──────────────────────────▶
-│ Cloud Process    │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐     "Radar Track Data"        → track_* params
-│ Stage 3: Track   │ ──────────────────────────▶
-│ Data Process     │
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐     "Scaling"                 → radar_data_scaling_track_velocity
-│ Stage 4: Scaling │ ──────────────────────────▶
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐     "Simple Window"           → frame_size, stride_size,
-│ Stage 5: Window  │ ──────────────────────────▶     radar_frames_quality_index,
-│ + Quality Index  │                                radar_feature_ordering
-└────────┬─────────┘
-         │
-         ▼
-┌──────────────────┐
-│ Output Tensors   │  X: [N, frame_size × features_per_radar_frame]
-│                  │  Y: [N] class indices
-└──────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        TRAINING PHASE (Python)                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Raw CSV/NPY/PKL/TXT                                                       │
+│         │                                                                   │
+│         ▼                                                                   │
+│  ┌──────────────────┐     "Radar Point Cloud Data"   → point_cloud_* params│
+│  │ Stage 2: Point   │ ──────────────────────────────▶                       │
+│  │ Cloud Process    │                                                        │
+│  └────────┬─────────┘                                                        │
+│           │                                                                   │
+│           ▼                                                                   │
+│  ┌──────────────────┐     "Radar Track Data"        → track_* params        │
+│  │ Stage 3: Track   │ ──────────────────────────────▶                       │
+│  │ Data Process     │                                                        │
+│  └────────┬─────────┘                                                        │
+│           │                                                                   │
+│           ▼                                                                   │
+│  ┌──────────────────┐     "Scaling"                  → radar_data_scaling_  │
+│  │ Stage 4: Scaling │ ──────────────────────────────▶ track_velocity         │
+│  └────────┬─────────┘                                                        │
+│           │                                                                   │
+│           ▼                                                                   │
+│  ┌──────────────────┐     "Simple Window"           → frame_size, stride_   │
+│  │ Stage 5: Window  │ ──────────────────────────────▶ size, radar_frames_   │
+│  │ + Quality Index  │                                 quality_index,        │
+│  └────────┬─────────┘                                 radar_feature_ordering │
+│           │                                                                   │
+│           ▼                                                                   │
+│  ┌──────────────────┐                                                        │
+│  │ Output Tensors   │  X: [N, frame_size × features_per_radar_frame]       │
+│  │                  │  Y: [N] class indices                                 │
+│  └────────┬─────────┘                                                        │
+│           │                                                                   │
+│           ▼                                                                   │
+│  ┌──────────────────┐     Model: RF_DualStream_PointCloud_19K               │
+│  │ Training         │ ──────────────────────────────▶ or RF_MLP_4L_19K      │
+│  │ (PyTorch)        │                                                        │
+│  └────────┬─────────┘                                                        │
+│           │                                                                   │
+│           ▼                                                                   │
+│  ┌──────────────────┐                                                        │
+│  │ ONNX Export      │  model.onnx (float32)                                 │
+│  └────────┬─────────┘                                                        │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       QUANTIZATION PHASE (Python)                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  float32 ONNX ──▶ TI Quantization (PTQ/QAT) ──▶ quantized ONNX (int8)     │
+│       │                  (tinyml-modelmaker)         │                     │
+│       │                         │                      │                     │
+│       │                         ▼                      │                     │
+│       │              ┌──────────────────┐              │                     │
+│       │              │ Calibration Data │              │                     │
+│       │              │ (representative  │              │                     │
+│       │              │  samples)        │              │                     │
+│       │              └──────────────────┘              │                     │
+│       │                                                │                     │
+│       ▼                                                ▼                     │
+│  training/base/                                training/quantization/        │
+│  model.onnx                                    model.onnx                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      COMPILATION PHASE (TVM + TI NNC)                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  quantized ONNX ──▶ TVM Compiler ──▶ C Artifacts                           │
+│       │                (TI MCU NNC)     │                                  │
+│       │                         ┌──────┴──────┐                            │
+│       │                         ▼             ▼                            │
+│       │                  ┌─────────┐    ┌─────────┐                        │
+│       │                  │ tvmgen_ │    │ lib0.c  │                        │
+│       │                  │default.h│    │ lib1.c  │                        │
+│       │                  │ mod.a   │    │         │                        │
+│       │                  └─────────┘    └─────────┘                        │
+│       │                         │                                        │
+│       │                         ▼                                        │
+│       │                  ┌──────────────────┐                            │
+│       │                  │ Quantized Output:│                            │
+│       │                  │  uint8 (0-255)   │                            │
+│       │                  │  scale=0.125     │                            │
+│       │                  │  zero_point=127  │                            │
+│       │                  └──────────────────┘                            │
+│       │                         │                                        │
+│       │                         ▼                                        │
+│       │                  ┌──────────────────┐                            │
+│       │                  │ Dequantization:  │  ◄── APP MUST IMPLEMENT   │
+│       │                  │ float = 0.125 ×  │                            │
+│       │                  │        (u8 - 127)│                            │
+│       │                  └──────────────────┘                            │
+│       │                                                                   │
+│       ▼                                                                   │
+│  compilation/artifacts/                                                   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
 ```
 
-**Key principle:** Each stage runs **IFF its token string is present** in `data_proc_transforms`. Order in the list does not matter — the internal signal-chain order is fixed.
+**Key principle:** Each preprocessing stage runs **IFF its token string is present** in `data_proc_transforms`. Order in the list does not matter — the internal signal-chain order is fixed.
 
-> **Note:** Stage 1 (Radar Range Data) is available but not included in the default presets. Enable it inline if you need FFT bin selection.
+> **Note:** Stage 1 (Radar Range Data) is available but not included in default presets. Enable it inline if you need FFT bin selection.
+
 
 ---
 
@@ -72,6 +142,7 @@ Raw CSV/NPY/PKL/TXT
 > **Note:** Both presets set `frame_size=8`. `stride_size` differs: `0.125` (dense) for preset 1, `0.5` (sparse) for preset 2.
 
 ### Preset 1 Detail: `Generic_392Input_PointCloudWithTrack_SimpleWindow`
+
 - **Point Cloud (5 features × 8 pts = 40):** x, y, z, doppler, snr — relative coords (y only), spatial filter ±10m
 - **Track (9 features):** x, y, z, velocity (3), acceleration (3) — velocity/accel bounds ±10, spatial z-only ±10
 - **Scaling:** track_velocity × 30
@@ -199,6 +270,60 @@ Raw CSV/NPY/PKL/TXT
 
 ---
 
+## Training Configuration
+
+### Model Architectures
+
+| Model | Description | Input Size | Parameters | Best For |
+|---|---|---|---|---|
+| `RF_DualStream_PointCloud_19K` | Dual-stream (point cloud + track), ~19K params | 392 | ~19K | **Default** — best accuracy |
+| `RF_MLP_4L_19K` | 4-layer MLP, ~19K params | 392 | ~19K | Faster inference, simpler |
+
+### Key Training Parameters (from `pose_and_fall_radar_config.yaml`)
+
+```yaml
+model:
+  name: "RF_DualStream_PointCloud_19K"  # or RF_MLP_4L_19K
+
+training:
+  epochs: 100
+  batch_size: 64
+  learning_rate: 0.001
+  optimizer: "AdamW"
+  weight_decay: 1e-4
+  scheduler: "cosine"
+  early_stopping_patience: 15
+
+quantization:
+  quantization: 1  # 0=float, 1=TINPU int8
+  output_int: true  # quantized output (requires dequantization on device)
+  auto_quantization: false
+  calibration_samples: 500
+
+compilation:
+  target: "c -keys=arm_cpu,cpu -mcpu=cortex-m4 output_int=true skip_normalize=true"
+  cross_compiler: "~/bin/ti-cgt-armllvm_5.1.1.LTS/bin/tiarmclang"
+  cross_compiler_options: "-O3 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -march=armv7e-m -mthumb"
+```
+
+---
+
+## Quantization & Compilation Details
+
+### Quantization Modes
+
+| Mode | `quantization` | `output_int` | Output Type | Dequantization Needed? |
+|---|---|---|---|---|
+| Float32 (baseline) | 0 | false | float32 | No |
+| Generic Quantized | 1 | true | uint8 | **YES** |
+
+### Generated Artifacts (Quantized Model)
+
+```
+compilation/artifacts/
+├── tvmgen_default.h    # Header with I/O structs + dequant params
+└── mod.a               # Precompiled static library
+```
 ## Use-Case Scenarios
 
 ### 1. Standard Pose & Fall Detection (Default)
@@ -271,18 +396,12 @@ CSV must contain these **case-sensitive** columns (per TI capture tool format):
 | PointCloud+Track (Preset 1) | 49 | 8 | `[N, 392]` |
 | SimpleWindowOnly (Preset 2) | *input-dependent* | 8 | `[N, frame_size × input_features]` |
 
-Labels (Y): `[N]` integer class indices (0 = standing, 1 = sitting, 2 = walking, 3 = falling, 4 = laying).
-
----
-
-## Common Pitfalls
-
-| Symptom | Likely Cause | Fix |
-|---|---|---|
-| `KeyError: 'point_x0'` | CSV missing point cloud columns | Use `SimpleWindowOnly` preset or verify capture tool output |
-| All windows dropped | `radar_min_points_per_window` too high | Lower threshold or check data quality |
-| Mismatched input size | `frame_size` ≠ model expectation | Keep `frame_size=8` for RF_DualStream_PointCloud_19K / RF_MLP_4L_19K |
-| int32 output with `quantization=0` | Known TVM behavior for classification logits | Set `output_int=false` in compilation target (handled automatically) |
+**Labels (Y):** `[N]` integer class indices as an example for Radar Posture and Fall Detection 
+- 0 = Standing
+- 1 = Sitting
+- 2 = Walking
+- 3 = Falling
+- 4 = Laying
 
 ---
 
@@ -290,17 +409,21 @@ Labels (Y): `[N]` integer class indices (0 = standing, 1 = sitting, 2 = walking,
 
 | File | Purpose |
 |---|---|
-| `pose_and_fall_radar_config.yaml` | Baseline training config (raw data, full pipeline) |
+| `xwrl6432_posture_and_fall_detection.yaml` | Baseline training config (raw data, full pipeline, quantized) |
 | `README.md` | This guide |
 
 ---
 
-## Further Reading
+## Key Reference Files in Repository
 
-- **Preset definitions:** `tinyml_modelmaker/ai_modules/radar/constants.py` → `FEATURE_EXTRACTION_PRESET_DESCRIPTIONS`
-- **Dataset loader:** `tinyml-tinyverse/tinyml_tinyverse/common/datasets/radar_dataset.py` → `GenericRadarDataset`
-- **Model zoo:** `tinyml-modelzoo/examples/radar_posture_and_fall_detection/`
+| Component | Location |
+|---|---|
+| Preset definitions | `tinyml_modelmaker/ai_modules/radar/constants.py` → `FEATURE_EXTRACTION_PRESET_DESCRIPTIONS` |
+| Dataset loader | `tinyml-tinyverse/tinyml_tinyverse/common/datasets/radar_dataset.py` → `GenericRadarDataset` |
+| TVM compilation | `tinyml-tinyverse/tinyml_tinyverse/common/compilation/` |
+| Training entry point | `tinyml-tinyverse/tinyml_tinyverse/references/timeseries_classification/train.py` |
 
 ---
 
-*Generated for Tensorlab EdgeAI — Texas Instruments*
+*Generated for Tensorlab EdgeAI — Texas Instruments*  
+*Compatible with TI mmWave radar sensors*

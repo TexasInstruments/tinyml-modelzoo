@@ -1523,7 +1523,7 @@ _model_descriptions = {
     'RF_MLP_4L_19K': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             generic_model=False,
-            task_type=constants.TASK_TYPE_RADAR_CLASSIFICATION,
+            task_type=constants.TASK_TYPE_RADAR_POINT_CLOUD_CLASSIFICATION,
             task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
             model_details='ANN Classifier model for Surface Classification and Posture Detection Radar Applications. '
         ),
@@ -1540,7 +1540,7 @@ _model_descriptions = {
     'RF_DualStream_PointCloud_19K': deep_update_dict(deepcopy(template_model_description), {
             'common': dict(
                 generic_model=False,
-                task_type=constants.TASK_TYPE_RADAR_CLASSIFICATION,
+                task_type=constants.TASK_TYPE_RADAR_POINT_CLOUD_CLASSIFICATION,
                 task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
                 model_details='Pose and Fall Detection model for Radar Point Cloud data. '
             ),

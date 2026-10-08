@@ -1,8 +1,6 @@
 ################################################################################
-# RADAR POSE & FALL DETECTION APPLICATION 
+# RADAR SURFACE CLASSIFICATION APPLICATION 
 #
-# This configuration trains a 5-class human posture classification model
-# (standing, walking, laying, falling, sitting) on mmWave radar sensors.
 #
 ################################################################################
 
@@ -11,7 +9,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 common:
-  task_type: radar_posture_and_fall_detection
+  task_type: radar_surface_classification
 
   # Target module selects the AI module implementation (radar, vision, timeseries, audio)
   # This is common for all radar applications integrated within Tensorlab
@@ -27,17 +25,15 @@ common:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 dataset:
-  dataset_name: radar_posture_and_fall_detection
+  dataset_name: radar_surface_classification
   # NOTE: If your CSV column names don't match TI's capture tool convention
-  # (bin*, point_x*, track_*, etc.), use the SimpleWindowOnly preset instead! - Works well with already Pre Processed Radar Dataset
+  # 
 
-  #input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip
-  input_data_path: /home/lte_phy/Posture_detection_fall_5_classes_dataset/fall_detection_dataset.zip
-
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/radar_grass_surface_dataset.zip
   # Split strategy:
   #   - "within_files": Split each file internally (train/val/test from same file)
   #   - "amongst_files": Split by whole files (some files for train, some for test)
-  split_type: within_files
+  split_type: amongst_files
 
   # Train/Validation/Test split ratios (must sum to 1.0)
   split_factor: [0.7, 0.2, 0.1]
@@ -52,42 +48,19 @@ dataset:
 #   3. "Radar Track Data"       → Process track features + ghost track filter
 #   4. "Scaling"                → Scale columns (independent!)
 #   5. "Simple Window"          → Quality index + sliding window
-#
-# PRESETS (use feature_extraction_name):
-#   - "Generic_392Input_PointCloudWithTrack_SimpleWindow"        : All 5 stages (DEFAULT, for raw CSV)
-#   - "Generic_Radar_SimpleWindowOnly"    : Only stage 5 (for pre-cleaned data), also handles Radar Frames Quality Check
 
 data_processing_feature_extraction:
-  # PRESET NAME (RECOMMENDED): Use preset, override specific params below
-  feature_extraction_name: "Generic_392Input_PointCloudWithTrack_SimpleWindow"
    
-  radar_point_cloud_data_selector: ['y', 'z', 'snr']
-  radar_point_cloud_coordinate_system: relative
-  radar_point_cloud_relative_coordinate_filter: ['y']  
-
-  # [min_y, max_y, min_z, max_z, min_x, max_x]
-  radar_point_cloud_spatial_filter_bounds: [-10.0, 10.0, -10.0, 10.0, None, None]
-
-  # [min_doppler, max_doppler, min_snr, max_snr]
-  radar_point_cloud_non_spatial_filter_bounds: [None,None,None,None]
-
-  radar_track_data_selector: ['z', 'velocity', 'acceleration']
-  radar_track_velocity_bounds: [-10.0, 10.0]
-  radar_track_acceleration_bounds: [-10.0, 10.0]
-
-  # [min_y, max_y, min_z, max_z, min_x, max_x]
-  radar_track_spatial_filter_bounds: [None, None, -10.0, 10.0, None, None ]
-
-  # For Data Pre Processing clear Guide refer Tensorlab User Guide Or Readme in Model Zoo
-  # tinyml-modelmaker/misc/radar_data_pipeline_config_guide.yaml
+  feature_extraction_name: Generic_130Input_Radar_RangeClassification
+  radar_feature_ordering: feature_major
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TRAINING CONFIGURATION - Model, Optimization, Hyperparameters
 # ═══════════════════════════════════════════════════════════════════════════════
 
 training:
-  # Options for radar: RF_DualStream_PointCloud_19K, RF_MLP_4L_19K
-  model_name: RF_DualStream_PointCloud_19K
+  
+  model_name: RF_MLP_4L_19K
 
   dataset_loader: GenericRadarDataset
 
@@ -98,8 +71,8 @@ training:
   # Quantization mode:
   #   0 = NO_QUANTIZATION (FP32 float training) 
   #   1 = QUANTIZATION_GENERIC (generic quantization)
-  quantization: 0
-
+  quantization: 1
+  
   # Quantization method (when quantization > 0):
   #   "QAT" = Quantization-Aware Training (recommended, 0-1% accuracy loss)
   #   "PTQ" = Post-Training Quantization (fast, 1-5% accuracy loss)
@@ -111,18 +84,16 @@ training:
 
   # TRAINING HYPERPARAMETERS 
 
-  training_epochs: 250
+  training_epochs: 100
 
   # Early stopping - stops if no improvement for N epochs
   early_stopping: false
   early_stopping_patience: 5
 
   batch_size: 64
-  num_classes: 5
-  learning_rate: 0.001
-  optimizer: adamw
-  weight_decay: 0
-  lr_scheduler: CosineAnnealingLR
+  num_classes: 2
+  learning_rate: 0.0001
+  optimizer: sgd
 
   # GPU count: 0 = CPU (default, portable), >0 = number of GPUs
   num_gpus: 0
@@ -132,5 +103,3 @@ testing: {}
 
 compilation:
   compile_preset_name: "default_preset"
-  # Keep generated lib*.c files (for debugging)
-  keep_libc_files: false

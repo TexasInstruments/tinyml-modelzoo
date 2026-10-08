@@ -1,0 +1,133 @@
+################################################################################
+# RADAR POSE & FALL DETECTION APPLICATION 
+#
+# This configuration trains a 5-class human posture classification model
+# (standing, walking, laying, falling, sitting) on mmWave radar sensors.
+#
+################################################################################
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COMMON SETTINGS - Task, Tensorlab AI Module, Device Identification
+# ═══════════════════════════════════════════════════════════════════════════════
+
+common:
+  task_type: radar_point_cloud_classification
+
+  # Target module selects the AI module implementation (radar, vision, timeseries, audio)
+  # This is common for all radar applications integrated within Tensorlab
+  target_module: radar
+
+  # Target radar device - determines compilation preset
+  target_device: xWRL6432
+
+  run_name: '{date-time}_{model_name}'
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DATASET CONFIGURATION - Data Source, Splitting, Paths
+# ═══════════════════════════════════════════════════════════════════════════════
+
+dataset:
+  dataset_name: radar_point_cloud_classification
+  # NOTE: If your CSV column names don't match TI's capture tool convention
+  # (bin*, point_x*, track_*, etc.), use the SimpleWindowOnly preset instead! - Works well with already Pre Processed Radar Dataset
+
+  input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip
+
+  # Split strategy:
+  #   - "within_files": Split each file internally (train/val/test from same file)
+  #   - "amongst_files": Split by whole files (some files for train, some for test)
+  split_type: within_files
+
+  # Train/Validation/Test split ratios (must sum to 1.0)
+  split_factor: [0.7, 0.2, 0.1]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DATA PROCESSING & FEATURE EXTRACTION - 5-Stage Radar Pipeline
+# ════════════════════════════════════════════════════════════════════════════════
+#
+# PIPELINE STAGES :
+#   1. "Radar Range Data"       → Select FFT range bins (bin* columns)
+#   2. "Radar Point Cloud Data" → Process point cloud detections
+#   3. "Radar Track Data"       → Process track features + ghost track filter
+#   4. "Scaling"                → Scale columns (independent!)
+#   5. "Simple Window"          → Quality index + sliding window
+#
+# PRESETS (use feature_extraction_name):
+#   - "Generic_392Input_PointCloudWithTrack_SimpleWindow"        : All 5 stages (DEFAULT, for raw CSV)
+#   - "Generic_Radar_SimpleWindowOnly"    : Only stage 5 (for pre-cleaned data), also handles Radar Frames Quality Check
+
+data_processing_feature_extraction:
+  # PRESET NAME (RECOMMENDED): Use preset, override specific params below
+  feature_extraction_name: "Generic_392Input_PointCloudWithTrack_SimpleWindow"
+   
+  radar_point_cloud_data_selector: ['y', 'z', 'snr']
+  radar_point_cloud_coordinate_system: relative
+  radar_point_cloud_relative_coordinate_filter: ['y']  
+
+  # [min_x, max_x, min_y, max_y, min_z, max_z]
+  radar_point_cloud_spatial_filter_bounds: [None, None, -10.0, 10.0, -10.0, 10.0]
+
+  # [min_doppler, max_doppler, min_snr, max_snr]
+  radar_point_cloud_non_spatial_filter_bounds: [None,None,None,None]
+
+  radar_track_data_selector: ['z', 'velocity', 'acceleration']
+  radar_track_velocity_bounds: [-10.0, 10.0]
+  radar_track_acceleration_bounds: [-10.0, 10.0]
+
+  # [min_x, max_x, min_y, max_y, min_z, max_z]
+  radar_track_spatial_filter_bounds: [None, None, None, None, -10.0, 10.0 ]
+
+  # For Data Pre Processing clear Guide refer Tensorlab User Guide Or Readme in Model Zoo
+  # tinyml-modelmaker/misc/radar_data_pipeline_config_guide.yaml
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TRAINING CONFIGURATION - Model, Optimization, Hyperparameters
+# ═══════════════════════════════════════════════════════════════════════════════
+
+training:
+  # Options for radar: RF_DualStream_PointCloud_19K, RF_MLP_4L_19K
+  model_name: RF_DualStream_PointCloud_19K
+
+  dataset_loader: GenericRadarDataset
+
+  training_backend: tinyml_tinyverse
+
+  # QUANTIZATION SETTINGS
+
+  # Quantization mode:
+  #   0 = NO_QUANTIZATION (FP32 float training) 
+  #   1 = QUANTIZATION_GENERIC (generic quantization)
+  quantization: 0
+  
+  # Quantization method (when quantization > 0):
+  #   "QAT" = Quantization-Aware Training (recommended, 0-1% accuracy loss)
+  #   "PTQ" = Post-Training Quantization (fast, 1-5% accuracy loss)
+  quantization_method: "QAT"
+  quantization_weight_bitwidth: 8       
+  quantization_activation_bitwidth: 8   
+  auto_quantization: false              
+
+
+  # TRAINING HYPERPARAMETERS 
+
+  training_epochs: 250
+
+  # Early stopping - stops if no improvement for N epochs
+  early_stopping: false
+  early_stopping_patience: 5
+
+  batch_size: 64
+  num_classes: 5
+  learning_rate: 0.001
+  optimizer: adamw
+  weight_decay: 0
+  lr_scheduler: CosineAnnealingLR
+
+  # GPU count: 0 = CPU (default, portable), >0 = number of GPUs
+  num_gpus: 0
+  training_device: cpu
+
+testing: {}
+
+compilation:
+  compile_preset_name: "default_preset"

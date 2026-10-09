@@ -1536,6 +1536,22 @@ _model_descriptions = {
             ],
         ),
     }),
+    'MY_CLS_2k_NPU': deep_update_dict(deepcopy(template_model_description), {
+        'common': dict(
+            model_details='My NPU-compliant classification model with ~1.7k params.\n'
+                          '3 Conv+BatchNorm+ReLU layers + Linear layer.',
+        ),
+        'training': dict(
+            model_training_id='MY_CNN_TS_2K_NPU',   # must match the class name exactly
+            model_name='MY_CLS_2k_NPU',             # must match the dict key
+            target_devices=[
+                constants.TARGET_DEVICE_F28P55,
+                constants.TARGET_DEVICE_MSPM0G5187,
+                constants.TARGET_DEVICE_F29H85,
+                # ... any other device you plan to compile for
+            ],
+        ),
+    }),
 }
 
 enabled_models_list = [
@@ -1564,7 +1580,7 @@ enabled_models_list = [
     'ArcFault_model_200_t', 'ArcFault_model_300_t', 'ArcFault_model_700_t', 'ArcFault_model_1400_t',
     'MotorFault_model_1_t', 'MotorFault_model_2_t', 'MotorFault_model_3_t', 'PIRDetection_model_1_t',
     'FanImbalance_model_1_t', 'FanImbalance_model_2_t', 'FanImbalance_model_3_t', 'Pose_and_Fall_model', 'ElectricalFault_model_40k_t',
-    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t', 'WiFiPresDet_4.7k_CDE'
+    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t', 'WiFiPresDet_4.7k_CDE',
 ]
 
 

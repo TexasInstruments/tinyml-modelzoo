@@ -9,8 +9,8 @@ tinyml-modelzoo/
 ├── examples/               # Ready-to-run example configurations
 ├── tinyml_modelzoo/
 │   ├── models/             # Neural network model definitions
-│   ├── model_descriptions/ # Model metadata for GUI integration
-│   └── device_info/        # Target device performance data
+│   └── model_descriptions/ # Model metadata (names used in configs and the GUI)
+├── docs/                   # Guides (config YAML, bring your own model, NPU guidelines)
 ├── run_tinyml_modelzoo.sh  # Training wrapper (Linux)
 ├── run_tinyml_modelzoo.bat # Training wrapper (Windows)
 └── ADDING_NEW_MODELS.md    # Guide for adding custom models
@@ -94,6 +94,8 @@ common:
     projects_path: './your/choice'  # or an absolute path
 ```
 
+To run the result on a board, follow the **[Deploying to an SDK Example](docs/DEPLOYING_TO_SDK_EXAMPLE.md)** guide. It covers which four files to copy from the run into a C2000Ware / F29 / MSPM33 / AM13 / AM26 SDK example, and how to check that the device matches the golden vectors.
+
 ---
 
 ## Supported Target Devices
@@ -155,6 +157,7 @@ For the reasoning behind how these categories differ from one another, see
 
 1. **Look for your use case** in the [Examples Reference](#examples-reference) tables below. If one matches (e.g. `motor_bearing_fault`, `pir_detection`), start there — it ships with a dataset, a tuned model, and a device-specific config.
 2. **If nothing matches**, use the generic example for your task type instead (the first row in each table below, e.g. [generic_timeseries_classification](examples/generic_timeseries_classification/)) and point it at your own dataset. This is also the recommended **first example to run** to learn the toolchain.
+3. **Adapt the config** to your dataset and device. See the [Config YAML Guide](docs/CONFIG_YAML_GUIDE.md) for the structure of the config file and the most useful options.
 
 ---
 
@@ -382,13 +385,14 @@ Note: LSTM models are not NPU-supported.
 
 ## Adding New Models
 
-Want to add your own model? See the comprehensive guide: **[ADDING_NEW_MODELS.md](ADDING_NEW_MODELS.md)**
+Want to bring your own model? Follow the step-by-step **[Bring Your Own Model (BYOM) Guide](docs/BRING_YOUR_OWN_MODEL.md)**. It adds a small NPU-friendly classification model and trains it on the DC arc fault example, and ends with guidelines for NPU compliance and model sizing.
 
 Key steps:
-1. Add model class to `tinyml_modelzoo/models/`
-2. Add class name to the file's `__all__` list
-3. (Optional) Add device performance info to `device_info/run_info.py`
-4. (Optional) Add model description to `model_descriptions/` for GUI integration
+1. Add the model class to `tinyml_modelzoo/models/` and its name to the file's `__all__` list
+2. Add a model description to `model_descriptions/` and its name to `enabled_models_list`. This is required: the config's `training.model_name` refers to the description name
+3. Set `training.model_name` in a copy of an example config and run it
+
+For more on model internals (layer types, custom `torch.nn.Module` models), see [ADDING_NEW_MODELS.md](ADDING_NEW_MODELS.md).
 
 No changes required outside this repo.
 
@@ -600,7 +604,10 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 ## Additional Resources
 
-- [User Guide](docs/user_guide/readme.md) - install methods (wheel or clone), the full applications list, and a per-category (timeseries/audio/image/radar) YAML config reference
+- [User Guide](https://software-dl.ti.com/C2000/esd/mcu_ai/user_guide/index.html) - install methods (pip install or clone), the full examples and applications list, and a section-by-section YAML config reference
+- [Config YAML Guide](docs/CONFIG_YAML_GUIDE.md) - How to create and adapt an example config YAML: section-by-section skeleton, feature extraction options and useful knobs
+- [Bring Your Own Model (BYOM) Guide](docs/BRING_YOUR_OWN_MODEL.md) - Add your own model to the ModelZoo, train it on an example, and design it for NPU acceleration
+- [Deploying to an SDK Example](docs/DEPLOYING_TO_SDK_EXAMPLE.md) - Copy a run's compiled model, feature-extraction config and golden vectors into an SDK example, then verify on the device
 - [TI's Neural Network Compiler Documentation](https://software-dl.ti.com/mctools/nnc/mcu/users_guide/)
 - [NPU Configuration Guidelines](docs/NPU_CONFIGURATION_GUIDELINES.md) - Design models optimized for TI NPU acceleration
 - [Integer On-Device Learning](docs/integer_ondevice_training/readme.md) - Fine-tune a deployed classification model on-device using integer-only arithmetic

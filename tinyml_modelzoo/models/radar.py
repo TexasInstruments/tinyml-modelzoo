@@ -41,19 +41,19 @@ class RF_MLP_4L_19K(nn.Module):
     """
     4-layer fully connected model for radar applications.
 
-    Expected Input : (N, 248)
+    Expected Input : (N, input_features)
 
     Architecture: BatchNorm -> Linear -> ReLU -> BatchNorm -> Linear -> ReLU ->
                  BatchNorm -> Linear -> ReLU -> BatchNorm -> Linear
-    Output: [batch, num_classes] 
+    Output: [batch, num_classes]
     """
     def __init__(self, config):
         super().__init__()
-        
+
         self.config = config or {}
-        self.input_features = self.config['input_features']
-        self.variables = self.config['variables']
-        self.num_classes = self.config['num_classes']
+        self.input_features = self.config.get('input_features', input_features)
+        self.variables = self.config.get('variables', variables)
+        self.num_classes = self.config.get('num_classes', num_classes)
 
         # Calculate input size after flattening
         input_size = self.input_features * self.variables
@@ -94,17 +94,17 @@ class RF_DualStream_PointCloud_19K(nn.Module):
     - Velocity stream: Handles velx, vely, velz
     - Fusion layers: Combines both streams for final classification
 
-    Input: (N,248) [batch, frame_size * number of features in a radar frame]
-           
-    Output: [batch, num_classes] 
+    Input: (N, input_features) [batch, frame_size * number of features in a radar frame]
+
+    Output: [batch, num_classes]
     """
 
     def __init__(self, config):
         super().__init__()
         self.config = config or {}
-        self.input_features = self.config['input_features']
-        self.variables = self.config['variables']
-        self.num_classes = self.config['num_classes']
+        self.input_features = self.config.get('input_features', input_features)
+        self.variables = self.config.get('variables', variables)
+        self.num_classes = self.config.get('num_classes', num_classes)
 
         raw_frame_size = self.config.get('frame_size', None)
 

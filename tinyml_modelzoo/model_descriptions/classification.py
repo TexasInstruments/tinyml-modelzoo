@@ -1523,12 +1523,12 @@ _model_descriptions = {
     'RF_MLP_4L_19K': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             generic_model=False,
-            task_type=constants.TASK_TYPE_RADAR_POINT_CLOUD_CLASSIFICATION,
+            task_type=constants.TASK_TYPE_RADAR_RANGE_CLASSIFICATION,
             task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
             model_details='ANN Classifier model for Surface Classification and Posture Detection Radar Applications. '
         ),
         'training': dict(
-            model_training_id='RF_MLP_4L_19K',  # Must match class name in models/!
+            model_training_id='RF_MLP_4L_19K',
             model_name='RF_MLP_4L_19K',
             properties=[dict(type="group", dynamic=True, script="radarclassification.py",
                            name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,

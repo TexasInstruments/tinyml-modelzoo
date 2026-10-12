@@ -1,11 +1,6 @@
 ################################################################################
 # RADAR POSE & FALL DETECTION APPLICATION 
-#
-# This configuration trains a 5-class human posture classification model
-# (standing, walking, laying, falling, sitting) on mmWave radar sensors.
-#
 ################################################################################
-
 common:
   task_type: radar_point_cloud_classification
   target_module: radar
@@ -14,8 +9,7 @@ common:
 
 dataset:
   dataset_name: radar_point_cloud_classification
-  # NOTE: If your CSV column names don't match TI's capture tool convention
-  # (bin*, point_x*, track_*, etc.), use the SimpleWindowOnly preset instead! - Works well with already Pre Processed Radar Dataset
+  # NOTE: Refer Radar Data Processing Markdown for more clarity on radar specific processing arguments
   input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip
   split_type: within_files # amongst_files/within_files
   # Train/Validation/Test 
@@ -24,45 +18,29 @@ dataset:
 data_processing_feature_extraction:
   # PRESET NAME (RECOMMENDED): Use preset, override specific params below
   feature_extraction_name: "Generic_392Input_PointCloudWithTrack_SimpleWindow"
-   
   radar_point_cloud_data_selector: ['y', 'z', 'snr']
   radar_point_cloud_coordinate_system: relative
   radar_point_cloud_relative_coordinate_filter: ['y']  
-
-  # [min_x, max_x, min_y, max_y, min_z, max_z]
-  radar_point_cloud_spatial_filter_bounds: [None, None, -10.0, 10.0, -10.0, 10.0]
-
-  # [min_doppler, max_doppler, min_snr, max_snr]
-  radar_point_cloud_non_spatial_filter_bounds: [None,None,None,None]
-
+  radar_point_cloud_spatial_filter_bounds: [None, None, -10.0, 10.0, -10.0, 10.0] # [min_x, max_x, min_y, max_y, min_z, max_z]
   radar_track_data_selector: ['z', 'velocity', 'acceleration']
   radar_track_velocity_bounds: [-10.0, 10.0]
   radar_track_acceleration_bounds: [-10.0, 10.0]
-
-  # [min_x, max_x, min_y, max_y, min_z, max_z]
-  radar_track_spatial_filter_bounds: [None, None, None, None, -10.0, 10.0 ]
+  radar_track_spatial_filter_bounds: [None, None, None, None, -10.0, 10.0 ] # [min_x, max_x, min_y, max_y, min_z, max_z]
 
 training:
   model_name: RF_DualStream_PointCloud_19K
-  dataset_loader: GenericRadarDataset
-  training_backend: tinyml_tinyverse
-  quantization: 0
+  quantization: 1
   quantization_method: "QAT"
   quantization_weight_bitwidth: 8       
   quantization_activation_bitwidth: 8             
   training_epochs: 250
-  early_stopping: true
-  early_stopping_patience: 5
-  batch_size: 64
-  num_classes: 5
   learning_rate: 0.001
   optimizer: adamw
   weight_decay: 0
+  output_int: false
   lr_scheduler: CosineAnnealingLR
   num_gpus: 0
-  training_device: cpu
 
 testing: {}
 
-compilation:
-  compile_preset_name: "default_preset"
+compilation: {}

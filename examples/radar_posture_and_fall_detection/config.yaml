@@ -17,22 +17,11 @@ dataset:
 
 data_processing_feature_extraction:
   # PRESET NAME (RECOMMENDED): Use preset, override specific params below
-  feature_extraction_name: "Generic_392Input_PointCloudWithTrack_SimpleWindow"
-  radar_point_cloud_data_selector: ['y', 'z', 'snr']
-  radar_point_cloud_coordinate_system: relative
-  radar_point_cloud_relative_coordinate_filter: ['y']  
-  radar_point_cloud_spatial_filter_bounds: [None, None, -10.0, 10.0, -10.0, 10.0] # [min_x, max_x, min_y, max_y, min_z, max_z]
-  radar_track_data_selector: ['z', 'velocity', 'acceleration']
-  radar_track_velocity_bounds: [-10.0, 10.0]
-  radar_track_acceleration_bounds: [-10.0, 10.0]
-  radar_track_spatial_filter_bounds: [None, None, None, None, -10.0, 10.0 ] # [min_x, max_x, min_y, max_y, min_z, max_z]
+  feature_extraction_name: "Generic_248Input_Posture_and_Fall_Detection"
 
 training:
   model_name: RF_DualStream_PointCloud_19K
-  quantization: 1
-  quantization_method: "QAT"
-  quantization_weight_bitwidth: 8       
-  quantization_activation_bitwidth: 8             
+  quantization_method: "QAT"            
   training_epochs: 250
   learning_rate: 0.001
   optimizer: adamw

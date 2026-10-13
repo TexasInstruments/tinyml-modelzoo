@@ -9,11 +9,13 @@
 1. [Quick Start: Identify Your Use Case Scenario](#quick-start-identify-your-use-case-scenario)
 2. [All Configurable Parameters Reference](#all-configurable-parameters-reference)
 3. [Use Case 1: Pre-Cleaned / Already Processed Datasets](#use-case-1-pre-cleaned--already-processed-datasets)
-4. [Use Case 2: Raw Data from Data Capture Tool/Visualizer (Future Scope)](#use-case-2-raw-data-from-ti-unified-data-capture-tools)
-5. [Use Case 3: Raw Data from Other Sources (Column Renaming Required)](#use-case-3-raw-data-from-other-sources-column-renaming-required)
-6. [Radar Frame Quality Filtering](#frame-quality-filtering-per_radar_frame-vs-per_window)
+4. [Use Case 2: On-device Signal Chain Output from Data Capture Tools](#use-case-2-on-device-signal-chain-output-from-data-capture-tools)
+5. [Use Case 3: Data from Other Sources (Column Renaming Required)](#use-case-3-data-from-other-sources-column-renaming-required)
+6. [Frame Quality Filtering: `per_radar_frame` vs `per_window`](#frame-quality-filtering-per_radar_frame-vs-per_window)
 7. [Feature Extraction Presets](#feature-extraction-presets)
 8. [Inline Override: Customizing Presets in YAML](#inline-override-customizing-presets-in-yaml)
+9. [Posture & Fall Detection: Complete Walkthrough](#posture--fall-detection-complete-walkthrough)
+10. [Troubleshooting & Common Pitfalls](#troubleshooting--common-pitfalls)
 
 ---
 

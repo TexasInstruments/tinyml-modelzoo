@@ -3,8 +3,8 @@
 This guide walks you through adding your own neural network to Tiny ML ModelZoo
 and training it with an existing example. As a worked example, you will add a
 small NPU-friendly classification model and train it on the
-[DC arc fault](../examples/dc_arc_fault/) dataset using
-[`config_dsk.yaml`](../examples/dc_arc_fault/config_dsk.yaml).
+[DC arc fault](https://github.com/TexasInstruments/tinyml-modelzoo/tree/main/examples/dc_arc_fault/) dataset using
+[`config_dsk.yaml`](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/examples/dc_arc_fault/config_dsk.yaml).
 
 You only need to edit files inside `tinyml-modelzoo`. **No changes are needed in
 `tinyml-tinyverse` or `tinyml-modelmaker`**: models are discovered automatically
@@ -430,4 +430,4 @@ To expose the model there with editable training parameters, add the
 `model_descriptions/classification.py`.
 
 For more on model internals (available layer types, custom `torch.nn.Module`
-models, test commands), see [ADDING_NEW_MODELS.md](../ADDING_NEW_MODELS.md).
+models, test commands), see [ADDING_NEW_MODELS.md](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/ADDING_NEW_MODELS.md).

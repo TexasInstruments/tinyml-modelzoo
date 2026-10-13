@@ -39,7 +39,7 @@ On-Device:     Train on PC → Split model → Deploy frozen + trainable parts �
 | **SDK** | The corresponding device SDK and Code generation tools (e.g., F29H85x SDK for C29x) |
 | **IDE** | Code Composer Studio (CCS)|
 | **ModelZoo** | tinyml-tensorlab ModelZoo environment set up ([setup instructions](https://github.com/TexasInstruments/tinyml-tensorlab/tree/main/tinyml-modelzoo)) |
-| **Baseline working** | The standard (non-ODT) anomaly detection example for your device should build and run successfully before attempting on-device training. This verifies your SDK, CCS, and hardware setup are correct. See the [fan blade example readme](../../examples/fan_blade_fault_classification/readme_anomaly_detection.md). |
+| **Baseline working** | The standard (non-ODT) anomaly detection example for your device should build and run successfully before attempting on-device training. This verifies your SDK, CCS, and hardware setup are correct. See the [fan blade example readme](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/examples/fan_blade_fault_classification/readme_anomaly_detection.md). |
 ---
 
 ## Key Concepts

@@ -249,6 +249,21 @@ purpose-built config for that specific use case.
 
 ## Available Models
 
+**83 models** are enabled in 1.5.0:
+
+| Task | Models |
+|------|--------|
+| Classification (timeseries) | 38 |
+| Regression | 11 |
+| Forecasting | 12 |
+| Anomaly Detection | 13 |
+| Audio Classification | 5 |
+| Image Classification | 3 |
+| Radar Point Cloud Classification | 1 |
+| **Total** | **83** |
+
+The counts are the entries of each task's `enabled_models_list` (the radar model is part of the classification list; audio and image lists live in `tinyml-modelmaker`). A model must be in this list to be selectable through `training.model_name`.
+
 Models are organized by task type. The **NPU** column indicates hardware acceleration support on TI devices with NPU (F28P55, AM13E2, MSPM0G5187).
 
 **NPU-optimized models** follow specific layer constraints for hardware acceleration:
@@ -303,7 +318,9 @@ For detailed guidelines, see [NPU Configuration Guidelines](docs/NPU_CONFIGURATI
 | `FanImbalance_model_2_t` | Varies | Specialized | No | Fan imbalance variant 2 |
 | `FanImbalance_model_3_t` | Varies | Specialized | No | Fan imbalance variant 3 |
 | `PIRDetection_model_1_t` | Varies | Specialized | No | PIR-based presence detection |
-| `SimpleCNN2D_BN_t` | ~3K | CNN | No | Wi-Fi CSI presence detection (2-layer 2D CNN over time-frequency features). CC35X1 only. |
+| `WiFiPresDet_4.7k_CDE` | ~4.7K | CNN | No | Wi-Fi CSI presence detection. CC35X1 only. |
+| `ECG_55k_NPU` | ~55K | CNN | Yes | ECG classification: 12 Conv+BatchNorm+ReLU layers, MaxPool and a Linear layer |
+| `ElectricalFault_model_40k_t` | ~40K | CNN | Yes | Electrical (transmission line) fault classification: 6 channels x 128 steps, 6 fault classes. MSPM0 only |
 
 ### Regression Models
 
@@ -311,6 +328,7 @@ For detailed guidelines, see [NPU Configuration Guidelines](docs/NPU_CONFIGURATI
 |------------|------------|--------------|-----|-------------|
 | `REGR_500_NPU` | ~500 | CNN | Yes | Compact regression |
 | `REGR_1k` | ~1K | CNN | No | Lightweight regression model |
+| `REGR_2k` | ~2K | CNN | No | Small regression model: 3 Conv+BatchNorm+ReLU layers and 2 Linear layers |
 | `REGR_2k_NPU` | ~2K | CNN | Yes | 2-layer model |
 | `REGR_3k` | ~3K | MLP | No | 4-layer fully connected network |
 | `REGR_4k` | ~4K | CNN | No | 2 Conv+BN+ReLU + Linear |
@@ -335,6 +353,7 @@ Note: For NPU models, encoder convolutions are NPU-accelerated but decoder upsam
 | `AD_10k_NPU` | ~10K | CNN AE | Yes | 3-layer autoencoder |
 | `AD_16k` | ~16K | Autoencoder | No | 4-layer CNN autoencoder |
 | `AD_17k` | ~17K | Autoencoder | No | Fan blade anomaly detection |
+| `AD_11k_NPU` | ~11K | Autoencoder | Yes | NPU-compliant fan blade anomaly detection |
 | `AD_20k_NPU` | ~20K | CNN AE | Yes | High capacity autoencoder |
 | `AD_Linear` | Varies | Linear AE | No | 3-layer deep linear autoencoder |
 | `Ondevice_Trainable_AD_Linear` | Varies | Linear AE | No | On-device trainable variant |
@@ -363,6 +382,7 @@ Note: LSTM models are not NPU-supported.
 | Model Name | Parameters | Architecture | NPU | Description |
 |------------|------------|--------------|-----|-------------|
 | `DSCNN_NPU` | ~9K | DSCNN | Yes | Depthwise separable CNN for keyword spotting; input (1, 49, 10) MFCC |
+| `DSCNN_32K_NPU` | Varies | DSCNN | Yes | SRAM/Flash-optimized DSCNN (48 filters, 3x1 depthwise kernels). Target: SRAM < 32 KB, Flash < 128 KB, W8 quantization |
 | `TCDS_ResNet_NPU` | ~24K | Temporal Channel-Decoupled Separable CNN | Yes | Cough detection from LPC features; input (1, 100, 70), SRAM-efficient (no 2D spatial buffers) |
 | `DSCNN_GB_NPU` | ~6K | DSCNN | Yes | Glass break detection from FFT-binned features; input (1, 86, 32), mixed-precision (4-bit DW/PW, 8-bit stem) |
 | `TCDS_ResNet_FB_NPU` | Varies | Learned Filterbank + TCDS-ResNet | Yes | Wake word detection directly from raw audio via a jointly-trained Conv1D filterbank front-end; mixed-precision (2-bit backbone, 8-bit stem/head) |
@@ -372,7 +392,7 @@ Note: LSTM models are not NPU-supported.
 | Model Name | Parameters | Architecture | NPU | Description |
 |------------|------------|--------------|-----|-------------|
 | `Lenet5` | ~60K | LeNet-5 | No | Classic CNN for image classification |
-| `MobileNetV1_58k_NPU` | ~58K | MobileNetV1-style DW-Sep | Yes | Compact NPU-optimized image classifier |
+| `MobileNetV1_28k_NPU` | ~28K | MobileNetV1-style DW-Sep | Yes | Compact NPU-optimized image classifier |
 | `MobileNetV2_58k_NPU` | ~58K | MobileNetV2-style DW-Sep | Yes | Inverted residual image classifier |
 
 ### Radar Point Cloud Classification Models
@@ -432,7 +452,7 @@ These categories can look similar from a distance, so here's how to tell them ap
     - Gen3 F28x device support reconciled: F2838x, F28P551x, F28002x, and new F28E12x device profile added across regression, forecasting, and anomaly-detection models; over-broad device lists tightened (e.g. arc fault, generic timeseries classification) to match verified per-model support
     - Task-level target device lists for radar, image, and audio classification are now derived from each model's real device support instead of a hand-maintained list, fixing several tasks (e.g. radar classification) that had advertised devices no model actually supported
   - Applications Supported: 37 example applications (4 generic timeseries tasks + 33 specific applications)
-  - Models: 78 models across classification/regression/forecasting/anomaly-detection (timeseries + radar) plus vision and audio classification
+  - Models: 83 models across classification/regression/forecasting/anomaly-detection (timeseries + radar) plus vision and audio classification
     - Added TCDSResNet and a compressed DSCNN for audio classification (cough detection), both NPU-compliant
     - Compressed MobileNet_v1 to fit AM13 memory budget
     - Added Radar Point Cloud Classification support (new model + dataset flow )
@@ -605,6 +625,7 @@ These categories can look similar from a distance, so here's how to tell them ap
 ## Additional Resources
 
 - [User Guide](https://software-dl.ti.com/C2000/esd/mcu_ai/user_guide/index.html) - install methods (pip install or clone), the full examples and applications list, and a section-by-section YAML config reference
+- **Full User Guide (Sphinx)** - the 1.5.0 user guide source lives in [docs/](docs/index.rst): installation (wheel or clone), task types, bring-your-own-data, devices, every example, features, deployment, troubleshooting and a config reference. Build it with `pip install -r docs/requirements.txt && make -C docs html`, then open `docs/_build/html/index.html`.
 - [Config YAML Guide](docs/CONFIG_YAML_GUIDE.md) - How to create and adapt an example config YAML: section-by-section skeleton, feature extraction options and useful knobs
 - [Bring Your Own Model (BYOM) Guide](docs/BRING_YOUR_OWN_MODEL.md) - Add your own model to the ModelZoo, train it on an example, and design it for NPU acceleration
 - [Deploying to an SDK Example](docs/DEPLOYING_TO_SDK_EXAMPLE.md) - Copy a run's compiled model, feature-extraction config and golden vectors into an SDK example, then verify on the device

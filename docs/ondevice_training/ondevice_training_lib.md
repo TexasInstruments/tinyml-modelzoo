@@ -854,5 +854,3 @@ To extend the library with a new layer type (e.g., Conv1D):
 | `ODT_LinearBackward(ctx, grad_out, grad_in, in, layer)` | Linear backward: input grad + weight update/accumulate | void |
 | `ODT_ReLUForward(in, out, size)` | ReLU: out = max(0, in) | void |
 | `ODT_ReLUBackward(grad_out, grad_in, fwd_out, size)` | ReLU backward: pass grad where fwd > 0 | void |
-
----

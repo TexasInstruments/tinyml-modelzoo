@@ -1,6 +1,6 @@
 # How to Create a ModelZoo Config YAML
 
-Every example under [`examples/`](../examples/) is driven by a single YAML file.
+Every example under [`examples/`](https://github.com/TexasInstruments/tinyml-modelzoo/tree/main/examples/) is driven by a single YAML file.
 This guide explains the structure of that file and how to adapt an existing
 example to your own dataset and target device.
 
@@ -14,7 +14,7 @@ example to your own dataset and target device.
 ## 1. Config Skeleton and 4-Step Recipe
 
 Almost every config follows the same 6-section skeleton
-(based on [`generic_timeseries_classification/config.yaml`](../examples/generic_timeseries_classification/config.yaml)):
+(based on [`generic_timeseries_classification/config.yaml`](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/examples/generic_timeseries_classification/config.yaml)):
 
 ```yaml
 common:                          # WHAT task, WHICH device
@@ -51,7 +51,7 @@ compilation: {}                  # {} = default_preset
 ### 4-Step Recipe
 
 1. **Copy the closest example.** Use the use-case folder if one matches your
-   problem (e.g. [`motor_bearing_fault`](../examples/motor_bearing_fault/)).
+   problem (e.g. [`motor_bearing_fault`](https://github.com/TexasInstruments/tinyml-modelzoo/tree/main/examples/motor_bearing_fault/)).
    If none does, use the generic example for your task:
    `generic_timeseries_classification`, `generic_timeseries_regression`,
    `generic_timeseries_forecasting` or `generic_timeseries_anomalydetection`.
@@ -130,10 +130,10 @@ data_processing_feature_extraction:
 
 | Task | What is different |
 |------|-------------------|
-| **Forecasting** | `SimpleWindow` is mandatory; add `forecast_horizon` (future timesteps to predict) and `target_variables` (column indices to predict). See [`generic_timeseries_forecasting`](../examples/generic_timeseries_forecasting/config.yaml). |
-| **Anomaly detection** | Uses `dataset.split_factor: [0.5, 0.1, 0.4]` and an `AD_*` autoencoder model. See [`generic_timeseries_anomalydetection`](../examples/generic_timeseries_anomalydetection/). |
-| **Regression** | Usually windowing only (`SimpleWindow`) with a `REGR_*` model. See [`generic_timeseries_regression`](../examples/generic_timeseries_regression/config.yaml). |
-| **Image** | Set `common.target_module: vision` and use a preset such as `Mnist_Default`. See [`MNIST_image_classification`](../examples/MNIST_image_classification/). |
+| **Forecasting** | `SimpleWindow` is mandatory; add `forecast_horizon` (future timesteps to predict) and `target_variables` (column indices to predict). See [`generic_timeseries_forecasting`](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/examples/generic_timeseries_forecasting/config.yaml). |
+| **Anomaly detection** | Uses `dataset.split_factor: [0.5, 0.1, 0.4]` and an `AD_*` autoencoder model. See [`generic_timeseries_anomalydetection`](https://github.com/TexasInstruments/tinyml-modelzoo/tree/main/examples/generic_timeseries_anomalydetection/). |
+| **Regression** | Usually windowing only (`SimpleWindow`) with a `REGR_*` model. See [`generic_timeseries_regression`](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/examples/generic_timeseries_regression/config.yaml). |
+| **Image** | Set `common.target_module: vision` and use a preset such as `Mnist_Default`. See [`MNIST_image_classification`](https://github.com/TexasInstruments/tinyml-modelzoo/tree/main/examples/MNIST_image_classification/). |
 
 ### Selecting input channels with `variables`
 

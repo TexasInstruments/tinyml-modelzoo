@@ -1,199 +1,285 @@
 # Radar Posture & Fall Detection
 
-Classify a person's posture (standing, sitting, walking, falling, laying) from a TI mmWave radar sensor, using the point cloud + track outputs the radar's ondevice signal chain already produces — no raw ADC suopport.
+Classify a person's posture (standing, sitting, walking, falling, laying) from a TI mmWave radar sensor, using the point cloud + track outputs the radar's on-device signal chain already produces — no raw ADC support.
 
-This guide walks through **why** the data processing pipeline is shaped the way it is, then covers training, quantization, and compilation for the `xWRL6432` target.
+This guide covers the data processing configuration, training, quantization, and compilation for the `xWRL6432` target using TensorLab EdgeAI.
 
 - **Example config:** [`config.yaml`](./config.yaml)
 - **Dataset:** [posture_and_fall_detection_dataset.zip](https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip)
 
-See **major instructions** in the [full  radar data processing pipeline reference](tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md) to map your use-case scenario.
+---
+
+## Overview
+
+This example config demonstrates retraining through Tensorlab and final compiled artifacts generation for using TI mmWave sensors with machine learning for human posture and fall classification using the xWRL6432 sensor. The application classifies five pose states:
+
+- **Falling** (class 0)
+- **Laying** (class 1)
+- **Sitting** (class 2)
+- **Standing** (class 3)
+- **Walking** (class 4)
+
+The model uses the radar's on-device signal chain outputs — point cloud detections and track data — as input. No raw ADC access is required.
 
 ---
 
-## 1. What the radar gives us
+## Quick Start
 
-Scenario : xWRL6432's Processed Output Data from device
+To train and evaluate the model using the provided dataset and preset configuration:
 
-| Stream | Columns | What it is |
-|---|---|---|
-| **Point cloud** | `point_x{i}`, `point_y{i}`, `point_z{i}`, `point_doppler{i}`, `point_snr{i}` | Up to several detected reflection points per frame — body-part-level detections (arms, torso, head), each with 3D position, radial velocity (Doppler), and signal quality (SNR) |
-| **Track** | `track_id`/`tid`, `track_x/y/z`, `track_velocity_x/y/z`, `track_acc_x/y/z` | One tracked object (the person) per frame 
+### Prerequisites
 
-Posture and fall detection is fundamentally about **how the point cloud is distributed and moving around the tracked centroid over time**.
+TO BE ADDED
+
+### Steps
+
+TO BE ADDED
+
+
+---
+### Data Collection Procedure (for Custom Data)
+
+1. Arrange environment per Physical Setup above
+2. Configure mmWave Data Recorder with appropriate `.cfg` file
+3. Use hotkey-triggered recording to capture only desired motion segments:
+   - Press hotkey → start recording
+   - Perform pose/motion
+   - Press hotkey → stop recording
+4. Save each class to separate subdirectory under `dataset/classes/<class_name>/`
 
 ---
 
-## 2. Data Processing & Feature Extraction
+## YAML Configuration for Posture & Fall Detection
 
-### Pipeline shape
+### Identify Your Data Source
 
-```
-Raw CSV (point_*, track_* columns) - Processed Data (On-Device Signal Chain)
-        │
-        ▼
-┌─────────────────────┐
-│ Track Data           │  Validate track (drop ghost tracks), select &
-│ (stage: internal 3rd,│  bound track features
-│  logically "Stage 3")│
-└──────────┬───────────┘
-           │ feeds relative-coordinate 
-           ▼
-┌─────────────────────┐
-│ Point Cloud Data      │  Select point features, convert to coordinates
-│ ("Stage 2")           │  relative to the track centroid, spatially filter,
-│                       │  pick up to N points/frame
-└──────────┬───────────┘
-           ▼
-┌─────────────────────┐
-│ Scaling               │  Multiply track velocity by a fixed factor so its
-│ ("Stage 4")           │  magnitude is comparable to position/point features 
-(OPTIONAL)
-└──────────┬───────────┘
-           ▼
-┌─────────────────────┐
-│ Simple Window          │  Slide an N-frame window over time, drop
-│ + Quality Index        │  low-quality windows, flatten to one feature vector
-│ ("Stage 5")           │
-└──────────┬───────────┘
-           ▼
-   X: [N_windows, frame_size × features_per_frame]   (392 for the default preset)
-   Y: [N_windows]  posture class index
-```
+| Case | Description | Action |
+|------|-------------|--------|
+| **A** | Data from TI Data Recorder / Visualizer (standard columns: `point_x*`, `track_id`, `track_velocity_*`) | Use preset directly |
+| **B** | Data from other tools / custom firmware (different column names) | Rename columns first → see [Column Mapping](#column-mapping-for-non-ti-data) |
+| **C** | Pre-cleaned / externally featurized data (no `point_*`, `track_*`, `bin*` columns) | Use `Generic_Radar_SimpleWindowOnly` preset |
 
-> **Important:** stage *execution order is fixed in code*, not by the order you list tokens in `data_proc_transforms`. Listing transforms in any order has the same effect.
-
-### Track Data — "where is the person, and is this track real?"
-
-Enabled by the `"Radar Track Data"` token.
-
-- **Ghost-track filtering (automatic):** the radar tracker occasionally emits spurious/ghost tracks BASED ON tid/track_id.
-- **Feature selection** (`radar_track_data_selector`): choose from `x, y, z, velocity, acceleration` — the default keeps all five groups (9 scalar features: x, y, z + 3 velocity components + 3 acceleration components).
-- **Physical bounds as outlier filters:** `radar_track_velocity_bounds` (±10 m/s default) and `radar_track_acceleration_bounds` (±10 m/s² default) reject frames where the tracker's estimate is physically implausible for a person — usually tracker glitches, not real motion. `radar_track_spatial_filter_bounds` similarly bounds the track's x/y/z position (e.g. keep only tracks within ±10 m of the sensor on each axis) to exclude detections too far outside the sensing volume to be the subject.
-
-### Point Cloud Data — "what does the body look like around that center?"
-
-Enabled by the `"Radar Point Cloud Data"` token. This is where most of the posture signal lives.
-
-- **Feature selection** (`radar_point_cloud_data_selector`): pick from `x, y, z, doppler, snr` per point. SNR helps the model weight confident detections more.
-- **Relative coordinates — the key transform:** `radar_point_cloud_coordinate_system: relative` subtracts the track's centroid position from each point's coordinates (per axis listed in `radar_point_cloud_relative_coordinate_filter`, default `['y']` in the preset but commonly `['x','y','z']`). This makes the model learn the **shape of the point cloud around the person**, not their absolute location in the room — so posture classification generalizes across where in the radar's field of view the person happens to be standing.
-- **Spatial filtering** (`radar_point_cloud_spatial_filter_bounds`, `[min_x,max_x,min_y,max_y,min_z,max_z]`): clips points far from the sensing volume (default ±10 m on each axis).
-- **Non-spatial filtering** (`radar_point_cloud_non_spatial_filter_bounds`): optional Doppler/SNR range gates to drop noisy or implausible points.
-- **Per-frame point selection:** a frame can have a variable number of detected points, but the model needs a fixed-size input. `radar_max_points_per_frame` (default 8) caps how many points are kept per frame; `radar_point_cloud_structure_strategy` controls *which* points survive when there are more than the cap:
-  - `'highest only'` / `'lowest only'` — keep the top/bottom-N by `radar_point_cloud_sort_by` (default `'z'`, i.e. height)
-  - `'highest and lowest'` (default) — interleave high and low points, which for a standing/falling human captures both head-region and floor-region reflections rather than clustering around one extreme
-
-### Scaling — matching feature magnitudes
-
-Enabled by the `"Scaling"` token, independent of every other stage. `radar_data_scaling_track_velocity` (default `30`) multiplies all `track_velocity_*` columns by a constant. Track velocity in m/s is numerically small compared to position/point-cloud features in meters and millimeter-scale noise; scaling it up keeps all the input tensor's feature columns in a comparable numeric range so the network doesn't implicitly down-weight velocity just because its raw values are small — this matters more for `RF_MLP_4L_19K`, since BatchNorm in `RF_DualStream_PointCloud_19K` already normalizes each stream separately.
-
-### Simple Window — turning a frame stream into training samples
-
-Enabled by the `"Simple Window"` token — this is where temporal context enters the picture. A single radar frame is a snapshot; posture (and especially a *fall*, which is a short dynamic event) is a function of several consecutive frames.
-
-- **`frame_size`** (default `8`): number of consecutive frames bundled into one window — one training sample.
-- **`stride_size`** (fraction of `frame_size`, default `0.125`): the window hop, computed as `int(frame_size × stride_size)`. With `frame_size=8, stride_size=0.125`, the stride is 1 frame — windows overlap heavily (dense sliding window), which maximizes the number of training samples extracted from limited fall-event recordings (falls are rare and short, so dense overlap matters for getting enough positive examples).
-- **Quality index** (`radar_frames_quality_index: 'per_window'` by default): sums the real (non-padded) point counts across all frames in a candidate window and drops it if the total is below `radar_min_points_per_window` (default `12`). This throws out windows where the tracker mostly lost the person — e.g., momentarily out of the radar's field of view — which would otherwise inject label noise. The alternative mode, `'per_radar_frame'`, instead drops individual sparse *frames* before windowing (threshold `radar_min_points_per_frame`); `null` disables quality filtering entirely.
-- A window is also rejected if its underlying frame indices aren't contiguous (i.e., it would span a gap left by previously dropped ghost/invalid frames) — this prevents a window from silently stitching together two unrelated time segments.
-- **Feature ordering** (`radar_feature_ordering: 'frame_major'` default): flattens `[frame0_feat0, frame0_feat1, ..., frame1_feat0, ...]`. The alternative `'feature_major'` groups by feature across frames instead (`[frame0_feat0, frame1_feat0, ..., frame0_feat1, ...]`) — relevant mainly if a custom architecture expects per-feature time series contiguously.
-
-### Presets
-
-| Preset | Stages | Features/Frame | Frame Size | Total Input | Notes |
-|---|---|---|---|---|---|
-| `Generic_392Input_PointCloudWithTrack_SimpleWindow` **(default)** | Point Cloud + Track + Window | 49 (40 point-cloud + 9 track) | 8 | **392** | Full pipeline, raw TI capture CSV |
-| `Generic_Radar_SimpleWindowOnly` | Window only | input-dependent (31 assumed) | 8 | configurable | Skip radar-specific processing — use for pre-cleaned/externally-featurized data |
-
-Set `feature_extraction_name` to a preset and override individual parameters inline as needed — any key you set explicitly takes precedence over the preset's default for that key.
-
-### Output tensor
-
-- **X:** `[N_windows, 392]` = 8 frames × 49 features/frame (`frame_major` order)
-- **Y:** `[N_windows]` integer class index — in this example: `0=Standing, 1=Sitting, 2=Walking, 3=Falling, 4=Laying`
-
----
-
-## 3. Training
-
-### Model architectures
-
-| Model | Shape | Params | Why |
-|---|---|---|---|
-| **`RF_DualStream_PointCloud_19K`** (default) | Dual-stream MLP | ~19K | Splits each frame's features into a **position stream** (point coordinates + extra point-cloud features) and a **velocity stream** (the 3 track velocity components), each with its own `BatchNorm → Linear → ReLU → BatchNorm` branch, concatenated and fused through two more FC layers. Separating streams lets the network learn position-shape patterns and motion-dynamics patterns independently before combining them — a natural fit for a task where "shape" (posture) and "velocity" (fall dynamics) carry distinct information. |
-| `RF_MLP_4L_19K` | Plain 4-layer MLP | ~19K | `BatchNorm → FC(64) → ReLU → BatchNorm → FC(32) → ReLU → BatchNorm → FC(16) → ReLU → BatchNorm → FC(num_classes)`. |
-
-
-### Config (from `config.yaml`)
+### 3.1 Recommended: Use the Preset (Simplest)
 
 ```yaml
+data_processing_feature_extraction:
+  feature_extraction_name: "Generic_248Input_Posture_and_Fall_Detection"
+  variables: 1
+```
+
+**What this preset configures:**
+- **Point Cloud**: Selects `y` (distance), `z` (height), `snr` — makes `y` relative to track centroid
+- **Track**: Selects `z` (height), `velocity`, `acceleration` — applies ±10 m/s and ±10 m/s² bounds
+- **Window**: 8 frames, stride 0.125 (1-frame overlap), per-window quality (min 12 points)
+- **Output**: 31 features/frame × 8 frames = **248 features** → matches `RF_DualStream_PointCloud_19K`
+
+### 3.2 Full Inline Configuration (Maximum Control)
+
+```yaml
+data_processing_feature_extraction:
+  # Option 1: Start from preset and override specific parameters
+  feature_extraction_name: "Generic_248Input_Posture_and_Fall_Detection"
+  
+  # --- Common Overrides ---
+  frame_size: 16                    # More temporal context (default: 8)
+  stride_size: 0.5                  # Less overlap, faster training (default: 0.125)
+  radar_min_points_per_window: 20   # Stricter quality (default: 12)
+  radar_max_points_per_frame: 12    # More points per frame (default: 8)
+  
+  # --- Point Cloud Overrides ---
+  radar_point_cloud_data_selector: ['x', 'y', 'z', 'snr']  # Add x (azimuth)
+  radar_point_cloud_sort_by: 'y'    # Sort by distance instead of height
+  
+  # --- Quality Mode Override ---
+  # radar_frames_quality_index: 'per_radar_frame'  # Per-frame instead of per-window
+  # radar_min_points_per_frame: 3                  # Min points per frame
+  
+  # --- Disable Quality ---
+  # radar_frames_quality_index: None
+  
+  variables: 1
+```
+
+```yaml
+data_processing_feature_extraction:
+  # Option 2: Fully inline (no preset) — for complete customization
+  data_proc_transforms:
+    - "Radar Point Cloud Data"
+    - "Radar Track Data"
+    - "Simple Window"
+  
+  # Window parameters
+  frame_size: 8
+  stride_size: 0.125
+  
+  # Point Cloud
+  radar_point_cloud_data_selector: ['y', 'z', 'snr']
+  radar_point_cloud_coordinate_system: 'relative'
+  radar_point_cloud_relative_coordinate_filter: ['y']
+  radar_point_cloud_spatial_filter_bounds: [None, None, -10.0, 10.0, -10.0, 10.0]
+  radar_point_cloud_non_spatial_filter_bounds: [None, None, None, None]
+  radar_max_points_per_frame: 8
+  radar_point_cloud_structure_strategy: 'highest and lowest'
+  radar_point_cloud_sort_by: 'z'
+  
+  # Track
+  radar_track_data_selector: ['z', 'velocity', 'acceleration']
+  radar_track_velocity_bounds: [-10.0, 10.0]
+  radar_track_acceleration_bounds: [-10.0, 10.0]
+  radar_track_spatial_filter_bounds: [None, None, None, None, -10.0, 10.0]
+  
+  # Window Quality
+  radar_min_points_per_window: 12
+  radar_frames_quality_index: 'per_window'
+  radar_feature_ordering: 'frame_major'
+  
+  variables: 1
+```
+
+### 3.3 For Pre-Cleaned Data (No Radar Columns)
+
+```yaml
+data_processing_feature_extraction:
+  feature_extraction_name: "Generic_Radar_SimpleWindowOnly"
+  frame_size: 8           # Must match model input
+  stride_size: 0.5
+  # Optional: per-frame quality if your data has standard point columns
+  # radar_frames_quality_index: 'per_radar_frame'
+  # radar_min_points_per_frame: 3
+```
+
+---
+## Expected Column Names (Case-Sensitive)
+
+If your data uses different column names (Case B above), rename to TensorLab's expected format:
+
+| Data Type | Column Pattern | Example Columns |
+|-----------|----------------|-----------------|
+| **Range Data** | `bin0`, `bin1`, `bin2`... `binN` | `bin0` through `bin63` (FFT range profile) |
+| **Point Cloud** | `point_x{idx}`, `point_y{idx}`, `point_z{idx}`, `point_doppler{idx}`, `point_snr{idx}` | `point_x0`, `point_y0`, `point_z0`, `point_doppler0`, `point_snr0`, `point_x1`... |
+| **Track Data** | `track_id` or `tid` | Required for ghost track filtering |
+| | `track_x`, `track_y`, `track_z` | Track position |
+| | `track_velocity_x`, `track_velocity_y`, `track_velocity_z` | Track velocity |
+| | `track_acc_x`, `track_acc_y`, `track_acc_z` | Track acceleration |
+
+
+---
+
+## Complete Training Configuration
+
+```yaml
+common:
+  task_type: "radar_point_cloud_classification"
+  target_device: "xWRL6432"
+  training_device: "cuda"
+
+dataset:
+  dataset_name: "radar_human_pose_detection"
+  input_data_path: "https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip"
+  split_type: "within_files"      # Split inside each recording file
+  split_factor: [0.7, 0.2, 0.1]   # Train / Val / Test
+
+data_processing_feature_extraction:
+  feature_extraction_name: "Generic_248Input_Posture_and_Fall_Detection"
+  variables: 1
+
 training:
-  model_name: RF_DualStream_PointCloud_19K
-  quantization: 1                      # 0=float only, 1=generic int8 quant
+  model_name: "RF_DualStream_PointCloud_19K"
+  quantization: 1                         # 0 = No Quantization, 1 = Generic Quantization
   quantization_method: "QAT"
   quantization_weight_bitwidth: 8
   quantization_activation_bitwidth: 8
   training_epochs: 250
   learning_rate: 0.001
-  optimizer: adamw
-  lr_scheduler: CosineAnnealingLR
+  optimizer: "adamw"
+  lr_scheduler: "CosineAnnealingLR"
   weight_decay: 0
   output_int: false
   num_gpus: 0
 ```
 
-Training runs a standard supervised loop (cross-entropy loss) and checkpoints the best validation-accuracy epoch. On completion, the float model is exported to ONNX (`model.onnx`) — this becomes the input to quantization.
+### Dataset Split Methods
 
-Dataset split: `split_type: within_files` with `split_factor: [0.7, 0.2, 0.1]` — each recording file is split internally by contiguous row ranges across train/val/test, rather than assigning whole files to a split. This fits posture data where a single long recording session may contain multiple posture segments. #Recommended - `amongst_files` split method with each recording session containing one particular posture, split_type and split_factor can vary based on the dataset collected.
-
----
-
-## 4. Quantization
-
-Why quantize: the compiled model needs to run on the xWRL6432's Cortex-M4 MCU core, int8 arithmetic is dramatically cheaper and smaller than float32.
-
-This example uses **QAT (Quantization-Aware Training)**: `quantization: 1` (generic quantization), `quantization_method: "QAT"`, 8-bit weights and activations. Training actually happens in **two phases automatically**:
-
-1. **Float phase:** full `training_epochs` (250) run in float32, producing a baseline `checkpoint.pth` / `model.onnx`.
-2. **Quantization fine-tune phase:** This produces a second `model.onnx` under a separate `training/quantization/` output path.
-
-QAT (vs. PTQ) is the right choice here because it tends to recover more accuracy on networks sensitive to quantization — worthwhile given the dual-stream model already has a fairly narrow 19K-parameter budget to work with. `output_int: false` means the exported quantized model still dequantizes its output back to a human-readable score internally — set `true` only if your firmware wants to handle raw int8 output + separately-provided scale/zero-point itself (Since radar sensors support `float` type).
+| `split_type` | When to Use |
+|--------------|-------------|
+| `within_files` | Single long recording|
+| `amongst_files` | Each recording session = one posture class (Recommneded with atleast good amount of dataset) | 
 
 ---
 
-## 5. Compilation
 
-The quantized (or float, if `quantization: 0`) ONNX model is compiled with **TVM + TI's MCU NNC (Neural Network Compiler)** backend into C artifacts linkable directly into firmware for the xWRL6432 (Cortex-M4):
+### Simple Window (`"Simple Window"`)
+- **Windowing**: 8 consecutive frames → 1 training sample (248 features)
+- **Stride**: 0.125 = 1 frame overlap → dense sampling for short fall events
+- **Quality**: `per_window` drops windows with < 12 total real points across 8 frames
+- **Consecutive check**: Rejects windows spanning gaps from dropped ghost frames
 
+---
 
+## Model Architectures
 
-**Generated artifacts** (`compilation/artifacts/`):
+| Model | Shape | Params | Description |
+|-------|-------|--------|-------------|
+| **`RF_DualStream_PointCloud_19K`** (default) | Dual-stream MLP | ~19K | Splits each frame into **position stream** (point coords + track height + accel = 28 features) and **velocity stream** (3 track velocity components). Separate BN → Linear → ReLU → BN branches, then fusion. Natural fit: shape vs. motion. |
+| `RF_MLP_4L_19K` | Plain 4-layer MLP | ~19K | BN → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(16) → ReLU → BN → FC(num_classes) |
+
+---
+
+## Output Tensor
+
+- **X**: `[N_windows, 248]` = 8 frames × 31 features/frame (`frame_major` order)
+- **Y**: `[N_windows]` integer class index:
+  - `0` = Falling
+  - `1` = Laying
+  - `2` = Standing
+  - `3` = Sitting
+  - `4` = Walking
+
+---
+
+## Quantization
+
+This example uses **QAT (Quantization-Aware Training)**:
+- `quantization: 1` (Generic quantization)
+- `quantization_method: "QAT"`
+- 8-bit weights and activations
+- Two phases: float training (250 epochs) → quantization fine-tune
+- `output_int: false` — exported model dequantizes output to float (radar supports float)
+
+---
+
+## Compilation
+
+The quantized/float ONNX model is compiled with **TVM + TI MCU NNC** backend into C artifacts for xWRL6432 (Cortex-M4):
 
 ```
 compilation/artifacts/
-├── tvmgen_default.h   # I/O structs (tvmgen_default_inputs/outputs), tvmgen_default_run() entry
-│                      # point, and — for quantized models — dequant scale/zero-point constants considering output_int: true 
-└── mod.a              # Precompiled static library archive containing all compiled operator code
+├── tvmgen_default.h   # I/O structs, tvmgen_default_run() entry point
+└── mod.a              # Precompiled static library
 ```
 
-Intermediate TVM C-codegen sources (`lib0.c`, `lib1.c`, ...) are generated then deleted by default (pass `keep_libc_files: true` if you want to inspect them). Firmware links against `mod.a` and calls `tvmgen_default_run()` with the input struct populated from your 392-value feature vector — the same preprocessing done in Python must be replicated (or already be done by the sensor's onboard tracker/CFAR chain) on-device before this call.
+Firmware links against `mod.a` and calls `tvmgen_default_run()` with the 248-value feature vector. The same preprocessing must be replicated on-device (or done by the sensor's onboard tracker/CFAR chain).
+
 
 ---
 
-## Files in This Example
-
-| File | Purpose |
-|---|---|
-| `config.yaml` | End-to-end config: dataset, preprocessing preset, training, quantization |
-| `README.md` | This guide |
-
-## Key Reference Files 
+## Key Reference Files
 
 | Component | Location |
-|---|---|
+|-----------|----------|
 | Model architectures | `tinyml-modelzoo/tinyml_modelzoo/models/radar.py` |
-| Radar Data Processing Pipeline | `tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md` |
+| Radar Data Processing Pipeline (full reference) | [Radar Data Processing Pipeline Reference Guide](tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md) |
+
 
 ---
 
-*Generated for Tensorlab EdgeAI — Texas Instruments*
-*Compatible with TI mmWave radar sensors (xWRL6432)*
+## Need More Help?
+
+- Search for issues or post questions on the [TI E2E Forum](https://e2e.ti.com/)
+- See the full pipeline reference: [RADAR_PROCESSING_PIPELINE.md](tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md)
+- TensorLab EdgeAI documentation in the main repository - For More Clarity on Setup Environment
+
+---
+
+*Generated for Tensorlab EdgeAI — Texas Instruments*  
+*Compatible with TI mmWave radar sensors*

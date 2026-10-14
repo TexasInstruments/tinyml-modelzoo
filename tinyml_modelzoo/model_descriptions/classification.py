@@ -1520,12 +1520,30 @@ _model_descriptions = {
                     dict(type="group", dynamic=True, script="generictimeseriesclassification.py", name="train_group", label="Training Parameters", default=[])]
     ),
 }),
+    'RF_MLP_3L_11K': deep_update_dict(deepcopy(template_model_description), {
+            'common': dict(
+                generic_model=False,
+                task_type=constants.TASK_TYPE_RADAR_SURFACE_CLASSIFICATION,
+                task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
+                model_details='Classifier model for Surface Classification and Posture Detection Radar Applications. '
+            ),
+            'training': dict(
+                model_training_id='RF_MLP_3L_11K',
+                model_name='RF_MLP_3L_11K',
+                quantization=TinyMLQuantizationVersion.QUANTIZATION_GENERIC,
+                properties=[dict(type="group", dynamic=True, script="radarclassification.py",
+                               name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,
+                target_devices=[
+                    constants.TARGET_DEVICE_xWRL6432,
+                ],
+        ),
+}),
     'RF_MLP_4L_19K': deep_update_dict(deepcopy(template_model_description), {
         'common': dict(
             generic_model=False,
             task_type=constants.TASK_TYPE_RADAR_SURFACE_CLASSIFICATION,
             task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
-            model_details='ANN Classifier model for Surface Classification and Posture Detection Radar Applications. '
+            model_details='Classifier model for Surface Classification and Posture Detection Radar Applications. '
         ),
         'training': dict(
             model_training_id='RF_MLP_4L_19K',
@@ -1585,7 +1603,7 @@ enabled_models_list = [
     'ArcFault_model_200_t', 'ArcFault_model_300_t', 'ArcFault_model_700_t', 'ArcFault_model_1400_t',
     'MotorFault_model_1_t', 'MotorFault_model_2_t', 'MotorFault_model_3_t', 'PIRDetection_model_1_t',
     'FanImbalance_model_1_t', 'FanImbalance_model_2_t', 'FanImbalance_model_3_t', 'ElectricalFault_model_40k_t',
-    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t', 'WiFiPresDet_4.7k_CDE', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K'
+    'GearboxFault_model_1.2k_t', 'GearboxFault_model_1.5k_t', 'WiFiPresDet_4.7k_CDE', 'RF_MLP_3L_11K', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K'
 ]
 
 

@@ -17,13 +17,14 @@ dataset:
 data_processing_feature_extraction:
    
   feature_extraction_name: Generic_130Input_Radar_SurfaceClassification
+  radar_range_bins_bounds: [6,31]
 
 training:
   
-  model_name: RF_MLP_4L_19K
+  model_name: RF_MLP_3L_11K
   training_epochs: 100
-  learning_rate: 0.0001
-  optimizer: sgd
+  learning_rate: 0.001
+  optimizer: SGD
   output_int: false
   num_gpus: 0
 

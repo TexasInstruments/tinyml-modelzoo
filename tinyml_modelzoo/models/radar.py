@@ -36,7 +36,46 @@ import torch.nn as nn
 # from ..utils import py_utils
 # from .base import GenericModelWithSpec
 
+class RF_MLP_3L_11K(nn.Module):
+    """
+    3-layer fully connected model for radar applications.
 
+    Expected Input : (N, input_features)
+
+    Architecture: BatchNorm -> Linear -> ReLU -> BatchNorm -> Linear -> ReLU ->
+                  BatchNorm -> Linear
+    Output: [batch, num_classes]
+    """
+    def __init__(self, config, input_features=130, variables=1, num_classes=2):
+        super().__init__()
+
+        self.config = config or {}
+        self.input_features = self.config.get('input_features', input_features)
+        self.variables = self.config.get('variables', variables)
+        self.num_classes = self.config.get('num_classes', num_classes)
+
+        input_size = self.input_features * self.variables
+
+        self.bn1 = torch.nn.BatchNorm1d(num_features=input_size)
+        self.fc1 = torch.nn.Linear(in_features=input_size, out_features=64)
+        self.bn2 = torch.nn.BatchNorm1d(num_features=64)
+        self.fc2 = torch.nn.Linear(in_features=64, out_features=32)
+        self.bn3 = torch.nn.BatchNorm1d(num_features=32)
+        self.fc3 = torch.nn.Linear(in_features=32, out_features=self.num_classes)
+        self.relu = torch.nn.ReLU()
+
+    def forward(self, x):
+        x = x.view(x.size(0), -1)
+        x = self.bn1(x)
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.bn2(x)
+        x = self.fc2(x)
+        x = self.relu(x)
+        x = self.bn3(x)
+        x = self.fc3(x)
+        return x
+    
 class RF_MLP_4L_19K(nn.Module):
     """
     4-layer fully connected model for radar applications.
@@ -70,6 +109,7 @@ class RF_MLP_4L_19K(nn.Module):
         self.relu = torch.nn.ReLU()
 
     def forward(self, x):
+        x = x.view(x.size(0), -1)
         x = self.bn1(x)
         x = self.fc1(x)
         x = self.relu(x)
@@ -201,5 +241,5 @@ class RF_DualStream_PointCloud_19K(nn.Module):
 
 # Export all radar models
 __all__ = [
-    'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K'
+    'RF_MLP_3L_11K', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K'
 ]

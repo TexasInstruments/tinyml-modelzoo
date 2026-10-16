@@ -202,10 +202,40 @@ def get_model(model_name, variables, num_classes, input_features=None,
     # Try loading from custom model_spec file
     if model_spec and os.path.exists(model_spec):
         model_definition = import_file_or_folder(model_spec)
-        if model_definition is not None and hasattr(model_definition, 'get_model'):
-            model_class = model_definition.get_model(model_name)
-            if model_class is not None:
-                return model_class(config=config_dict)
+        if model_definition is not None:
+            # Path 1: file exposes a get_model() factory (existing convention)
+            if hasattr(model_definition, 'get_model'):
+                model_class = model_definition.get_model(model_name)
+                if model_class is not None:
+                    return model_class(config=config_dict)
+            # Path 2: BYOM — bare class, class name == model_name.
+            # Supports both GenericModelWithSpec subclasses and plain nn.Module subclasses.
+            model_class = getattr(model_definition, model_name, None)
+            if model_class is not None and inspect.isclass(model_class):
+                if issubclass(model_class, GenericModelWithSpec):
+                    # GenericModelWithSpec pattern: takes config= dict (same as built-in models)
+                    return model_class(config=config_dict)
+                else:
+                    # Plain nn.Module pattern: takes individual kwargs
+                    try:
+                        return model_class(
+                            variables=variables,
+                            num_classes=num_classes,
+                            input_features=input_features,
+                        )
+                    except TypeError:
+                        import warnings
+                        warnings.warn(
+                            f"BYOM model '{model_name}' __init__ did not accept variables/num_classes/"
+                            f"input_features kwargs. Instantiating with no arguments. "
+                            f"Add **kwargs to __init__ to silence this warning.",
+                            stacklevel=2,
+                        )
+                        return model_class()
+            raise ValueError(
+                f"BYOM: model '{model_name}' not found in '{model_spec}'. "
+                f"Define a class named '{model_name}' or a get_model() function in that file."
+            )
 
     raise ValueError(f"Model '{model_name}' not found in registry or specified model_spec. "
                      f"Available models: {list(model_dict.keys())}")

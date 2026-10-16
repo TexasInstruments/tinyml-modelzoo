@@ -6,7 +6,124 @@ small NPU-friendly classification model and train it on the
 [DC arc fault](https://github.com/TexasInstruments/tinyml-modelzoo/tree/main/examples/dc_arc_fault/) dataset using
 [`config_dsk.yaml`](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/examples/dc_arc_fault/config_dsk.yaml).
 
-You only need to edit files inside `tinyml-modelzoo`. **No changes are needed in
+There are two ways to bring your own model. Choose the one that fits your situation.
+
+## Two Ways to Bring Your Own Model
+
+| | Option A — Quick Start | Option B — Permanent Addition |
+|---|---|---|
+| Edit modelzoo source? | **No** | Yes |
+| Survives reinstall? | Only if you keep your `.py` file | Yes |
+| Appears in GUI model picker? | No | Yes |
+| Full train → ONNX → MCU pipeline? | **Yes** | Yes |
+
+Use **Option A** to try a custom architecture quickly. Use **Option B** when the model is ready to ship to all users.
+
+---
+
+## Option A: Quick Start — Custom Model File
+
+Point the config at a Python file containing your model class. No modelzoo edits needed.
+
+### Step A-1: Write your model file
+
+Choose one style. The pipeline detects which style you used automatically.
+
+**Style 1 — Plain `nn.Module` (simpler)**
+
+```python
+# /path/to/my_model.py
+import torch.nn as nn
+
+class MyModel(nn.Module):
+    def __init__(self, variables=1, num_classes=2, input_features=512, **kwargs):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(variables * input_features, 64),
+            nn.ReLU(),
+            nn.Linear(64, num_classes),
+        )
+
+    def forward(self, x):
+        return self.net(x)  # input shape: (batch, variables, input_features)
+```
+
+Constructor contract:
+
+| Parameter | Meaning | Provided by pipeline |
+|---|---|---|
+| `variables` | Number of input channels | Yes |
+| `num_classes` | Number of output classes | Yes |
+| `input_features` | Temporal length of input | Yes |
+| `**kwargs` | Forward-compat catch-all | — |
+
+**Style 2 — `GenericModelWithSpec` subclass (matches built-in modelzoo style)**
+
+Use this style to leverage built-in layer types (`BatchNormLayer`, `ConvBNReLULayer`, etc.) and layer-spec YAML serialization.
+
+```python
+# /path/to/my_model.py
+from tinyml_modelzoo.models.base import GenericModelWithSpec
+from tinyml_modelzoo.utils import py_utils
+
+class MyModel(GenericModelWithSpec):
+    def __init__(self, config, input_features=512, variables=1, num_classes=2, **kwargs):
+        # Must forward shape params to super so self.variables etc. are set
+        super().__init__(config, input_features=input_features, variables=variables,
+                         num_classes=num_classes, **kwargs)
+        self.model_spec = self.gen_model_spec()
+        self._init_model_from_spec(
+            model_spec=self.model_spec,
+            variables=self.variables,
+            num_classes=self.num_classes,
+            input_features=self.input_features,
+        )
+
+    def gen_model_spec(self):
+        layers = py_utils.DictPlus()
+        layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
+        layers += {'1': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        return dict(model_spec=layers)
+```
+
+Constructor receives `config=dict(variables=..., num_classes=..., input_features=..., dual_op=...)`. Shape params (`variables`, `num_classes`, `input_features`) must be declared in `__init__` and forwarded to `super().__init__()` — that's how `self.variables` etc. get set. See `tinyml_modelzoo/layers/tinynn.py` for available layer types.
+
+### Step A-2: Update your config
+
+```yaml
+training:
+  model_name: MyModel                          # must match class name exactly
+  custom_model_path: /path/to/my_model.py      # absolute path recommended
+```
+
+This works for both styles — no other config change needed.
+
+### Step A-3: Run as normal
+
+```bash
+python tinyml_modelmaker/run_tinyml_modelmaker.py config.yaml
+```
+
+The full pipeline runs: training → ONNX export → TVM compilation → MCU C code.
+
+### Common errors
+
+| Error message | Cause | Fix |
+|---|---|---|
+| `custom_model_path does not exist or is not a file` | Path typo or file not deployed | Use an absolute path |
+| `BYOM: model 'MyModel' not found in '/path/to/my_model.py'` | Class name doesn't match `model_name` | Class name and `training.model_name` must be identical |
+| `UserWarning: BYOM model 'MyModel' __init__ did not accept variables/...` | Plain `nn.Module` constructor ignores shape params | Add `variables=1, num_classes=2, input_features=512, **kwargs` to `__init__` |
+
+> **Note:** If your file also defines a `get_model(model_name)` function, that takes priority over bare class discovery.
+
+When your model is validated and you want it available to all users and the GUI, follow **Option B** below.
+
+---
+
+## Option B: Permanent Addition to ModelZoo
+
+Edit files inside `tinyml-modelzoo`. **No changes are needed in
 `tinyml-tinyverse` or `tinyml-modelmaker`**: models are discovered automatically
 from `tinyml_modelzoo`.
 

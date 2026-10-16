@@ -301,9 +301,15 @@ Training defaults are overridden per model by the model description (for example
    * - ``model_name``
      - ``None`` (required)
      - Must be listed in the ``enabled_models_list`` of the model descriptions. See :doc:`model_zoo_reference`.
+   * - ``custom_model_path``
+     - ``None``
+     - Path to a Python file with your own model class, named exactly as ``model_name``. When set, ``model_name`` does
+       not have to be in ``enabled_models_list``. The path must exist. Used by the BYOM quick start; see
+       :doc:`/BRING_YOUR_OWN_MODEL`.
    * - ``model_spec``, ``model_config``
      - ``None``
-     - Model specification or config (for spec-based models).
+     - Model specification or config (for spec-based models). ``model_spec`` is set automatically from
+       ``custom_model_path``.
    * - ``dataset_loader``
      - ``'GenericTSDataset'``
      - ``GenericAudioDataset``, ``GenericImageDataset`` and ``GenericRadarDataset`` for the other modules.

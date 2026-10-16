@@ -37,7 +37,9 @@ Which Install Should I Choose?
      - **Clone install** (:doc:`developer_installation`)
    * - I want to add or change a model architecture
      - **Clone install** (:doc:`developer_installation`)
-   * - I want to bring my own model (BYOM)
+   * - I want to bring my own model (BYOM), without editing ModelZoo (``custom_model_path``)
+     - **Either install**
+   * - I want to add my model to ModelZoo permanently (BYOM)
      - **Clone install** (:doc:`developer_installation`)
 
 Quick Start

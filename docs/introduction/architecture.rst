@@ -150,7 +150,7 @@ Which Install Do I Need?
      - Wheel install (config only)
    * - BYOM
      - Add or modify model architectures and train end-to-end
-     - Clone install (edit ``tinyml_modelzoo/models``)
+     - Either install with ``training.custom_model_path``, or the clone install to edit ``tinyml_modelzoo/models``
    * - BYOM
      - Already have a trained ONNX model and need to compile it for a TI device
      - See :doc:`/BRING_YOUR_OWN_MODEL`

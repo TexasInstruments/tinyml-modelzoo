@@ -407,10 +407,14 @@ Note: LSTM models are not NPU-supported.
 
 Want to bring your own model? Follow the step-by-step **[Bring Your Own Model (BYOM) Guide](docs/BRING_YOUR_OWN_MODEL.md)**. It adds a small NPU-friendly classification model and trains it on the DC arc fault example, and ends with guidelines for NPU compliance and model sizing.
 
-Key steps:
-1. Add the model class to `tinyml_modelzoo/models/` and its name to the file's `__all__` list
-2. Add a model description to `model_descriptions/` and its name to `enabled_models_list`. This is required: the config's `training.model_name` refers to the description name
-3. Set `training.model_name` in a copy of an example config and run it
+There are two ways to bring a model:
+
+- **Quick start (no source edits):** write the model class in your own `.py` file and point the config at it with
+  `training.model_name: MyModel` and `training.custom_model_path: /path/to/my_model.py`. Plain `torch.nn.Module` and `GenericModelWithSpec` classes both work, and the full train, ONNX export and compile pipeline runs. This works with the wheel install too, and needs a `tinyml-modelmaker` release that supports `custom_model_path`.
+- **Permanent addition:**
+  1. Add the model class to `tinyml_modelzoo/models/` and its name to the file's `__all__` list
+  2. Add a model description to `model_descriptions/` and its name to `enabled_models_list`. This is required: the config's `training.model_name` refers to the description name
+  3. Set `training.model_name` in a copy of an example config and run it
 
 For more on model internals (layer types, custom `torch.nn.Module` models), see [ADDING_NEW_MODELS.md](ADDING_NEW_MODELS.md).
 

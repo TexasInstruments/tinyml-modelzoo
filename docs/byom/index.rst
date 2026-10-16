@@ -11,8 +11,9 @@ This section explains how to use your own neural network with Tiny ML ModelZoo 1
       :link: /BRING_YOUR_OWN_MODEL
       :link-type: doc
 
-      Create a new architecture that plugs into the full pipeline (training, quantization, compilation). You add a
-      model class and a model description, then point a config YAML at it. Follow the step-by-step guide.
+      Create a new architecture that plugs into the full pipeline (training, quantization, compilation). Either point
+      the config at your own ``.py`` file with ``custom_model_path`` (no source edits), or add a model class and a
+      model description to ModelZoo. Follow the step-by-step guide.
 
    .. grid-item-card:: Compile an existing ONNX model
       :link: compilation_only
@@ -34,14 +35,16 @@ Contents
 Which approach do I need?
 =========================
 
-* Use the **ModelZoo approach** when you want ModelMaker to train, quantize and test the model with your dataset, or when
-  you want the model to show up with the other ModelZoo models.
+* Use the **ModelZoo approach** when you want ModelMaker to train, quantize and test the model with your dataset.
+  Start with a **custom model file** (``training.custom_model_path``) to try an architecture quickly, then add it to the
+  ModelZoo itself when you want it to show up with the other ModelZoo models and in the GUI.
 * Use **compilation only** when the model is already trained (and, for NPU devices, already quantized) and you only need the
   compiled library for the device.
 
 .. important::
 
-   Adding a model to the ModelZoo edits files in the ``tinyml-modelzoo`` source tree, so it needs the **clone install**
+   A **custom model file** (``custom_model_path``) works with either install. Adding a model **permanently** to the
+   ModelZoo edits files in the ``tinyml-modelzoo`` source tree, so it needs the **clone install**
    (``pip install -e .``). See :doc:`/installation/developer_installation`. Compile-only needs just the normal
    install (:doc:`/installation/user_installation`).
 

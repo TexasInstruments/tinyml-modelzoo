@@ -246,12 +246,66 @@ html, body {
 
     <div id="slides">
       <!-- ============================================================ -->
-<!-- SLIDE 01 · Bring Your Own Model: What You Change             -->
+<!-- SLIDE 01 · Quick Start: Point the Config at Your Own File    -->
 <!-- ============================================================ -->
 <section class="slide active">
         <div class="eyebrow">ModelZoo · Bring Your Own Model</div>
-        <div class="slide-title">Bring Your Own Model: What You Change</div>
-        <div class="slide-sub">Three files inside <code style="font-family:var(--mono);font-size:14px">tinyml-modelzoo</code>. No changes in <code style="font-family:var(--mono);font-size:14px">tinyml-tinyverse</code> or <code style="font-family:var(--mono);font-size:14px">tinyml-modelmaker</code></div>
+        <div class="slide-title">Quick Start: Point the Config at Your Own File</div>
+        <div class="slide-sub">No edits to <code style="font-family:var(--mono);font-size:14px">tinyml-modelzoo</code>. Works with the wheel install too. The full train, ONNX export and compile pipeline runs</div>
+        <div class="grid" style="grid-template-columns:1.1fr 1fr;gap:20px;flex:1;min-height:0;align-items:stretch">
+          <div class="flex col gap-sm" style="min-height:0">
+            <div class="label" style="margin-bottom:0">1 · Your model file</div>
+            <div class="code-block" style="flex:1;font-size:clamp(9px,1.55vh,14px);line-height:1.5;white-space:pre;overflow:hidden"><span class="dim"># /path/to/my_model.py</span>
+import torch.nn as nn
+
+class <span style="color:var(--green)">MyModel</span>(nn.Module):
+    def __init__(self, <span class="hl">variables=1, num_classes=2,
+                 input_features=512, **kwargs</span>):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(variables * input_features, 64),
+            nn.ReLU(),
+            nn.Linear(64, num_classes))
+
+    def forward(self, x):
+        <span class="dim"># x: (batch, variables, input_features, 1)</span>
+        return self.net(x)    <span class="dim"># (batch, num_classes)</span></div>
+            <div class="label" style="margin-bottom:0">2 · Config</div>
+            <div class="code-block" style="flex:0;font-size:clamp(9px,1.55vh,14px);line-height:1.5;white-space:pre;padding:12px 16px"><span class="hl">training:</span>
+  model_name: <span style="color:var(--green)">MyModel</span>               <span class="dim"># = class name</span>
+  custom_model_path: /path/to/my_model.py
+  quantization: 2                      <span class="dim"># optional: QAT + hardware NPU</span></div>
+          </div>
+          <div class="flex col gap-sm" style="min-height:0">
+            <div class="label" style="margin-bottom:0">3 · Run</div>
+            <div class="code-block" style="flex:0;font-size:clamp(9px,1.55vh,14px);line-height:1.5;white-space:pre;padding:12px 16px">./run_tinyml_modelzoo.sh config.yaml
+<span class="dim"># or, from any folder:</span>
+python -m tinyml_modelmaker.run_tinyml_modelmaker config.yaml</div>
+            <div class="card green" style="display:flex;flex-direction:column;gap:6px;padding:14px 18px;flex:1">
+              <div class="label" style="margin-bottom:0;color:var(--green)">Two styles, detected automatically</div>
+              <div class="card-body" style="font-size:clamp(11px,1.8vh,16px)">Plain <code style="font-family:var(--mono);font-size:0.9em">nn.Module</code> (gets <code style="font-family:var(--mono);font-size:0.9em">variables</code>, <code style="font-family:var(--mono);font-size:0.9em">num_classes</code>, <code style="font-family:var(--mono);font-size:0.9em">input_features</code> keyword arguments) or a <code style="font-family:var(--mono);font-size:0.9em">GenericModelWithSpec</code> subclass (gets <code style="font-family:var(--mono);font-size:0.9em">config=dict(...)</code>).</div>
+            </div>
+            <div class="card blue" style="display:flex;flex-direction:column;gap:6px;padding:14px 18px;flex:1">
+              <div class="label" style="margin-bottom:0;color:var(--blue)">What you get</div>
+              <div class="card-body" style="font-size:clamp(11px,1.8vh,16px)"><code style="font-family:var(--mono);font-size:0.9em">quantization</code> unset: float model in <code style="font-family:var(--mono);font-size:0.9em">training/base/</code>, compiled to <code style="font-family:var(--mono);font-size:0.9em">mod.a</code> (soft NPU). <code style="font-family:var(--mono);font-size:0.9em">quantization: 2</code>: also <code style="font-family:var(--mono);font-size:0.9em">training/quantization/</code>, compiled for the hardware NPU.</div>
+            </div>
+            <div class="card yellow" style="display:flex;flex-direction:column;gap:6px;padding:14px 18px;flex:1">
+              <div class="label" style="margin-bottom:0;color:var(--yellow)">Watch out</div>
+              <div class="card-body" style="font-size:clamp(11px,1.8vh,16px)">Class name must equal <code style="font-family:var(--mono);font-size:0.9em">model_name</code>. The model must return <code style="font-family:var(--mono);font-size:0.9em">(batch, num_classes)</code>. Needs a ModelMaker release with <code style="font-family:var(--mono);font-size:0.9em">custom_model_path</code>; otherwise the run stops with <em>please check if the given model_name is a supported one</em>.</div>
+            </div>
+          </div>
+        </div>
+        <div class="fs-sm muted" style="margin-top:10px">Adithya Thonse · October 2026</div>
+      </section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 02 · Permanent Addition: What You Change               -->
+<!-- ============================================================ -->
+<section class="slide">
+        <div class="eyebrow">ModelZoo · Bring Your Own Model</div>
+        <div class="slide-title">Permanent Addition: What You Change</div>
+        <div class="slide-sub">To ship the model with ModelZoo: three files inside <code style="font-family:var(--mono);font-size:14px">tinyml-modelzoo</code> (clone install). No changes in <code style="font-family:var(--mono);font-size:14px">tinyml-tinyverse</code> or <code style="font-family:var(--mono);font-size:14px">tinyml-modelmaker</code></div>
         <div class="grid grid-3" style="gap:16px;align-items:stretch">
           <div class="card blue" style="display:flex;flex-direction:column;gap:10px;padding:20px 22px">
             <div class="label" style="margin-bottom:0;color:var(--blue)">1 · Model class</div>
@@ -302,8 +356,8 @@ html, body {
         </div>
       </section>
 
-      <!-- ============================================================ -->
-<!-- SLIDE 02 · Step 1 · Add the Model Class: Two Ways            -->
+<!-- ============================================================ -->
+<!-- SLIDE 03 · Step 1 · Add the Model Class: Two Ways            -->
 <!-- ============================================================ -->
 <section class="slide">
         <div class="eyebrow">ModelZoo · Bring Your Own Model</div>
@@ -373,8 +427,8 @@ html, body {
         <div class="fs-sm muted" style="margin-top:10px">Either way, add <code style="font-family:var(--mono);font-size:0.9em">&#39;MY_CNN_TS_2K_NPU&#39;</code> to <code style="font-family:var(--mono);font-size:0.9em">__all__</code>. <code style="font-family:var(--mono);font-size:0.9em">torch</code>, <code style="font-family:var(--mono);font-size:0.9em">py_utils</code> and <code style="font-family:var(--mono);font-size:0.9em">GenericModelWithSpec</code> are already imported at the top of <code style="font-family:var(--mono);font-size:0.9em">models/classification.py</code>.</div>
       </section>
 
-      <!-- ============================================================ -->
-<!-- SLIDE 03 · Step 1 · Layer by Layer, Then Check It            -->
+<!-- ============================================================ -->
+<!-- SLIDE 04 · Step 1 · Layer by Layer, Then Check It            -->
 <!-- ============================================================ -->
 <section class="slide">
         <div class="eyebrow">ModelZoo · Bring Your Own Model</div>
@@ -415,8 +469,8 @@ html, body {
         </div>
       </section>
 
-      <!-- ============================================================ -->
-<!-- SLIDE 04 · Step 2 · Add the Model Description                -->
+<!-- ============================================================ -->
+<!-- SLIDE 05 · Step 2 · Add the Model Description                -->
 <!-- ============================================================ -->
 <section class="slide">
         <div class="eyebrow">ModelZoo · Bring Your Own Model</div>
@@ -459,8 +513,8 @@ html, body {
         </div>
       </section>
 
-      <!-- ============================================================ -->
-<!-- SLIDE 05 · Steps 3–5 · Configure, Run, Check                 -->
+<!-- ============================================================ -->
+<!-- SLIDE 06 · Steps 3–5 · Configure, Run, Check                 -->
 <!-- ============================================================ -->
 <section class="slide">
         <div class="eyebrow">ModelZoo · Bring Your Own Model</div>
@@ -501,8 +555,8 @@ html, body {
         <div class="callout blue" style="margin:16px 0 0;font-size:clamp(12px,2vh,17px)">Compare both numbers with a run of the original <code style="font-family:var(--mono);font-size:0.9em">config_dsk.yaml</code> (<code style="font-family:var(--mono);font-size:0.9em">CLS_1k_NPU</code>). DC arc fault is an easy dataset, so use it to prove the flow end to end and your own data to judge accuracy.</div>
       </section>
 
-      <!-- ============================================================ -->
-<!-- SLIDE 06 · Troubleshooting                                   -->
+<!-- ============================================================ -->
+<!-- SLIDE 07 · Troubleshooting                                   -->
 <!-- ============================================================ -->
 <section class="slide">
         <div class="eyebrow">ModelZoo · Bring Your Own Model</div>
@@ -546,8 +600,8 @@ html, body {
         <div class="callout green" style="margin-top:auto;font-size:clamp(12px,2vh,17px)"><strong>Expected and harmless:</strong> <code style="font-family:var(--mono);font-size:0.9em">model_config () was provided but is not implemented</code> and DataLoader worker-count warnings.</div>
       </section>
 
-      <!-- ============================================================ -->
-<!-- SLIDE 07 · Guidelines for Designing Your Model               -->
+<!-- ============================================================ -->
+<!-- SLIDE 08 · Guidelines for Designing Your Model               -->
 <!-- ============================================================ -->
 <section class="slide">
         <div class="eyebrow">ModelZoo · Bring Your Own Model</div>

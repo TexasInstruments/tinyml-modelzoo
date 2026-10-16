@@ -28,10 +28,37 @@ Unknown model name
 models are selectable, so an older 1.4.0 name, a typo, or a model you defined but did not enable gives this error. The
 lookup is case sensitive.
 
-**Fix** Use a name from :doc:`/appendix/model_zoo_reference`. For your own model add it to the description
-file and to ``enabled_models_list`` as described in :doc:`/BRING_YOUR_OWN_MODEL`. A related error is
+**Fix** Use a name from :doc:`/appendix/model_zoo_reference`. For your own model either set
+``training.custom_model_path`` to a ``.py`` file that defines a class with that name, or add it to the description
+file and to ``enabled_models_list``, as described in :doc:`/BRING_YOUR_OWN_MODEL`. If you already set
+``custom_model_path`` and still get ``please check if the given model_name is a supported one``, the installed
+``tinyml-modelmaker`` predates that option. A related error is
 ``task_type: <x> does not match the pretrained model``: the model belongs to a different task than
 ``common.task_type``.
+
+.. _err-custom-model:
+
+Custom model file (``custom_model_path``) errors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Symptom**
+
+.. code-block:: text
+
+   training.custom_model_path does not exist or is not a file: /path/to/my_model.py
+   ValueError: BYOM: model 'MyModel' not found in '/path/to/my_model.py'. Define a class named 'MyModel' or a get_model() function in that file.
+   UserWarning: BYOM model 'MyModel' __init__ did not accept variables/num_classes/input_features kwargs. Instantiating with no arguments.
+
+**Cause** The first message means the path is wrong (use an absolute path). The second means the file has no class
+whose name equals ``training.model_name`` (the match is exact and case sensitive). The warning means a plain
+``torch.nn.Module`` has an ``__init__`` that does not take ``variables``, ``num_classes`` and ``input_features``, so it was
+built with no arguments and the model will not fit your data.
+
+**Fix** Correct the path or the class name. Declare
+``def __init__(self, variables=1, num_classes=2, input_features=512, **kwargs)``. The model must return
+``(batch, num_classes)``. If the run instead stops with
+``please check if the given model_name is a supported one: <name>``, the installed ``tinyml-modelmaker`` predates
+``custom_model_path``; update it. See :doc:`/BRING_YOUR_OWN_MODEL`.
 
 .. _err-python-311:
 

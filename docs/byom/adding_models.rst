@@ -9,10 +9,43 @@ repository.
 
 .. note::
 
-   Adding models edits the ModelZoo source, so you need the **clone install** (clone
-   `tinyml-modelzoo <https://github.com/TexasInstruments/tinyml-modelzoo>`_ and run ``pip install -e .``). See
+   This page describes the **permanent** route, which edits the ModelZoo source and so needs the **clone install**
+   (clone `tinyml-modelzoo <https://github.com/TexasInstruments/tinyml-modelzoo>`_ and run ``pip install -e .``). See
    :doc:`/installation/developer_installation`. You only change files in ``tinyml-modelzoo``; nothing in ModelMaker or
    TinyVerse has to change, because models are discovered automatically from ``tinyml_modelzoo``.
+
+   To use a model **without editing ModelZoo** (any install), see :ref:`byom-custom-model-path` below.
+
+.. _byom-custom-model-path:
+
+Quick start: a custom model file
+================================
+
+Put the model class in your own Python file and point the config at it:
+
+.. code-block:: yaml
+
+   training:
+     model_name: MyModel                       # must equal the class name in the file
+     custom_model_path: /path/to/my_model.py   # absolute path recommended
+
+* **No registration is needed.** There is no description, ``__all__`` entry or ``enabled_models_list`` entry for such
+  a model. ModelMaker builds a stub description from the path, and the full pipeline (training, ONNX export,
+  compilation) runs.
+* **Two styles are detected automatically.** A ``GenericModelWithSpec`` subclass is created with
+  ``config=dict(variables=..., num_classes=..., input_features=..., dual_op=...)``. A plain ``torch.nn.Module`` is
+  created with the keyword arguments ``variables``, ``num_classes`` and ``input_features``; give its ``__init__`` those
+  parameters (and ``**kwargs``), otherwise it is created with no arguments and a warning is raised.
+* **A** ``get_model(model_name)`` **function** in the file takes priority over looking up a class named ``model_name``.
+* **Output shape.** The model must return ``(batch, num_classes)``. Input is ``(batch, variables, input_features, 1)``.
+* **Errors.** ``training.custom_model_path does not exist or is not a file`` (wrong path) and
+  ``BYOM: model '<name>' not found in '<file>'`` (class name differs from ``model_name``).
+* **Requires** a ``tinyml-modelmaker`` release that supports ``custom_model_path``. With an older one the run stops
+  with ``please check if the given model_name is a supported one``.
+* **Quantization.** With ``training.quantization`` unset the run is float only. Use ``quantization: 2`` for a
+  quantized, hardware-NPU compile on NPU devices.
+
+The complete worked example, with both styles in full, is in :doc:`/BRING_YOUR_OWN_MODEL`.
 
 The two names
 =============

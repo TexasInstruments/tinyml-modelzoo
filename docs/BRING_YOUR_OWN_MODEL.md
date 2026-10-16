@@ -25,6 +25,11 @@ Use **Option A** to try a custom architecture quickly. Use **Option B** when the
 
 Point the config at a Python file containing your model class. No modelzoo edits needed.
 
+> **Requirement:** `training.custom_model_path` is handled by `tinyml-modelmaker`. Use a modelmaker release that
+> includes it (a `pip install -e .` of this repository pulls in the released wheel, which may be older). If your
+> run stops with `please check if the given model_name is a supported one: MyModel`, the installed modelmaker
+> predates this option. Update it, or install modelmaker from source.
+
 ### Step A-1: Write your model file
 
 Choose one style. The pipeline detects which style you used automatically.
@@ -46,7 +51,7 @@ class MyModel(nn.Module):
         )
 
     def forward(self, x):
-        return self.net(x)  # input shape: (batch, variables, input_features)
+        return self.net(x)  # input shape: (batch, variables, input_features, 1)
 ```
 
 Constructor contract:
@@ -83,9 +88,15 @@ class MyModel(GenericModelWithSpec):
     def gen_model_spec(self):
         layers = py_utils.DictPlus()
         layers += {'0': dict(type='BatchNormLayer', num_features=self.variables)}
-        layers += {'1': dict(type='LinearLayer', in_features=None, out_features=self.num_classes)}
+        layers += {'1': dict(type='ReshapeLayer', ndim=2)}
+        layers += {'2': dict(type='LinearLayer', in_features=self.variables * self.input_features,
+                             out_features=self.num_classes)}
         return dict(model_spec=layers)
 ```
+
+Both styles must end with an output of shape `(batch, num_classes)`. In Style 2 that is why a `ReshapeLayer`
+precedes the `LinearLayer`: without it the linear layer is applied to every time step and the output keeps the
+time axis. Time series input arrives as `(batch, variables, input_features, 1)`.
 
 Constructor receives `config=dict(variables=..., num_classes=..., input_features=..., dual_op=...)`. Shape params (`variables`, `num_classes`, `input_features`) must be declared in `__init__` and forwarded to `super().__init__()` — that's how `self.variables` etc. get set. See `tinyml_modelzoo/layers/tinynn.py` for available layer types.
 
@@ -102,10 +113,26 @@ This works for both styles — no other config change needed.
 ### Step A-3: Run as normal
 
 ```bash
-python tinyml_modelmaker/run_tinyml_modelmaker.py config.yaml
+./run_tinyml_modelzoo.sh /path/to/your_config.yaml     # Linux / macOS, from the tinyml-modelzoo folder
+python -m tinyml_modelmaker.run_tinyml_modelmaker /path/to/your_config.yaml   # any install, any folder
 ```
 
-The full pipeline runs: training → ONNX export → TVM compilation → MCU C code.
+The full pipeline runs: training → ONNX export → TVM compilation → MCU C code. The model is read from your file
+at run time, so keep the file in place until the run has finished. The resolved path is recorded in the run's
+`run.yaml` (`training.model_spec`).
+
+What you get:
+
+- With `training.quantization` unset (`0`, float only; `config_dsk.yaml` does not set it) the run produces the float
+  model under `training/base/` and compiles it into `compilation/artifacts/` (`mod.a`, `tvmgen_default.h`), plus
+  golden vectors and plots.
+- With `quantization: 2` (quantization-aware training) the run also produces `training/quantization/`, and the
+  quantized model is what gets compiled. Add the line under `training:` in your config.
+- The NPU preset follows the quantization setting, not the model's origin. A float run (`quantization` unset)
+  compiles with the **soft** NPU preset (compiler log: `ti-npu type: soft`). A `quantization: 2` run on an NPU
+  device compiles for the **hardware NPU** (`ti-npu type: hard`, with `skip_normalize` and `output_int` on), as it
+  does for the built-in models. Layers that break the NPU rules still fall back to the CPU, so follow
+  [Guidelines for Designing Your Model](#guidelines-for-designing-your-model).
 
 ### Common errors
 

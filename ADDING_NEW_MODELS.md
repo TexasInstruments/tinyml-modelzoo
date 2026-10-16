@@ -4,8 +4,12 @@ Reference for how models are defined, registered and resolved in Tiny ML
 ModelZoo. For a step-by-step walkthrough that adds a model and trains it on an
 example, see the **[Bring Your Own Model (BYOM) Guide](docs/BRING_YOUR_OWN_MODEL.md)**.
 
-Only files inside `tinyml-modelzoo` are involved. `tinyml-tinyverse` and
-`tinyml-modelmaker` import models and descriptions from `tinyml_modelzoo`.
+This reference describes the **permanent** route: model classes and descriptions registered inside
+`tinyml-modelzoo`. `tinyml-tinyverse` and `tinyml-modelmaker` import them from `tinyml_modelzoo`.
+
+To try a model without editing `tinyml-modelzoo`, use `training.custom_model_path` instead (see **Option A** in the
+[BYOM Guide](docs/BRING_YOUR_OWN_MODEL.md)). The file only needs a class whose name equals `training.model_name`; no
+description, `__all__` entry or `enabled_models_list` entry is required.
 
 - [Files](#files)
 - [Name Resolution](#name-resolution)

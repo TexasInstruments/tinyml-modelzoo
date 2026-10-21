@@ -268,6 +268,20 @@ After training completes, find artifacts at:
 | **B** | Data from other tools (different column names) | Rename columns first → see [Column Mapping](#column-mapping-for-non-ti-data) |
 | **C** | Pre-cleaned / externally featurized data (no `bin*` columns needed) | Use `Generic_Radar_SimpleWindowOnly` preset |
 
+Steps To Obtain Radar Data Processing YAML Block : Run → Preset → Copy to Clipboard
+
+```bash
+# Launch the builder
+python3 radar_config_builder/main.py
+```
+
+Wizard flow (left panel):
+1. **Task Type** → `Posture / Fall Detection` **OR** `Surface Classification`
+2. **Scenario** → `On-device signal chain data` (with CSV validation) **OR** `Already pre-processed dataset` (no use of any data pre-processing pipeline within tensorlab)
+3. **Preset** → `Generic_130Input_Radar_SurfaceClassification` (248) 
+4. **Pipeline Stages / Fields** → adjust active transforms and parameters; live YAML preview updates on right
+5. **Copy to Clipboard** — click the button in the right panel; paste result into your `config.yaml` (`data_processing_feature_extraction:` block)
+
 ### 3.1 Recommended: Use the Preset (Simplest)
 
 ```yaml

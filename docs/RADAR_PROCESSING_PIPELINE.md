@@ -346,6 +346,8 @@ Generic_248Input_Posture_and_Fall_Detection = dict(
 ```
 
 **Per-Frame Feature Layout (31 features)**:
+
+
 | Index | Feature | Source |
 |-------|---------|--------|
 | 0 | track_height_z | Track |

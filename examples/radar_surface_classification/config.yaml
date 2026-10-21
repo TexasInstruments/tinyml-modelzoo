@@ -17,7 +17,7 @@ dataset:
 data_processing_feature_extraction:
    
   feature_extraction_name: Generic_130Input_Radar_SurfaceClassification
-  radar_range_bins_bounds: [6,31]
+  radar_range_bins_bounds: [null,null]
 
 training:
   

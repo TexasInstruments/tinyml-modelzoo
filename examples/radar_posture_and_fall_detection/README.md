@@ -286,6 +286,20 @@ After training completes, find artifacts at:
 
 ---
 
+Steps To Obtain Radar Data Processing YAML Block : Run → Preset → Copy to Clipboard
+
+```bash
+# Launch the builder
+python3 radar_config_builder/main.py
+```
+
+Wizard flow (left panel):
+1. **Task Type** → `Posture / Fall Detection` **OR** `Surface Classification`
+2. **Scenario** → `On-device signal chain data` (with CSV validation) **OR** `Already pre-processed dataset` (no use of any data pre-processing pipeline within tensorlab)
+3. **Preset** → `Generic_248Input_Posture_and_Fall_Detection` (248) 
+4. **Pipeline Stages / Fields** → adjust active transforms and parameters; live YAML preview updates on right
+5. **Copy to Clipboard** — click the button in the right panel; paste result into your `config.yaml` (`data_processing_feature_extraction:` block)
+
 ### 3.1 Recommended: Use the Preset (Simplest)
 
 ```yaml
@@ -329,8 +343,6 @@ Total:       192 + 56 = 248 features → matches RF_DualStream_PointCloud_19K
 > radar_point_cloud_data_selector: ['x', 'z', 'snr']  # Use x instead of y
 > radar_point_cloud_relative_coordinate_filter: ['x']  # Make x relative
 > radar_point_cloud_sort_by: 'z'  # Still sort by height
-> ```
-
 ---
 
 ### 3.2 Full Inline Configuration (Maximum Control)
@@ -563,9 +575,11 @@ training:
 
 | Model | Shape | Params | Description |
 |-------|-------|--------|-------------|
-| **`RF_DualStream_PointCloud_19K`** (default) | Dual-stream MLP | ~19K | Splits each frame into **position stream** (point coords + track height + accel = 28 features) and **velocity stream** (3 track velocity components). Separate BN → Linear → ReLU → BN branches, then fusion. Natural fit: shape vs. motion. |
+| **`RF_DualStream_PointCloud_19K`** (default) | Dual-stream MLP | ~19K | Splits each frame into **position stream** (point coords + track height + accel = 28 features) and **velocity stream** (3 track velocity components).Separate BN → Linear → ReLU → BN branches, then fusion. Natural fit: shape vs. motion. |
 | `RF_MLP_4L_19K` | Plain 4-layer MLP | ~19K | BN → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(16) → ReLU → BN → FC(num_classes) |
 | `RF_MLP_3L_19K` | 3-layer MLP | ~11K | BN → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(num_classes). Smaller, faster. |
+
+Feature-order constraint (model-fixed split) - RF_DualStream_PointCloud_19K: the dual-stream splits each frame by fixed indices — `vel_idx = [frame_start+1, frame_start+2, frame_start+3]` (3 velocity slots) and `pos_idx = [frame_start] + [frame_start+4 ...]`. The preset's `frame_major` ordering and track selector (`z, velocity, acceleration`) align with this: velocity features (`track_velocity_x/y/z`) must occupy slots 1-3 of each frame; position stream gets slot 0 (`track_z`) + remaining slots. `frame_size` determines `num_features_per_frame = input_features / frame_size` (must divide evenly; preset uses 8 → 31 features/frame).
 
 ---
 
@@ -575,8 +589,8 @@ training:
 - **Y**: `[N_windows]` integer class index:
   - `0` = Falling
   - `1` = Laying
-  - `2` = Standing
-  - `3` = Sitting
+  - `2` = Sitting
+  - `3` = Standing
   - `4` = Walking
 
 ---

@@ -18,7 +18,7 @@ changes caused by a person even at rest. Threshold based CSI detectors are britt
 arrangements; a trained model on the Wi-Fi SoC gives always-on, privacy-preserving sensing without extra hardware.
 
 * **Task**: binary classification (``generic_timeseries_classification``)
-* **Device**: CC35X1 (`CC3551E <https://www.ti.com/pro duct/CC3551E>`_); the model is compiled for the M33 CDE
+* **Device**: CC35X1 (`CC3551E <https://www.ti.com/product/CC3551E>`_); the model is compiled for the M33 CDE
 * **Model**: ``WiFiPresDet_4.7k_CDE`` (about 4.7K parameters)
 * **Data**: CSI magnitudes of 52 usable subcarriers at 128 Hz
 

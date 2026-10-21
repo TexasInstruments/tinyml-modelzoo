@@ -12,13 +12,13 @@ Overview
 --------
 
 The model classifies 2-second windows of CSI data into **no presence** (class 0) and **presence** (class 1),
-enabling device-free occupancy sensing without body-worn sensors. PIR and radar sensors need line of sight and
+enabling device-free occupancy sensing without body-worn sensors. PIR sensors need line of sight and
 miss stationary occupants, whereas Wi-Fi CSI is pervasive, passive and sensitive to the small environmental
 changes caused by a person even at rest. Threshold based CSI detectors are brittle across rooms and furniture
 arrangements; a trained model on the Wi-Fi SoC gives always-on, privacy-preserving sensing without extra hardware.
 
 * **Task**: binary classification (``generic_timeseries_classification``)
-* **Device**: CC35X1 (`CC3531 <https://www.ti.com/product/CC3531>`_); the model is compiled for the M33 CDE
+* **Device**: CC35X1 (`CC3551E <https://www.ti.com/pro duct/CC3551E>`_); the model is compiled for the M33 CDE
 * **Model**: ``WiFiPresDet_4.7k_CDE`` (about 4.7K parameters)
 * **Data**: CSI magnitudes of 52 usable subcarriers at 128 Hz
 
@@ -162,5 +162,5 @@ See Also
 --------
 
 * :doc:`pir_detection`: PIR based presence/motion classification
-* `CC3531 product page <https://www.ti.com/product/CC3531>`_
+* `CC3551E product page <https://www.ti.com/product/CC3551E>`_
 * `TI Neural Network Compiler guide <https://software-dl.ti.com/mctools/nnc/mcu/users_guide/>`_

@@ -59,6 +59,8 @@ template_model_description = dict(
     compilation=dict()
 )
 
+AUDIO_PROPERTIES = [dict(type="group", dynamic=True, script="audio.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
+                    dict(type="group", dynamic=True, script="audio.py", name="train_group", label="Training Parameters", default=[])]
 
 _model_descriptions = {
     'DSCNN_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -70,12 +72,10 @@ _model_descriptions = {
             model_training_id='CNN_AUDIO_DSCNN',
             model_name='DSCNN_NPU',
             learning_rate=0.1,
-            batch_size=constants.TRAINING_BATCH_SIZE_DEFAULT[constants.TASK_TYPE_AUDIO_CLASSIFICATION],
             target_devices=[
                 constants.TARGET_DEVICE_MSPM0G5187,
             ],
-            properties=[dict(type="group", dynamic=True, script="audio.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
-                        dict(type="group", dynamic=True, script="audio.py", name="train_group", label="Training Parameters", default=[])]
+            properties=AUDIO_PROPERTIES
         ),
     }),
     'DSCNN_32K_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -88,12 +88,10 @@ _model_descriptions = {
             model_training_id='CNN_AUDIO_DSCNN_32K_NPU',
             model_name='DSCNN_32K_NPU',
             learning_rate=0.001,
-            batch_size=constants.TRAINING_BATCH_SIZE_DEFAULT[constants.TASK_TYPE_AUDIO_CLASSIFICATION],
             target_devices=[
                 constants.TARGET_DEVICE_MSPM0G5187,
             ],
-            properties=[dict(type="group", dynamic=True, script="audio.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
-                        dict(type="group", dynamic=True, script="audio.py", name="train_group", label="Training Parameters", default=[])]
+            properties=AUDIO_PROPERTIES
         ),
     }),
     'DSCNN_GB_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -106,12 +104,10 @@ _model_descriptions = {
             model_training_id='CNN_AUDIO_DSCNN_GB_NPU',
             model_name='DSCNN_GB_NPU',
             learning_rate=0.001,
-            batch_size=constants.TRAINING_BATCH_SIZE_DEFAULT[constants.TASK_TYPE_AUDIO_CLASSIFICATION],
             target_devices=[
                 constants.TARGET_DEVICE_MSPM0G5187,
             ],
-            properties=[dict(type="group", dynamic=True, script="audio.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
-                        dict(type="group", dynamic=True, script="audio.py", name="train_group", label="Training Parameters", default=[])]
+            properties=AUDIO_PROPERTIES
         ),
     }),
     'TCDS_ResNet_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -124,12 +120,10 @@ _model_descriptions = {
             model_training_id='CNN_AUDIO_TCDS_ResNet_NPU',
             model_name='TCDS_ResNet_NPU',
             learning_rate=0.001,
-            batch_size=constants.TRAINING_BATCH_SIZE_DEFAULT[constants.TASK_TYPE_AUDIO_CLASSIFICATION],
             target_devices=[
                 constants.TARGET_DEVICE_MSPM0G5187,
             ],
-            properties=[dict(type="group", dynamic=True, script="audio.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
-                        dict(type="group", dynamic=True, script="audio.py", name="train_group", label="Training Parameters", default=[])]
+            properties=AUDIO_PROPERTIES
         ),
     }),
     'TCDS_ResNet_FB_NPU': deep_update_dict(deepcopy(template_model_description), {
@@ -141,12 +135,10 @@ _model_descriptions = {
             model_training_id='CNN_AUDIO_TCDS_ResNet_FB_NPU',
             model_name='TCDS_ResNet_FB_NPU',
             learning_rate=0.01,
-            batch_size=constants.TRAINING_BATCH_SIZE_DEFAULT[constants.TASK_TYPE_AUDIO_CLASSIFICATION],
             target_devices=[
                 constants.TARGET_DEVICE_MSPM0G5187,
             ],
-            properties=[dict(type="group", dynamic=True, script="audio.py", name="preprocessing_group", label="Preprocessing Parameters", default=[]),
-                        dict(type="group", dynamic=True, script="audio.py", name="train_group", label="Training Parameters", default=[])]
+            properties=AUDIO_PROPERTIES
         ),
     }),
 }

@@ -1,7 +1,8 @@
 # Radar Data Pre-Processing Pipeline — Complete Reference Guide
 
 > **Complete guide to the Radar Data Pre-Processing Pipeline in Tensorlab**
-> **Important Note : This pipeline ONLY works on Processed Signal Chain Output and is mainly having inbuilt presets needed to preprocess Radar dataset through filterings, points/radar frames quality checks, windowing etc. and make it ready for Training**
+
+**Important Note : This pipeline ONLY works on Processed Signal Chain Output and is mainly having inbuilt presets needed to preprocess Radar dataset through filterings, points/radar frames quality checks, windowing etc. and make it ready for Training**
 
 ---
 

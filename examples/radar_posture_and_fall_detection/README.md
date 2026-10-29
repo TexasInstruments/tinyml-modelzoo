@@ -1,4 +1,5 @@
 # Radar Posture & Fall Detection 
+#### -Atharv Vats, Adithya Thonse
 
 Classify a person's posture (standing, sitting, walking, falling, laying) from a TI mmWave radar sensor, using the point cloud + track outputs the radar's on-device signal chain already produces — no raw ADC data feature extraction support within Tensorlab today.
 

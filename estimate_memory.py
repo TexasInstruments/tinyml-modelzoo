@@ -242,11 +242,8 @@ def main(args):
             return 1
         config['common']['target_module'] = target_module
 
-    # Support both 'timeseries' and 'radar' target modules
-    # Radar does not use FEL for feature extraction (it's done on device signal chain) - Future Scope to include completely raw ADC data,
-    # so only NN model memory estimation is supported for Radar Devices in current version
-    if target_module not in ('timeseries', 'radar'):
-        logger.error(f"estimate_memory.py currently only supports target_module='timeseries' or 'radar' "
+    if target_module != 'timeseries':
+        logger.error(f"estimate_memory.py currently only supports target_module='timeseries' "
                      f"(memory pre-flight/FEL wiring for '{target_module}' is not available). "
                      f"Got task_type='{task_type}' -> target_module='{target_module}'.")
         return 1

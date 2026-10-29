@@ -1,4 +1,5 @@
 # Radar Surface Classification
+### -Atharv Vats, Adithya Thonse
 
 Classify the surface or material underneath/in front of a TI mmWave radar sensor — e.g. floor type, terrain, or ground material — directly from **1-D FFT range-profile data**, with no point cloud or tracker involved. The shape of the energy return across range bins *is* the feature, because different materials reflect radar energy differently at different distances.
 

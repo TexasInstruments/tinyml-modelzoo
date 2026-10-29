@@ -1,11 +1,37 @@
 # Radar Surface Classification
 
-Classify the surface or material underneath/in front of a TI mmWave radar sensor — e.g. floor type, terrain, or ground material — directly from raw **FFT range-profile data**, with no point cloud or tracker involved. The shape of the energy return across range bins *is* the feature, because different materials reflect radar energy differently at different distances.
+Classify the surface or material underneath/in front of a TI mmWave radar sensor — e.g. floor type, terrain, or ground material — directly from **1-D FFT range-profile data**, with no point cloud or tracker involved. The shape of the energy return across range bins *is* the feature, because different materials reflect radar energy differently at different distances.
 
-This guide covers the data processing configuration, training, quantization, and compilation for the xWRL6432 target using TensorLab EdgeAI.
+This guide covers the data pre-processing configuration, training, quantization, and compilation for the xWRL6432 target using Tensorlab EdgeAI - TinyML Modelzoo needed for re-training.
+
+Modelzoo provides a modular CLI approach to add new models/ modify existing model architectures, providing BYOD, BYOM approach from re-training perspective.
 
 - **Example config:** [config.yaml](./config.yaml)
-- **Dataset:** [radar_grass_surface_dataset.zip](https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/radar_grass_surface_dataset.zip) (Grass vs Not Grass)
+- **Sample Dataset:** [radar_grass_surface_dataset.zip](https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/radar_grass_surface_dataset.zip) (Grass vs Not Grass)
+
+---
+
+## Index
+
+- [Overview](#overview)
+- [Quick Start](#quick-start)
+  - [Prerequisites Checklist](#prerequisites-checklist)
+  - [Linux / macOS — Install (Recommended)](#linux--macos--install-recommended)
+  - [Windows (PowerShell) — Install (Recommended)](#windows-powershell--install-recommended)
+  - [Quick Commands (After Install)](#quick-commands-after-install)
+  - [Bring Your Own Data (BYOD) / Bring Your Own Model (BYOM)](#bring-your-own-data-byod--bring-your-own-model-byom)
+  - [Output Structure](#output-structure)
+- [YAML Configuration for Surface Classification](#yaml-configuration-for-surface-classification)
+  - [Expected Column Mapping](#expected-column-mapping)
+  - [Dataset Split Methods](#dataset-split-methods)
+  - [Data Pre-Processing and Feature Extraction Presets](#data-pre-processing-and-feature-extraction-presets)
+  - [`data_processing_feature_extraction` YAML block generation](#data_processing_feature_extraction-yaml-block-generation)
+- [Model Architecture](#model-architecture)
+- [Output Tensor](#output-tensor)
+- [Quantization](#quantization)
+- [Compilation](#compilation)
+- [Key Reference Files](#key-reference-files)
+- [Need More Help?](#need-more-help)
 
 ---
 
@@ -18,18 +44,23 @@ This example demonstrates using TI mmWave sensors with machine learning for surf
 
 The model uses the radar's on-device signal chain output — the FFT range profile (`bin0`...`binN` columns) — as input. No point cloud or track data is required.
 
+### Retraining Workflow
+
+![TinyML Modelzoo Retraining Workflow](../../docs/_static/img/examples/radar_classification/radar_retraining_arch.png)
+
 ---
 
 ## Quick Start
 
-### Two Installation Paths
+### Prerequisites Checklist
 
-| Path | Use When | What You Get |
-|------|----------|--------------|
-| **Clone** | You want examples/, wrapper scripts, or to modify models | Full repo + editable install |
-| **Wheel Support** | You only run configs, no model changes | Minimal pip install, no examples folder |
-
----
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Python | 3.10.x | **Required** for ti_mcu_nnc compiler wheel |
+| Git | Latest | With core.longpaths=true |
+| Virtualenv | Built-in | python -m venv |
+| TI ARM Compiler | 5.1.1.LTS | For compilation only; set TI_CGT_ARMLLVM_PATH |
+| CUDA (optional) | 11.8+ | For GPU training; CPU works fine |
 
 ### Linux / macOS — Install (Recommended)
 
@@ -51,7 +82,7 @@ pip install -e .
 python -c "import tinyml_modelmaker, tinyml_tinyverse, tinyml_torchmodelopt, tinyml_modelzoo; print('All packages OK')"
 
 # 5. Set compiler for xWRL6432 (required for compilation step)
-#export TI_CGT_ARMLLVM_PATH=/path/to/ti-cgt-armllvm_5.1.1.LTS  # Adjust path
+export TI_CGT_ARMLLVM_PATH=/path/to/ti-cgt-armllvm_5.1.1.LTS  # Adjust path
 
 # 6. Run training (outputs to ./data/projects/)
 ./run_tinyml_modelzoo.sh examples/radar_surface_classification/config.yaml
@@ -94,24 +125,6 @@ python -c "import tinyml_modelmaker, tinyml_tinyverse, tinyml_torchmodelopt, tin
 |--------|-------------|----------------------|
 | **Activate venv** | source venv/bin/activate | .\venv\Scripts\Activate.ps1 |
 | **Run training** | ./run_tinyml_modelzoo.sh examples/radar_surface_classification/config.yaml | ./run_tinyml_modelzoo.ps1 examples/radar_surface_classification/config.yaml |
-| **Run with extra args** | ./run_tinyml_modelzoo.sh examples/radar_surface_classification/config.yaml training.epochs=50 | ./run_tinyml_modelzoo.ps1 examples/radar_surface_classification/config.yaml training.epochs=50 |
-
----
-
-### Wheel Install (Minimal — No Examples/  sample config YAML access)
-
-```bash
-# Linux/macOS/Windows (same command)
-python -m venv venv
-source venv/bin/activate          # Windows: .\venv\Scripts\Activate.ps1
-pip install http://software-dl.ti.com/C2000/esd/mcu_ai/wheel/tinyml_modelzoo-1.5.0-py3-none-any.whl
-
-# Download config manually from GitHub examples folder/ Create a new yaml config
-# Then run directly:
-python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
-```
-
-> **Wheel install does NOT include** examples/ folder or run_tinyml_modelzoo.sh/.ps1 scripts.
 
 ---
 
@@ -140,7 +153,7 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
      split_factor: [0.7, 0.2, 0.1]
    ```
 
-3. **Ensure column names match** (bin0, bin1, bin2... for range data) or use inline config (Section 3.2) to map your columns.
+3. **Ensure column names match** bin0, bin1, bin2... for range data
 
 4. **Run training**:
    ```bash
@@ -149,7 +162,7 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
 
 #### **BYOM: Add Your Own Model**
 
-1. **Edit** tinyml_modelzoo/tinyml_modelzoo/models/radar.py and add your model class:
+1. **Edit** `tinyml_modelzoo/models/radar.py` and add your model class:
    ```python
    class MyCustomRadarModel(nn.Module):
        def __init__(self, config, input_features=130, variables=1, num_classes=2):
@@ -176,14 +189,14 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
    
    # Add to __all__ list at bottom of file:
    __all__ = [
-       'RF_MLP_3L_19K', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K',
+       'RF_MLP_3L_11K', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K',
        'MyCustomRadarModel'  # <-- Add here
    ]
    ```
 
-2. **Register model metadata** in tinyml_modelzoo/tinyml_modelzoo/model_descriptions/classification.py:
-   - Add a new entry in the _model_descriptions dictionary (see lines 1523-1576 for radar examples)
-   - Add the model key to enabled_models_list (line 1606)
+2. **Register model metadata** in `tinyml_modelzoo/model_descriptions/classification.py`:
+   - Add a new entry in the _model_descriptions dictionary 
+   - Add the model key to enabled_models_list 
    
    ```python
    # In _model_descriptions dict (around line 1576):
@@ -220,7 +233,7 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
      model_name: "MyCustomRadarModel"
    ```
 
-4. **Reinstall** (developer install only):
+4. **Reinstall**:
    ```bash
    pip install -e .
    ```
@@ -229,17 +242,6 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
 
 > **Note**: Model descriptions are Python dicts in classification.py. See existing radar entries (RF_MLP_3L_11K, RF_MLP_4L_19K, RF_DualStream_PointCloud_19K) as templates.
 
----
-
-### Prerequisites Checklist
-
-| Requirement | Version | Notes |
-|-------------|---------|-------|
-| Python | 3.10.x | **Required** for ti_mcu_nnc compiler wheel |
-| Git | Latest | With core.longpaths=true |
-| Virtualenv | Built-in | python -m venv |
-| TI ARM Compiler | 5.1.1.LTS | For compilation only; set TI_CGT_ARMLLVM_PATH |
-| CUDA (optional) | 11.8+ | For GPU training; CPU works fine |
 
 ---
 
@@ -260,42 +262,46 @@ After training completes, find artifacts at:
 
 ## YAML Configuration for Surface Classification
 
-### Identify Your Data Source
 
-| Case | Description | Action |
-|------|-------------|--------|
-| **A** | Data from TI Data Recorder / Visualizer (standard columns: `bin0`, `bin1`, `bin2`...) | Use preset directly |
-| **B** | Data from other tools (different column names) | Rename columns first → see [Column Mapping](#column-mapping-for-non-ti-data) |
-| **C** | Pre-cleaned / externally featurized data (no `bin*` columns needed) | Use `Generic_Radar_SimpleWindowOnly` preset |
+> **Radar Config Builder (Coming Soon)**
+>
+> In the next Tensorlab release, we will be having a Radar config builder tool to help in streamlined yaml generation.
 
-Steps To Obtain Radar Data Processing YAML Block : Run → Preset → Copy to Clipboard
+### Expected Column Mapping 
 
-```bash
-# Launch the builder
-python3 radar_config_builder/main.py
-```
+If your data uses different column names, rename to Tensorlab's expected format:
 
-Wizard flow (left panel):
-1. **Task Type** → `Posture / Fall Detection` **OR** `Surface Classification`
-2. **Scenario** → `On-device signal chain data` (with CSV validation) **OR** `Already pre-processed dataset` (no use of any data pre-processing pipeline within tensorlab)
-3. **Preset** → `Generic_130Input_Radar_SurfaceClassification` (248) 
-4. **Pipeline Stages / Fields** → adjust active transforms and parameters; live YAML preview updates on right
-5. **Copy to Clipboard** — click the button in the right panel; paste result into your `config.yaml` (`data_processing_feature_extraction:` block)
+| Data Type | Your Column Pattern | → Rename To |
+|-----------|---------------------|-------------|
+| **Range Data** | `range_bin_0`, `fft_bin_0`, `fft_0` | `bin0` |
+| | `range_bin_1`, `fft_bin_1`, `fft_1` | `bin1` |
+| | `range_bin_2`, `fft_bin_2`, `fft_2` | `bin2` |
+| | ... | `bin3`, `bin4`... `binN` |
 
-### 3.1 Recommended: Use the Preset (Simplest)
+### Dataset Split Methods
+
+| `split_type` | When to Use |
+|--------------|-------------|
+| `amongst_files` | Each recording = one surface class (default, recommended) |
+| `within_files` | Single recording contains multiple surface segments |
+
+
+### Data Pre-Processing and Feature Extraction Presets
 
 ```yaml
 data_processing_feature_extraction:
   feature_extraction_name: "Generic_130Input_Radar_SurfaceClassification"
-  variables: 1
 ```
 
 **What this preset configures:**
 - **Range Data**: Keeps bins 6–31 (26 bins), drops near-field (0–5) and far-field noise (≥32)
 - **Window**: 5 frames, stride 0.2 (1-frame overlap), no quality filtering
-- **Output**: 26 bins/frame × 5 frames = **130 features** → matches `RF_MLP_4L_19K` and `RF_MLP_3L_19K`
+- **Output**: 26 bins/frame × 5 frames = **130 features** → matches `RF_MLP_4L_19K` and `RF_MLP_3L_11K`
 
-### 3.2 Full Inline Configuration (Maximum Control)
+### `data_processing_feature_extraction` YAML block generation
+
+
+#### Option 1: Override Preset Parameters
 
 ```yaml
 data_processing_feature_extraction:
@@ -309,10 +315,10 @@ data_processing_feature_extraction:
   
   # --- Feature Ordering ---
   # radar_feature_ordering: 'feature_major'  # Group by bin across frames
-  
-  variables: 1
 ```
+___
 
+#### Option 2: Fully Inline (No Preset)
 ```yaml
 data_processing_feature_extraction:
   # Option 2: Fully inline (no preset) — for complete customization
@@ -326,14 +332,10 @@ data_processing_feature_extraction:
   # Window parameters
   frame_size: 5
   stride_size: 0.2
-  
-  # Window Quality (optional - typically not needed for range data)
-  # radar_frames_quality_index: 'per_window'
-  # radar_min_points_per_window: 10
   radar_feature_ordering: 'frame_major'
 ```
 
-### 3.3 For Pre-Cleaned Data (No Range Bins)
+#### Option 3: For Training Ready Data - This only supports Windowing
 
 ```yaml
 data_processing_feature_extraction:
@@ -341,55 +343,17 @@ data_processing_feature_extraction:
   frame_size: 5           # Must match model input
   stride_size: 0.2
 ```
+**When to Use This Preset**
 
----
+| Scenario | Example |
+|----------|---------|
+| **Pre-featurized data** | You already extracted features/frame externally |
+| **Only windowing needed** | Each row = one radar frame (set `frame_size: window size needed`) |
 
-## Column Mapping for Non-TI Data
-
-If your data uses different column names (Case B above), rename to TensorLab's expected format:
-
-| Data Type | Your Column Pattern | → Rename To |
-|-----------|---------------------|-------------|
-| **Range Data** | `range_bin_0`, `fft_bin_0`, `fft_0` | `bin0` |
-| | `range_bin_1`, `fft_bin_1`, `fft_1` | `bin1` |
-| | `range_bin_2`, `fft_bin_2`, `fft_2` | `bin2` |
-| | ... | `bin3`, `bin4`... `binN` |
-
----
-
-## Complete Training Configuration
-
-```yaml
-common:
-  task_type: "radar_surface_classification"
-  target_device: "xWRL6432"
-
-dataset:
-  dataset_name: "radar_surface_classification"
-  input_data_path: "https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/radar_grass_surface_dataset.zip"
-  split_type: "amongst_files"      # Whole files per split (no cross-file windows)
-  split_factor: [0.7, 0.2, 0.1]    # Train / Val / Test
-
-data_processing_feature_extraction:
-  feature_extraction_name: "Generic_130Input_Radar_SurfaceClassification"
-
-training:
-  model_name: "RF_MLP_4L_19K"        # or "RF_MLP_3L_19K"
-  training_epochs: 100
-  learning_rate: 0.0001
-  optimizer: "sgd"
-  output_int: false
-  num_gpus: 0
-```
-
-### Dataset Split Methods
-
-| `split_type` | When to Use |
-|--------------|-------------|
-| `amongst_files` | Each recording = one surface class (default, recommended) |
-| `within_files` | Single recording contains multiple surface segments |
-
-> **Why `amongst_files`?** Surface classification typically collects one surface type per recording session. `amongst_files` ensures no window spans two different surfaces, preventing label leakage.
+**How It Works**
+- **Assumes** input CSV rows = individual frames
+- **Applies only** windowing: stacks `frame_size` rows → 1 sample
+- **Input features** = `num_columns_in_csv` × `frame_size`
 
 ---
 
@@ -397,45 +361,33 @@ training:
 
 | Model | Shape | Params | Description |
 |-------|-------|--------|-------------|
-| **`RF_MLP_4L_19K`** (default) | 4-layer MLP | ~19K | `BatchNorm → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(16) → ReLU → BN → FC(num_classes)`. Default input: 248 features. With 130-feature preset, first layer adapts automatically. |
-| **`RF_MLP_3L_19K`** | 3-layer MLP | ~11K | `BatchNorm → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(num_classes)`. Smaller footprint, faster inference. Default input: 130 features — **matches preset exactly**. |
+| **`RF_MLP_4L_19K`** (default) | 4-layer MLP | ~19K | `BatchNorm → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(16) → ReLU → BN → FC(num_classes)`. Default input: 248 features. With 130-feature preset, first layer adapts automatically. (Mainly used for Posture and Fall Detection Application) |
+| **`RF_MLP_3L_11K`** | 3-layer MLP | ~11K | `BatchNorm → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(num_classes)`. Smaller footprint, faster inference. Default input: 130 features — **matches preset exactly**. |
 
 Both models:
-- Output **raw logits** (no Softmax/Sigmoid) — compatible with `CrossEntropyLoss`
-- Work with the 130-feature preset (`Generic_130Input_Radar_SurfaceClassification`)
 - Support quantization (QAT, 8-bit) and compilation for xWRL6432
-
-### Model Selection Guide
-
-| Scenario | Recommended Model |
-|----------|-------------------|
-| **Default / Best accuracy** | `RF_MLP_4L_19K` |
-| **Smaller model / Faster inference** | `RF_MLP_3L_19K` |
-| **Memory-constrained deployment** | `RF_MLP_3L_19K` (~40% fewer params) |
-
 ---
 
 ## Output Tensor
 
-- **X**: `[N_windows, 130]` = 5 frames × 26 range bins (`frame_major` order)
+- **X**: `[N_windows, 130]` = 5 frames × 26 range bins (`frame_major` order) (Considering frame_size as 5 and number of range bins as 26)
 - **Y**: `[N_windows]` integer class index — one per surface
 
 ---
 
 ## Quantization
 
-By default, generic quantization runs if not disabled. To disable:
+By default, generic quantization run is disabled. To enable:
 
 ```yaml
 training:
-  quantization: 0
+  quantization: 1
 ```
 
 **Quantization config (default):**
-- Method: QAT (Quantization Aware Training)
+- Method: QAT (Quantization Aware Training) or PTQ (Post Training Quantization)
 - Weight bitwidth: 8-bit
 - Activation bitwidth: 8-bit
-- Output int: true (for radar targets)
 
 ---
 
@@ -453,36 +405,19 @@ Firmware links `mod.a` and calls `tvmgen_default_run()`, feeding the 130-value f
 
 ---
 
-## Recent Fixes & Changes
-
-### Bug Fix: `radar_range_bins_bounds` Handling
-- **Issue**: Config with `radar_range_bins_bounds: [null, null]` caused `float(None)` error
-- **Fixed in**: `tinyml-tinyverse/tinyml_tinyverse/common/utils/radar_utils.py` → `process_range_bins()`
-- **Change**: Now uses `get_bounds_pairs()` to properly handle `None` bounds (no filtering)
-
-### New Model Added: `RF_MLP_3L_19K`
-- Added to `tinyml-modelzoo/tinyml_modelzoo/models/radar.py`
-- 3-layer MLP (~11K params) for faster inference
-- Default input features: 130 — matches preset exactly
-
----
-
 ## Key Reference Files
 
 | Component | Location |
 |-----------|----------|
-| Model architectures | `tinyml-modelzoo/tinyml_modelzoo/models/radar.py` → `RF_MLP_3L_19K`, `RF_MLP_4L_19K` |
-| Radar Data Processing Pipeline (full reference) | `tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md` |
-| Training script | `tinyml-tinyverse/tinyml_tinyverse/references/radar_classification/train.py` |
-| Data processing utils | `tinyml-tinyverse/tinyml_tinyverse/common/utils/radar_utils.py` |
+| Model architectures | `tinyml-modelzoo/tinyml_modelzoo/models/radar.py` → `RF_MLP_3L_11K`, `RF_MLP_4L_19K` |
+| Radar Data Pre-Processing Pipeline (full reference) | `tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md` |
 
 ---
 
 ## Need More Help?
 
 - Search for issues or post questions on the [TI E2E Forum](https://e2e.ti.com/)
-- See the full pipeline reference: [RADAR_PROCESSING_PIPELINE.md](tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md)
-- TensorLab EdgeAI documentation in the main repository
+- Tensorlab Modelzoo documentation - [Tiny ML Modelzoo User Guide](https://software-dl.ti.com/C2000/esd/mcu_ai/user_guide/index.html)
 
 ---
 

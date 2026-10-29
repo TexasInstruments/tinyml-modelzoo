@@ -1530,7 +1530,7 @@ _model_descriptions = {
             'training': dict(
                 model_training_id='RF_MLP_3L_11K',
                 model_name='RF_MLP_3L_11K',
-                quantization=TinyMLQuantizationVersion.QUANTIZATION_GENERIC,
+                quantization=TinyMLQuantizationVersion.NO_QUANTIZATION,
                 properties=[dict(type="group", dynamic=True, script="radarclassification.py",
                                name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,
                 target_devices=[
@@ -1548,7 +1548,7 @@ _model_descriptions = {
         'training': dict(
             model_training_id='RF_MLP_4L_19K',
             model_name='RF_MLP_4L_19K',
-            quantization=TinyMLQuantizationVersion.QUANTIZATION_GENERIC,
+            quantization=TinyMLQuantizationVersion.NO_QUANTIZATION,
             properties=[dict(type="group", dynamic=True, script="radarclassification.py",
                            name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,
             target_devices=[
@@ -1561,12 +1561,12 @@ _model_descriptions = {
                 generic_model=False,
                 task_type=constants.TASK_TYPE_RADAR_POINT_CLOUD_CLASSIFICATION,
                 task_category=constants.TASK_CATEGORY_RADAR_CLASSIFICATION,
-                model_details='Pose and Fall Detection model for Radar Point Cloud data. '
+                model_details='Pose and Fall Detection model for Radar Point Cloud data enabling splitting of velocity and position features in a radar frame. '
             ),
             'training': dict(
                 model_training_id='RF_DualStream_PointCloud_19K',  # Must match class name in models/!
                 model_name='RF_DualStream_PointCloud_19K',
-                quantization=TinyMLQuantizationVersion.QUANTIZATION_GENERIC,
+                quantization=TinyMLQuantizationVersion.NO_QUANTIZATION,
                 properties=[dict(type="group", dynamic=True, script="radarclassification.py",
                                name="preprocessing_group", label="Preprocessing Parameters", default=[])] + template_gui_model_properties,
                 target_devices=[

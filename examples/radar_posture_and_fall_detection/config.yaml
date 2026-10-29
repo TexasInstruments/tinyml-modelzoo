@@ -9,7 +9,6 @@ common:
 
 dataset:
   dataset_name: radar_point_cloud_classification
-  # NOTE: Refer Radar Data Processing Markdown for more clarity on radar specific processing arguments
   input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip
   split_type: within_files
   # Train/Validation/Test 
@@ -18,16 +17,15 @@ dataset:
 data_processing_feature_extraction:
   # PRESET NAME (RECOMMENDED): Use preset, override specific params below
   feature_extraction_name: "Generic_248Input_Posture_and_Fall_Detection"
+  data_proc_transforms: ['Radar Point Cloud Data', 'Radar Track Data', 'Simple Window', 'Scaling']
+  radar_data_scaling_track_velocity: 30
 
 training:
-  model_name: RF_DualStream_PointCloud_19K
-  quantization: 0
-  quantization_method: "QAT"            
+  model_name: RF_DualStream_PointCloud_19K        
   training_epochs: 250
   learning_rate: 0.001
   optimizer: adamw
   weight_decay: 0
-  output_int: false
   lr_scheduler: CosineAnnealingLR
   num_gpus: 0
 

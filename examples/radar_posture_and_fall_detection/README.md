@@ -1,11 +1,38 @@
 # Radar Posture & Fall Detection 
 
-Classify a person's posture (standing, sitting, walking, falling, laying) from a TI mmWave radar sensor, using the point cloud + track outputs the radar's on-device signal chain already produces — no raw ADC support within Tensorlab.
+Classify a person's posture (standing, sitting, walking, falling, laying) from a TI mmWave radar sensor, using the point cloud + track outputs the radar's on-device signal chain already produces — no raw ADC data feature extraction support within Tensorlab today.
 
-This guide covers the data processing configuration, training, quantization, and compilation for the xWRL6432 target using TensorLab EdgeAI Framework.
+This guide covers the data pre-processing configuration, training, quantization, and compilation for the xWRL6432 target using Tensorlab EdgeAI - Tiny ML Modelzoo Framework for retraining purposes.
+
+Modelzoo provides a modular CLI approach to add new models/ modify existing model architectures, providing BYOD, BYOM approach from re-training perspective.
 
 - **Example config:** [config.yaml](./config.yaml)
-- **Dataset:** [posture_and_fall_detection_dataset.zip](https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip)
+- **Sample Dataset:** [posture_and_fall_detection_dataset.zip](https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip)
+
+---
+
+## Index
+
+- [Overview](#overview)
+- [Quick Start](#quick-start)
+  - [Prerequisites Checklist](#prerequisites-checklist)
+  - [Linux / macOS — Install](#linux--macos--install)
+  - [Windows (PowerShell) — Install](#windows-powershell--install)
+  - [Quick Commands (After Install)](#quick-commands-after-install)
+  - [Bring Your Own Data (BYOD) / Bring Your Own Model (BYOM)](#bring-your-own-data-byod--bring-your-own-model-byom)
+  - [Output Structure](#output-structure)
+  - [Data Collection Procedure (for Custom Data)](#data-collection-procedure-for-custom-data)
+- [YAML Configuration for Posture & Fall Detection](#yaml-configuration-for-posture--fall-detection)
+  - [Identify Your Data Source](#identify-your-data-source)
+  - [Expected Column Names (Case-Sensitive)](#expected-column-names-case-sensitive)
+  - [Dataset Split Methods](#dataset-split-methods)
+  - [Data Pre Processing and Feature Extraction Presets](#data-pre-processing-and-feature-extraction-presets)
+  - [`data_processing_feature_extraction` YAML block generation](#data_processing_feature_extraction-yaml-block-generation)
+- [Output Tensor](#output-tensor)
+- [Quantization](#quantization)
+- [Compilation](#compilation)
+- [Key Reference Files](#key-reference-files)
+- [Need More Help?](#need-more-help)
 
 ---
 
@@ -19,22 +46,29 @@ This example config demonstrates retraining through Tensorlab and final compiled
 - **Standing** (class 3)
 - **Walking** (class 4)
 
-The model uses the radar's on-device signal chain outputs — point cloud detections and track data — as input. Refer Radar ToolBox for procedures to flash, run, and customize the IWRL6432 Pose and Fall Detection Demo. 
+The model uses the radar's on-device signal chain outputs — point cloud detections and track data — as input. Refer to the Radar Toolbox for procedures to flash, run, and customize the xWRL6432 sensor module for pose and fall detection. 
+
+### Retraining Workflow
+
+![TinyML Modelzoo Retraining Workflow](../../docs/_static/img/examples/radar_classification/radar_retraining_arch.png)
 
 ---
 
 ## Quick Start
 
-### Two Installation Paths
+### Prerequisites Checklist
 
-| Path | Use When | What You Get |
-|------|----------|--------------|
-| **Clone** | You want examples/, wrapper scripts, or to modify models | Full repo + editable install |
-| **Wheel Support** | You only run configs, no model changes | Minimal pip install, no examples folder |
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Python | 3.10.x | **Required** for ti_mcu_nnc compiler wheel |
+| Git | Latest | With core.longpaths=true |
+| Virtualenv | Built-in | python -m venv |
+| TI ARM Compiler | 5.1.1.LTS | For compilation only; set TI_CGT_ARMLLVM_PATH |
+| CUDA (optional) | 11.8+ | For GPU training; CPU works fine |
 
 ---
 
-### Linux / macOS — Install (Recommended)
+### Linux / macOS — Install 
 
 ```bash
 # 1. Enable long paths (required for some model files)
@@ -54,7 +88,7 @@ pip install -e .
 python -c "import tinyml_modelmaker, tinyml_tinyverse, tinyml_torchmodelopt, tinyml_modelzoo; print('All packages OK')"
 
 # 5. Set compiler for xWRL6432 (required for compilation step)
-#export TI_CGT_ARMLLVM_PATH=/path/to/ti-cgt-armllvm_5.1.1.LTS  # Adjust path
+export TI_CGT_ARMLLVM_PATH=/path/to/ti-cgt-armllvm_5.1.1.LTS  # Adjust path
 
 # 6. Run training (outputs to ./data/projects/)
 ./run_tinyml_modelzoo.sh examples/radar_posture_and_fall_detection/config.yaml
@@ -62,7 +96,7 @@ python -c "import tinyml_modelmaker, tinyml_tinyverse, tinyml_torchmodelopt, tin
 
 ---
 
-### Windows (PowerShell) — Install (Recommended)
+### Windows (PowerShell) — Install
 
 ```powershell
 # 1. Enable long paths (run once as Administrator)
@@ -97,24 +131,7 @@ python -c "import tinyml_modelmaker, tinyml_tinyverse, tinyml_torchmodelopt, tin
 |--------|-------------|----------------------|
 | **Activate venv** | source venv/bin/activate | .\venv\Scripts\Activate.ps1 |
 | **Run training** | ./run_tinyml_modelzoo.sh examples/radar_posture_and_fall_detection/config.yaml | ./run_tinyml_modelzoo.ps1 examples/radar_posture_and_fall_detection/config.yaml |
-| **Run with extra args** | ./run_tinyml_modelzoo.sh examples/radar_posture_and_fall_detection/config.yaml training.epochs=50 | ./run_tinyml_modelzoo.ps1 examples/radar_posture_and_fall_detection/config.yaml training.epochs=50 |
 
----
-
-### Wheel Install (Minimal — No Examples/dIRECT config Yaml Access)
-
-```bash
-# Linux/macOS/Windows (same command)
-python -m venv venv
-source venv/bin/activate          # Windows: .\venv\Scripts\Activate.ps1
-pip install http://software-dl.ti.com/C2000/esd/mcu_ai/wheel/tinyml_modelzoo-1.5.0-py3-none-any.whl
-
-# Download config manually from GitHub examples folder/ Create a new yaml config
-# Then run directly:
-python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
-```
-
-> **Wheel install does NOT include** examples/ folder or run_tinyml_modelzoo.sh/.ps1 scripts.
 
 ---
 
@@ -122,7 +139,7 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
 
 #### **BYOD: Use Your Own Radar Data**
 
-1. **Organize data by class** (required for `amongst_files` split):
+1. **Organize data by class** (required for split):
    ```
    my_dataset/
    ├── classes/
@@ -145,7 +162,7 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
      split_factor: [0.7, 0.2, 0.1]
    ```
 
-3. **Ensure column names match** (see [Expected Column Names](#expected-column-names-case-sensitive)) or use inline config (Section 3.2) to map your columns In case you want to use the Complete Data Processing Pipeline integrated with Tensorlab.
+3. **Ensure column names match** (see [Expected Column Names](#expected-column-names-case-sensitive)) to map your columns in case you want to use the Complete Data Pre Processing Pipeline integrated with Tensorlab.
 
 4. **Run training**:
    ```bash
@@ -154,7 +171,7 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
 
 #### **BYOM: Add Your Own Model**
 
-1. **Edit** `tinyml_modelzoo/tinyml_modelzoo/models/radar.py` and add your model class:
+1. **Edit** `tinyml_modelzoo/models/radar.py` and add your model class:
    ```python
    class MyCustomRadarModel(nn.Module):
        def __init__(self, config, input_features=248, variables=1, num_classes=5):
@@ -181,14 +198,14 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
    
    # Add to __all__ list at bottom of file:
    __all__ = [
-       'RF_MLP_3L_19K', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K',
+       'RF_MLP_3L_11K', 'RF_MLP_4L_19K', 'RF_DualStream_PointCloud_19K',
        'MyCustomRadarModel'  # <-- Add here
    ]
    ```
 
-2. **Register model metadata** in `tinyml_modelzoo/tinyml_modelzoo/model_descriptions/classification.py`:
-   - Add a new entry in the `_model_descriptions` dictionary (see lines 1523-1576 for radar examples)
-   - Add the model key to `enabled_models_list` (line 1606)
+2. **Register model metadata** in `tinyml_modelzoo/model_descriptions/classification.py`:
+   - Add a new entry in the `_model_descriptions` dictionary 
+   - Add the model key to `enabled_models_list` 
    
    ```python
    # In _model_descriptions dict (around line 1576):
@@ -225,7 +242,7 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
      model_name: "MyCustomRadarModel"
    ```
 
-4. **Reinstall** (developer install only):
+4. **Reinstall** :
    ```bash
    pip install -e .
    ```
@@ -233,18 +250,6 @@ python -m tinyml_modelmaker.run_tinyml_modelmaker path/to/config.yaml
 > **Developer install** (pip install -e .) picks up model changes instantly — no rebuild needed.
 
 > **Note**: Model descriptions are Python dicts in classification.py. See existing radar entries (RF_MLP_3L_11K, RF_MLP_4L_19K, RF_DualStream_PointCloud_19K) as templates.
-
----
-
-### Prerequisites Checklist
-
-| Requirement | Version | Notes |
-|-------------|---------|-------|
-| Python | 3.10.x | **Required** for ti_mcu_nnc compiler wheel |
-| Git | Latest | With core.longpaths=true |
-| Virtualenv | Built-in | python -m venv |
-| TI ARM Compiler | 5.1.1.LTS | For compilation only; set TI_CGT_ARMLLVM_PATH |
-| CUDA (optional) | 11.8+ | For GPU training; CPU works fine |
 
 ---
 
@@ -270,7 +275,71 @@ After training completes, find artifacts at:
    - Press hotkey → start recording
    - Perform pose/motion
    - Press hotkey → stop recording
-3. Save each class to separate subdirectory under `dataset/classes/<class_name>/`
+3. Save each class to separate subdirectory
+
+Refer to the [Radar Toolbox mmWave Data Recorder User Guide](http://dev.ti.com/tirex/local?id=mmWave_Data_Recorder_User_Guide&packageId=radar_toolbox) for detailed instructions
+
+#### Converting mmWave Data Recorder Captures to Tensorlab Expected CSV Format
+
+If your data comes straight out of the mmWave Data Recorder, use [annotate_radar_dataset.py](./annotate_radar_dataset.py) to convert it into a ready-to-use dataset ZIP.
+
+**Input Directory Structure** 
+>**Important Modification needed in binData Folder from User's end** : To develop 'class label' named folders (eg. falling, walking etc.) and classify the session folders in binData accordingly.
+
+```
+binData/
+├── falling/
+│   ├── session_001/
+│   │   ├── replay_1234567890.csv
+│   │   ├── replay_1234567890.json
+│   │   └── pHistBytes_1234567890_.bin
+│   ├── session_002/
+│   │   ├── replay_1234567891.csv
+│   │   └── replay_1234567891.json
+│   └── ...
+├── sitting/
+│   ├── session_003/
+│   │   ├── replay_1234567892.csv
+│   │   └── replay_1234567892.json
+│   └── ...
+├── standing/
+├── walking/
+└── laying/
+```
+
+**Run the Conversion Script**:
+
+```bash
+python annotate_radar_dataset.py --input /path/to/binData --output /path/to/my_radar_dataset.zip
+```
+
+**Output ZIP Structure** (ready for Tensorlab):
+
+```
+my_radar_dataset.zip
+└── classes/
+    ├── falling/
+    │   ├── session_001.csv
+    │   ├── session_002.csv
+    │   └── ...
+    ├── sitting/
+    │   ├── session_003.csv
+    │   └── ...
+    ├── standing/
+    ├── walking/
+    └── laying/
+```
+
+
+
+**Update config.yaml** to point at the ZIP:
+
+```yaml
+dataset:
+  input_data_path: /path/to/my_radar_dataset.zip
+```
+
+
 
 ---
 
@@ -280,27 +349,36 @@ After training completes, find artifacts at:
 
 | Case | Description | Action |
 |------|-------------|--------|
-| **A** | Data from TI Data Recorder / Visualizer (standard columns: point_x*, track_id, track_velocity_*) | Use preset directly |
-| **B** | Data from other tools / custom firmware (different column names) | Rename columns first → see [Column Mapping](#column-mapping-for-non-ti-data) |
-| **C** | Pre-cleaned / externally featurized data (no point_*, track_*, bin* columns) | Use Generic_Radar_SimpleWindowOnly preset |
+| **A** | Data from TI Data Recorder / Visualizer (standard columns: point_x*, track_id, track_velocity_*) | Use Generic_248Input_Posture_and_Fall_Detection preset directly |
+| **B** | Pre-cleaned / externally featurized data (no point_*, track_*, bin* columns) - Ready to pass to Model for Training | Use Generic_Radar_SimpleWindowOnly preset |
 
 ---
 
-Steps To Obtain Radar Data Processing YAML Block : Run → Preset → Copy to Clipboard
+> **Radar Config Builder (Coming Soon)**
+>
+> In the next Tensorlab release, we will be having a Radar config builder tool to help in streamlined yaml generation.
 
-```bash
-# Launch the builder
-python3 radar_config_builder/main.py
-```
+### Expected Column Names (Case-Sensitive)
 
-Wizard flow (left panel):
-1. **Task Type** → `Posture / Fall Detection` **OR** `Surface Classification`
-2. **Scenario** → `On-device signal chain data` (with CSV validation) **OR** `Already pre-processed dataset` (no use of any data pre-processing pipeline within tensorlab)
-3. **Preset** → `Generic_248Input_Posture_and_Fall_Detection` (248) 
-4. **Pipeline Stages / Fields** → adjust active transforms and parameters; live YAML preview updates on right
-5. **Copy to Clipboard** — click the button in the right panel; paste result into your `config.yaml` (`data_processing_feature_extraction:` block)
+If your data uses different column names (Case B above), rename to Tensorlab's expected format:
 
-### 3.1 Recommended: Use the Preset (Simplest)
+| Data Type | Column Pattern | Example Columns |
+|-----------|----------------|-----------------|
+| **Range Data** | `bin0`, `bin1`, `bin2`... `binN` | `bin0` through `bin63` (FFT range profile) |
+| **Point Cloud** | `point_x{idx}`, `point_y{idx}`, `point_z{idx}`, `point_doppler{idx}`, `point_snr{idx}` | `point_x0`, `point_y0`, `point_z0`, `point_doppler0`, `point_snr0`, `point_x1`... |
+| **Track Data** | `track_id` or `tid` | Required for ghost track filtering |
+| | `track_x`, `track_y`, `track_z` | Track position |
+| | `track_velocity_x`, `track_velocity_y`, `track_velocity_z` | Track velocity |
+| | `track_acc_x`, `track_acc_y`, `track_acc_z` | Track acceleration |
+
+### Dataset Split Methods
+
+| `split_type` | When to Use |
+|--------------|-------------|
+| `within_files` | Single long recording |
+| `amongst_files` | Each recording session = one posture class (recommended with sufficient dataset). | 
+
+### Data Pre Processing and Feature Extraction Presets
 
 ```yaml
 data_processing_feature_extraction:
@@ -314,14 +392,14 @@ data_processing_feature_extraction:
 | **Point Cloud Data** | `radar_point_cloud_data_selector` | `['y', 'z', 'snr']` | Keep: distance (y), height (z), SNR |
 | | `radar_point_cloud_coordinate_system` | `'relative'` | Make coords relative to track |
 | | `radar_point_cloud_relative_coordinate_filter` | `['y']` | Only make **distance (y)** relative to track centroid |
-| | `radar_point_cloud_spatial_filter_bounds` | `[None, None, -10, 10, -10, 10]` | Filter z (height): ±10m; x,y unbounded |
+| | `radar_point_cloud_spatial_filter_bounds` | `[None, None, -10, 10, -10, 10]` | Filter y,z (height): ±10m; x unbounded|
 | | `radar_point_cloud_non_spatial_filter_bounds` | `[None, None, None, None]` | No Doppler/SNR filtering |
 | | `radar_max_points_per_frame` | `8` | Keep top 8 points per frame |
 | | `radar_point_cloud_structure_strategy` | `'highest and lowest'` | Select highest & lowest points by sort key |
 | | `radar_point_cloud_sort_by` | `'z'` | Sort by **height (z)** before selection |
-| **Track Data** | `radar_track_data_selector` | `['z', 'velocity', 'acceleration']` | Keep: height, 3D velocity, 3D acceleration |
-| | `radar_track_velocity_bounds` | `[-10, 10]` | Filter velocity: ±10 m/s |
-| | `radar_track_acceleration_bounds` | `[-10, 10]` | Filter acceleration: ±10 m/s² |
+| **Track Data** | `radar_track_data_selector` | `['z', 'velocity', 'acceleration']` | Keep: height, velocity, acceleration |
+| | `radar_track_velocity_bounds` | `[-10, 10]` | Filter velocity: ±10 |
+| | `radar_track_acceleration_bounds` | `[-10, 10]` | Filter acceleration: ±10 |
 | | `radar_track_spatial_filter_bounds` | `[None, None, None, None, -10, 10]` | Filter track z (height): ±10m |
 | **Windowing** | `frame_size` | `8` | 8 consecutive radar frames = 1 sample |
 | | `stride_size` | `0.125` | 1-frame overlap (8 × 0.125 = 1) |
@@ -337,15 +415,31 @@ Total:       192 + 56 = 248 features → matches RF_DualStream_PointCloud_19K
 ```
 
 > **Important: Sensor Mounting Configuration**  
-> The preset uses `y` (distance) and `z` (height).  
-> depending on sensor mounting configurations, you MUST override:
+> The preset assumes standard mounting with:
+> - `y` = distance (range to target)
+> - `z` = elevation (height/vertical)
+>
+> **Depending on your sensor's physical orientation, you MUST override the coordinate mapping:**
+>
+> **Example 1: Standard Mounting (default)**
+> - Distance: `y`, Elevation: `z`
+> - No override needed (preset handles this)
+>
+> **Example 2: Sensor Rotated 90°**
+> - When rotated 90° around the horizontal axis:
+>   - `y` remains distance (range to target)
+>   - **`x` becomes elevation (height)** — was previously unused
+> - Override:
 > ```yaml
-> radar_point_cloud_data_selector: ['x', 'z', 'snr']  # Use x instead of y
-> radar_point_cloud_relative_coordinate_filter: ['x']  # Make x relative
-> radar_point_cloud_sort_by: 'z'  # Still sort by height
+> radar_point_cloud_data_selector: ['x', 'y', 'snr']  # Use x (height) instead of z
+> radar_point_cloud_relative_coordinate_filter: ['y']  # Make y (distance) relative
+> radar_point_cloud_sort_by: 'x'  # Sort by elevation (x now = height)
+> ```
+>
+> **General Rule**: Identify which physical axis is **distance (range to target)** and which is **elevation (vertical/height)**, then map those to the appropriate parameters in the YAML.
 ---
 
-### 3.2 Full Inline Configuration (Maximum Control)
+### `data_processing_feature_extraction` YAML block generation
 
 #### Option 1: Override Preset Parameters
 
@@ -371,16 +465,7 @@ data_processing_feature_extraction:
   # radar_frames_quality_index: None
 ```
 
-| Override | When to Use |
-|----------|-------------|
-| `frame_size: 16` | Longer falls, more temporal context needed |
-| `stride_size: 0.5` | Faster training (2-frame stride), less data augmentation |
-| `radar_min_points_per_window: 20` | Noisy environment, need cleaner windows |
-| `radar_max_points_per_frame: 12` | Dense scenes, more points available |
-| `data_selector: ['x','y','z','snr']` | Wall-mounted radar, need azimuth info |
-| `sort_by: 'y'` | Sort by distance instead of height |
-| `per_radar_frame` quality | Drop individual bad frames, not whole windows |
-| `radar_frames_quality_index: None` | Disable quality entirely (pre-cleaned data) |
+
 
 ---
 
@@ -419,29 +504,6 @@ data_processing_feature_extraction:
   radar_feature_ordering: 'frame_major'
 ```
 
-**Parameter-by-Parameter Explanation**
-
-| Parameter | Type | Format | Description |
-|-----------|------|--------|-------------|
-| `data_proc_transforms` | list | `["Radar Point Cloud Data", "Radar Track Data", "Simple Window"]` | **Required** — enables pipeline stages |
-| `frame_size` | int | `8` | Frames per window (must match model input) |
-| `stride_size` | float | `0.125` | Stride as fraction of frame_size (0.125 = 1 frame) |
-| `radar_point_cloud_data_selector` | list | `['y','z','snr']` | Which point features to keep (x,y,z,doppler,snr) |
-| `radar_point_cloud_coordinate_system` | str | `'absolute' \| 'relative'` | Relative = subtract track position |
-| `radar_point_cloud_relative_coordinate_filter` | list | `['y']` | Which axes to make relative (x,y,z) |
-| `radar_point_cloud_spatial_filter_bounds` | list | `[min_x,max_x, min_y,max_y, min_z,max_z]` | Spatial bounds (None = no limit) |
-| `radar_point_cloud_non_spatial_filter_bounds` | list | `[min_dop,max_dop, min_snr,max_snr]` | Doppler/SNR bounds |
-| `radar_max_points_per_frame` | int | `8` | Max points kept per frame (zero-padded) |
-| `radar_point_cloud_structure_strategy` | str | `'highest only' \| 'lowest only' \| 'highest and lowest'` | Point selection strategy |
-| `radar_point_cloud_sort_by` | str | `'x' \| 'y' \| 'z' \| 'doppler' \| 'snr'` | Feature to sort points by |
-| `radar_track_data_selector` | list | `['z','velocity','acceleration']` | Track feature groups (z, velocity, acceleration) |
-| `radar_track_velocity_bounds` | list | `[min, max]` | Velocity bounds for all 3 axes |
-| `radar_track_acceleration_bounds` | list | `[min, max]` | Acceleration bounds for all 3 axes |
-| `radar_track_spatial_filter_bounds` | list | `[min_x,max_x, min_y,max_y, min_z,max_z]` | Track position bounds |
-| `radar_min_points_per_window` | int | `12` | Min real points across window |
-| `radar_frames_quality_index` | str | `'per_window' \| 'per_radar_frame' \| None` | Quality check level |
-| `radar_feature_ordering` | str | `'frame_major' \| 'feature_major'` | Flattening order for ONNX |
-
 **Bounds Format (All Bounds Use Same Pattern)**
 
 ```yaml
@@ -462,7 +524,7 @@ radar_track_velocity_bounds: [-10.0, 10.0]
 
 ---
 
-### 3.3 For Pre-Cleaned Data (No Radar Columns)
+#### Option 3: For Training Ready Data - This only supports Windowing
 
 ```yaml
 data_processing_feature_extraction:
@@ -478,108 +540,41 @@ data_processing_feature_extraction:
 
 | Scenario | Example |
 |----------|---------|
-| **Pre-featurized data** | You already extracted 31 features/frame externally |
-| **No point cloud/track columns** | CSV has generic `feat_0`, `feat_1`... columns |
-| **Already windowed data** | Each row = one window (set `frame_size: 1`) |
+| **Pre-featurized data** | You already extracted features/frame externally |
+| **Only windowing needed** | Each row = one radar frame (set `frame_size: window size needed`) |
 
 **How It Works**
 - **Assumes** input CSV rows = individual frames
 - **Applies only** windowing: stacks `frame_size` rows → 1 sample
 - **Input features** = `num_columns_in_csv` × `frame_size`
 
-**Required Input Format**
-```csv
-# Each row = 1 radar frame, columns = your features
-feat_0, feat_1, feat_2, ..., feat_30
-0.1, 0.2, -0.5, ..., 1.3
-0.2, 0.3, -0.4, ..., 1.2
-...
-```
 
-**Model Compatibility**
+
+**Existing Models**
 
 | Model | Required Input |
 |-------|----------------|
-| `RF_DualStream_PointCloud_19K` | Depends on Frame Size and Number of input features in a radar frame | ✅ If `frame_size=8`, 31 cols |
-| `RF_MLP_4L_19K` | Configurable | ✅ If input features match |
-| `RF_MLP_3L_19K` | Configurable | ✅ If `frame_size × cols = 130` |
+| `RF_DualStream_PointCloud_19K` | Depends on order of feature columns in order to make sure velocity and position features are split correctly |
+| `RF_MLP_4L_19K` | Configurable | 
 
----
+> **Important: Velocity Feature Index Constraint for `RF_DualStream_PointCloud_19K`**
+>
+> The dual-stream model hard-codes which feature slots within each frame go to the velocity stream vs. the position stream:
+> - **Velocity stream** — slots **1, 2, 3** of each frame (`track_velocity_x`, `track_velocity_y`, `track_velocity_z`)
+> - **Position stream** — slot **0** and slots **4+** (track height, acceleration, and all point-cloud features)
+>
+> This means your per-frame feature layout **must** place the 3 velocity features at indices 1–3 within every frame. The default preset satisfies this automatically because `radar_track_data_selector: ['z', 'velocity', 'acceleration']` produces:
+>
+> - Slot 0 → `track_height_z` (track position)
+> - Slots 1–3 → `track_velocity_x/y/z` (track velocity) ← velocity stream
+> - Slots 4–6 → `track_acc_x/y/z` (track acceleration)
+> - Slots 7–30 → 8 points × [`y`, `z`, `snr`] (point cloud)
+>
+> If you override `radar_track_data_selector` or reorder features, keep velocity at slots 1–3. If your data has velocity at different indices, either:
+> 1. Reorder `radar_track_data_selector` so velocity stays in the middle (e.g., `['z', 'velocity', 'acceleration']`), or
+> 2. Use `RF_MLP_4L_19K` / `RF_MLP_3L_11K` instead, which treat the input as a flat vector with no fixed index split.
+>
 
-## Expected Column Names (Case-Sensitive)
-
-If your data uses different column names (Case B above), rename to TensorLab's expected format:
-
-| Data Type | Column Pattern | Example Columns |
-|-----------|----------------|-----------------|
-| **Range Data** | `bin0`, `bin1`, `bin2`... `binN` | `bin0` through `bin63` (FFT range profile) |
-| **Point Cloud** | `point_x{idx}`, `point_y{idx}`, `point_z{idx}`, `point_doppler{idx}`, `point_snr{idx}` | `point_x0`, `point_y0`, `point_z0`, `point_doppler0`, `point_snr0`, `point_x1`... |
-| **Track Data** | `track_id` or `tid` | Required for ghost track filtering |
-| | `track_x`, `track_y`, `track_z` | Track position |
-| | `track_velocity_x`, `track_velocity_y`, `track_velocity_z` | Track velocity |
-| | `track_acc_x`, `track_acc_y`, `track_acc_z` | Track acceleration |
-
----
-
-## Complete Training Configuration
-
-```yaml
-common:
-  task_type: "radar_point_cloud_classification"
-  target_device: "xWRL6432"
-  training_device: "cuda"
-
-dataset:
-  dataset_name: "radar_human_pose_detection"
-  input_data_path: "https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip"
-  split_type: "within_files"      # Split inside each recording file
-  split_factor: [0.7, 0.2, 0.1]   # Train / Val / Test
-
-data_processing_feature_extraction:
-  feature_extraction_name: "Generic_248Input_Posture_and_Fall_Detection"
-
-training:
-  model_name: "RF_DualStream_PointCloud_19K"
-  quantization: 1                         # 0 = No Quantization, 1 = Generic Quantization
-  quantization_method: "QAT"
-  quantization_weight_bitwidth: 8
-  quantization_activation_bitwidth: 8
-  training_epochs: 250
-  learning_rate: 0.001
-  optimizer: "adamw"
-  lr_scheduler: "CosineAnnealingLR"
-  weight_decay: 0
-  output_int: false
-  num_gpus: 0
-```
-
-### Dataset Split Methods
-
-| `split_type` | When to Use |
-|--------------|-------------|
-| `within_files` | Single long recording |
-| `amongst_files` | Each recording session = one posture class (Recommended with at least good amount of dataset) | 
-
----
-
-### Simple Window (`"Simple Window"`) Details
-
-- **Windowing**: 8 consecutive frames → 1 training sample (248 features)
-- **Stride**: 0.125 = 1 frame overlap → dense sampling for short fall events
-- **Quality**: `per_window` drops windows with < 12 total real points across 8 frames
-- **Consecutive check**: Rejects windows spanning gaps from dropped ghost frames
-
----
-
-## Model Architectures
-
-| Model | Shape | Params | Description |
-|-------|-------|--------|-------------|
-| **`RF_DualStream_PointCloud_19K`** (default) | Dual-stream MLP | ~19K | Splits each frame into **position stream** (point coords + track height + accel = 28 features) and **velocity stream** (3 track velocity components).Separate BN → Linear → ReLU → BN branches, then fusion. Natural fit: shape vs. motion. |
-| `RF_MLP_4L_19K` | Plain 4-layer MLP | ~19K | BN → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(16) → ReLU → BN → FC(num_classes) |
-| `RF_MLP_3L_19K` | 3-layer MLP | ~11K | BN → FC(64) → ReLU → BN → FC(32) → ReLU → BN → FC(num_classes). Smaller, faster. |
-
-Feature-order constraint (model-fixed split) - RF_DualStream_PointCloud_19K: the dual-stream splits each frame by fixed indices — `vel_idx = [frame_start+1, frame_start+2, frame_start+3]` (3 velocity slots) and `pos_idx = [frame_start] + [frame_start+4 ...]`. The preset's `frame_major` ordering and track selector (`z, velocity, acceleration`) align with this: velocity features (`track_velocity_x/y/z`) must occupy slots 1-3 of each frame; position stream gets slot 0 (`track_z`) + remaining slots. `frame_size` determines `num_features_per_frame = input_features / frame_size` (must divide evenly; preset uses 8 → 31 features/frame).
 
 ---
 
@@ -597,9 +592,16 @@ Feature-order constraint (model-fixed split) - RF_DualStream_PointCloud_19K: the
 
 ## Quantization
 
+By default, generic quantization run is disabled. To enable:
+
+```yaml
+training:
+  quantization: 1
+```
+
 This example uses **QAT (Quantization-Aware Training)**:
 - `quantization: 1` (Generic quantization)
-- `quantization_method: "QAT"`
+- `quantization_method: "QAT"`  (QAT/PTQ)
 - 8-bit weights and activations
 - Two phases: float training (250 epochs) → quantization fine-tune
 - `output_int: false` — exported model dequantizes output to float (radar supports float)
@@ -625,17 +627,17 @@ Firmware links against `mod.a` and calls `tvmgen_default_run()` with the 248-val
 | Component | Location |
 |-----------|----------|
 | Model architectures | `tinyml-modelzoo/tinyml_modelzoo/models/radar.py` |
-| Radar Data Processing Pipeline (full reference) | [Radar Data Processing Pipeline Reference Guide](tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md) |
+| Radar Data Pre-Processing Pipeline (full reference) |  `tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md` |
 
 ---
 
 ## Need More Help?
 
 - Search for issues or post questions on the [TI E2E Forum](https://e2e.ti.com/)
-- See the full pipeline reference: [Radar_DataProcessing_Pipeline.md](tinyml-modelzoo/docs/RADAR_PROCESSING_PIPELINE.md)
-- TensorLab EdgeAI documentation in the main repository - For More Clarity on Setup Environment
+
+- Tensorlab Modelzoo documentation - [Tiny ML Modelzoo User Guide](https://software-dl.ti.com/C2000/esd/mcu_ai/user_guide/index.html)
 
 ---
 
 *Generated for Tensorlab EdgeAI — Texas Instruments*  
-*Compatible with TI mmWave radar sensors*
+*TI mmWave radar Machine Learning*

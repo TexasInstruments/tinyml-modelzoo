@@ -86,7 +86,7 @@ class RF_MLP_4L_19K(nn.Module):
                  BatchNorm -> Linear -> ReLU -> BatchNorm -> Linear
     Output: [batch, num_classes]
     """
-    def __init__(self, config):
+    def __init__(self, config, input_features=130, variables=1, num_classes=2):
         super().__init__()
 
         self.config = config or {}
@@ -139,7 +139,7 @@ class RF_DualStream_PointCloud_19K(nn.Module):
     Output: [batch, num_classes]
     """
 
-    def __init__(self, config):
+    def __init__(self, config, input_features=248, variables=1, num_classes=5):
         super().__init__()
         self.config = config or {}
         self.input_features = self.config.get('input_features', input_features)

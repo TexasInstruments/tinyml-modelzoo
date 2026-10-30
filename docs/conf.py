@@ -14,8 +14,8 @@ import shutil
 project = 'TI Tiny ML ModelZoo'
 copyright = '2026, Texas Instruments Incorporated'
 author = 'Texas Instruments'
-release = '1.5.0'
-version = 'v1.5.0'
+release = '1.6.0'
+version = 'v1.6.0'
 
 # -- General configuration ---------------------------------------------------
 extensions = [

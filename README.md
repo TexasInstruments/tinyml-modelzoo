@@ -31,7 +31,7 @@ tinyml-modelzoo/
   - [Anomaly Detection](#anomaly-detection)
   - [Audio Classification](#audio-classification)
   - [Image Classification](#image-classification)
-  - [Radar Point Cloud Classification](#radar-point-cloud-classification)
+  - [Radar Classification](#radar-classification)
 - [Available Models](#available-models)
 - [Adding New Models](#adding-new-models)
 - [About the Task Types](#about-the-task-types)
@@ -55,7 +55,7 @@ tinyml-modelzoo/
    no need to clone anything else.
 3. (or) if you want to directly use this as a Python package and plan to make no model additions/changes, you might as well install the python package directly:
     ```commandline
-    pip install http://software-dl.ti.com/C2000/esd/mcu_ai/wheel/tinyml_modelzoo-1.5.0-py3-none-any.whl
+    pip install http://software-dl.ti.com/C2000/esd/mcu_ai/wheel/tinyml_modelzoo-1.6.0-py3-none-any.whl
     ```
 
 ### Running an Example
@@ -239,17 +239,18 @@ purpose-built config for that specific use case.
 | [machine_readable_code_classification](examples/machine_readable_code_classification/) | Image | Classify QR codes, barcodes, and other symbols (28×28 images). |
 | [coffee_bean_classification](examples/coffee_bean_classification/) | Image | Classify coffee bean quality from images. |
 
-### Radar Point Cloud Classification
+### Radar Classification
 
 | Example | Data Type | Description |
 |---------|-----------|--------------|
-| [radar_pose_and_fall_detection](examples/radar_pose_and_fall_detection/) | Radar point cloud | Human pose and fall detection from radar point-cloud frames. |
+| [radar_posture_and_fall_detection](examples/radar_posture_and_fall_detection/) | Radar point cloud | Human posture and fall detection from radar point-cloud frames. |
+| [radar_surface_classification](examples/radar_surface_classification/) | Radar range profile | Classify surface/material type from 1-D FFT range-profile data using xWRL6432. |
 
 ---
 
 ## Available Models
 
-**83 models** are enabled in 1.5.0:
+**85 models** are enabled in 1.6.0:
 
 | Task | Models |
 |------|--------|
@@ -259,10 +260,10 @@ purpose-built config for that specific use case.
 | Anomaly Detection | 13 |
 | Audio Classification | 5 |
 | Image Classification | 3 |
-| Radar Point Cloud Classification | 1 |
-| **Total** | **83** |
+| Radar Classification | 3 |
+| **Total** | **85** |
 
-The counts are the entries of each task's `enabled_models_list` (the radar model is part of the classification list; audio and image lists live in `tinyml-modelmaker`). A model must be in this list to be selectable through `training.model_name`.
+The counts are the entries of each task's `enabled_models_list` (radar models are part of the classification list; audio and image lists live in `tinyml-modelmaker`). A model must be in this list to be selectable through `training.model_name`.
 
 Models are organized by task type. The **NPU** column indicates hardware acceleration support on TI devices with NPU (F28P55, AM13E2, MSPM0G5187).
 
@@ -395,11 +396,13 @@ Note: LSTM models are not NPU-supported.
 | `MobileNetV1_28k_NPU` | ~28K | MobileNetV1-style DW-Sep | Yes | Compact NPU-optimized image classifier |
 | `MobileNetV2_58k_NPU` | ~58K | MobileNetV2-style DW-Sep | Yes | Inverted residual image classifier |
 
-### Radar Point Cloud Classification Models
+### Radar Classification Models
 
 | Model Name | Parameters | Architecture | NPU | Description |
 |------------|------------|--------------|-----|-------------|
-| `RF_MLP_4L_19K` | Varies | Linear (4-layer) | No | Human pose and fall detection from radar point-cloud data |
+| `RF_MLP_3L_11K` | ~11K | Linear (3-layer) | No | Surface/material classification and posture detection from radar range-profile data |
+| `RF_MLP_4L_19K` | ~19K | Linear (4-layer) | No | Human posture and fall detection from radar point-cloud data |
+| `RF_DualStream_PointCloud_19K` | ~19K | Dual-stream MLP | No | Pose and fall detection — splits velocity and position features from radar point-cloud frames |
 
 ---
 
@@ -446,6 +449,18 @@ These categories can look similar from a distance, so here's how to tell them ap
 
 
 
+- [2026-Oct] Release version 1.6.0 of the software
+  <details>
+
+  - Radar:
+    - Added `radar_surface_classification` example — classify floor/terrain type from 1-D FFT range-profile data on xWRL6432
+    - Renamed `radar_pose_and_fall_detection` → `radar_posture_and_fall_detection`; updated README and config
+    - Added two new radar models: `RF_MLP_3L_11K` (surface + posture classification) and `RF_DualStream_PointCloud_19K` (dual-stream velocity/position split for pose and fall detection)
+    - Added `docs/RADAR_PROCESSING_PIPELINE.md` covering the end-to-end radar pre-processing and inference pipeline
+    - Added `examples/radar_posture_and_fall_detection/annotate_radar_dataset.py` for dataset annotation
+  - Models: 85 total (up from 83 in 1.5.0)
+
+  </details>
 - [2026-Sep] Release version 1.5.0 of the software
   <details>
 
@@ -629,7 +644,7 @@ These categories can look similar from a distance, so here's how to tell them ap
 ## Additional Resources
 
 - [User Guide](https://software-dl.ti.com/C2000/esd/mcu_ai/user_guide/index.html) - install methods (pip install or clone), the full examples and applications list, and a section-by-section YAML config reference
-- **Full User Guide (Sphinx)** - the 1.5.0 user guide source lives in [docs/](docs/index.rst): installation (wheel or clone), task types, bring-your-own-data, devices, every example, features, deployment, troubleshooting and a config reference. Build it with `pip install -r docs/requirements.txt && make -C docs html`, then open `docs/_build/html/index.html`.
+- **Full User Guide (Sphinx)** - the 1.6.0 user guide source lives in [docs/](docs/index.rst): installation (wheel or clone), task types, bring-your-own-data, devices, every example, features, deployment, troubleshooting and a config reference. Build it with `pip install -r docs/requirements.txt && make -C docs html`, then open `docs/_build/html/index.html`.
 - [Config YAML Guide](docs/CONFIG_YAML_GUIDE.md) - How to create and adapt an example config YAML: section-by-section skeleton, feature extraction options and useful knobs
 - [Bring Your Own Model (BYOM) Guide](docs/BRING_YOUR_OWN_MODEL.md) - Add your own model to the ModelZoo, train it on an example, and design it for NPU acceleration
 - [Deploying to an SDK Example](docs/DEPLOYING_TO_SDK_EXAMPLE.md) - Copy a run's compiled model, feature-extraction config and golden vectors into an SDK example, then verify on the device

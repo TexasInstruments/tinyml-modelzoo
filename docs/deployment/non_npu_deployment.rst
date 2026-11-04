@@ -31,7 +31,7 @@ Non-NPU Devices
    * - AM263
      - MCU-PLUS-SDK ``examples/ai/<example>/am263x_lp/r5fss0-0_nortos/``
      - Cortex-R5F
-   * - MSPM0G3507, CC devices, IWRL6432
+   * - MSPM0G3507, CC devices, xWRL6432
      - Not in ``tinyml-sdk``
      - 1.4.0 guidance: integrate ``mod.a``, ``tvmgen_default.h`` and the feature-extraction
        library into your own project. See :doc:`/devices/mspm0_family` and

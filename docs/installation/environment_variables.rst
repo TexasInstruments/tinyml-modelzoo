@@ -35,9 +35,9 @@ ModelMaker uses ``<TOOLS_PATH>/<default folder name>``.
    * - ``ARM_LLVM_CGT_PATH``
      - ``$TOOLS_PATH/ti-cgt-armllvm_5.1.1.LTS``
      - TI Arm Clang (``bin/tiarmclang``) for MSPM0, MSPM33C, AM13, AM26x and the CC13xx/CC27xx/CC35xx connectivity devices
-   * - ``IWRL6432_ARM_LLVM_CGT_PATH``
+   * - ``xWRL6432_ARM_LLVM_CGT_PATH``
      - ``$TOOLS_PATH/ti-cgt-armllvm_5.1.1.LTS``
-     - Arm Clang for the IWRL6432 radar device (radar tasks only)
+     - Arm Clang for the xWRL6432 radar device (radar tasks only)
 
 The defaults are in the ``constants.py`` of the ModelMaker modules
 (``tinyml_modelmaker/ai_modules/timeseries``, ``audio``, ``radar``). If you install a
@@ -59,8 +59,8 @@ Which Variable for Which Device
      - ``CG_TOOL_ROOT``
    * - MSPM0G3507, MSPM0G3519, MSPM0G5187, MSPM33C32/34, AM13E2, AM263, AM263P, AM261, CC2755, CC2745, CC1312, CC1314, CC1352, CC1354, CC35X1
      - ``ARM_LLVM_CGT_PATH``
-   * - IWRL6432
-     - ``IWRL6432_ARM_LLVM_CGT_PATH``
+   * - xWRL6432
+     - ``xWRL6432_ARM_LLVM_CGT_PATH``
 
 See :doc:`/devices/index` for the full device list.
 

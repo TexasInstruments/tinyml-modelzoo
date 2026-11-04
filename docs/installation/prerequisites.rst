@@ -82,7 +82,7 @@ environment variable (:doc:`environment_variables`).
 
 * C2000 F28x: TI C2000 Code Generation Tools (https://www.ti.com/tool/C2000-CGT)
 * C2000 F29x: TI C29 Clang compiler
-* MSPM0, MSPM33C, AM13, AM26x, CC13xx/CC27xx/CC35xx, IWRL6432: TI Arm Clang compiler (https://www.ti.com/tool/ARM-CGT)
+* MSPM0, MSPM33C, AM13, AM26x, CC13xx/CC27xx/CC35xx, xWRL6432: TI Arm Clang compiler (https://www.ti.com/tool/ARM-CGT)
 
 To flash and debug on hardware, install Code Composer Studio (https://www.ti.com/tool/CCSTUDIO)
 and see :doc:`/DEPLOYING_TO_SDK_EXAMPLE`.

@@ -4,7 +4,7 @@ Connectivity, AM26x, MSPM33 and Radar Devices
 
 This page covers the device families that do not have a page of their own: the SimpleLink
 connectivity MCUs (CC27xx, CC13xx, CC35xx), the AM26x Arm Cortex-R5F family, the MSPM33C
-family, and the IWRL6432 radar sensor. For the per-device task matrix, SDK example and
+family, and the xWRL6432 radar sensor. For the per-device task matrix, SDK example and
 memory-estimation support see :doc:`device_overview`. AM13E2 is listed in
 :doc:`device_overview` as well; it has a hardware NPU (see :doc:`npu_guidelines`).
 
@@ -12,7 +12,7 @@ memory-estimation support see :doc:`device_overview`. AM13E2 is listed in
 
    The ``tinyml-sdk`` repository ships on-device AI examples for C2000 (c28, c29), AM13
    and AM26 only. There are **no** Tiny ML ModelZoo SDK examples for the CC,
-   MSPM33 or IWRL6432 devices. For those devices ModelMaker produces the compiled model
+   MSPM33 or xWRL6432 devices. For those devices ModelMaker produces the compiled model
    library and golden vectors, and you integrate them into your own SimpleLink / MSPM33 /
    mmWave project. The hardware numbers for the CC devices in the 1.4.0 guide
    (flash, RAM, energy per inference, recommended model sizes) could not be verified against
@@ -85,11 +85,11 @@ Arm Cortex-M33 devices. **MSPM33C32** is a CPU-only target (MSPM33 SDK ``mspm33c
 **MSPM33C34** has an NPU compilation profile and is accepted on the command line, but no
 1.5.0 model lists it, so every task is rejected for it. Use MSPM33C32 for MSPM33 projects.
 
-IWRL6432 (Radar)
+xWRL6432 (Radar)
 ----------------
 
-The IWRL6432 mmWave radar sensor (Arm Cortex-M4F, no NPU) is the target of the
-``radar_classification`` task and the only device that task lists in 1.5.0.
+The xWRL6432 mmWave radar sensor (Arm Cortex-M4F, no NPU) is the target of the
+radar tasks (point cloud and surface classification) and the only device they list.
 
 Where to Go Next
 ----------------

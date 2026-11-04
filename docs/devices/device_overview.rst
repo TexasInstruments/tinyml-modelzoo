@@ -293,7 +293,7 @@ Connectivity and Radar Devices
      - C, Motor, PIR
      - --
      - No
-   * - IWRL6432
+   * - xWRL6432
      - Cortex-M4F
      - No
      - Rad
@@ -404,7 +404,7 @@ Choosing a Device
 
 * **Start from the task.** Check the *Tasks* column. Image classification runs on
   MSPM0 and AM13E2, audio classification on MSPM0G5187, radar classification on
-  IWRL6432, and F28E12 supports regression, forecasting and anomaly detection only.
+  xWRL6432, and F28E12 supports regression, forecasting and anomaly detection only.
 * **Prefer an NPU device** (F28P55, MSPM0G5187, AM13E2) for larger convolutional models
   or tight latency budgets.
 * **Check the SDK example column** if you want the quickest path to the board: those

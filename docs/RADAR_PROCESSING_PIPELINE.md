@@ -72,7 +72,7 @@ dataset:
   input_data_path: /path/to/my_radar_dataset.zip
 ```
 
-Refer to the [Radar Posture & Fall Detection README](../tinyml-modelzoo/examples/radar_posture_and_fall_detection/README.md#converting-raw-mmwave-data-recorder-captures) for detailed instructions specific to the application.
+Refer to the [Radar Posture & Fall Detection README](https://github.com/TexasInstruments/tinyml-modelzoo/tree/main/examples/radar_posture_and_fall_detection/README.md) for detailed instructions specific to the application.
 
 ---
 

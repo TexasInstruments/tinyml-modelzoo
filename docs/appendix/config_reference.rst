@@ -94,7 +94,7 @@ Common section
   ``generic_timeseries_forecasting``, ``generic_timeseries_anomalydetection``
 * Timeseries application aliases mapped to classification: ``arc_fault``, ``motor_fault``, ``ecg_classification``,
   ``blower_imbalance``, ``pir_detection``
-* Other modules: ``audio_classification``, ``radar_classification``, ``image_classification``
+* Other modules: ``audio_classification``, ``radar_point_cloud_classification``, ``radar_surface_classification``, ``image_classification``
 
 The ``byom_compilation`` task type and the ``BYOM`` section of the 1.4.0 reference are not present in the 1.5.0 code
 (no match in ``tinyml_modelmaker``). To use your own model see :doc:`/BRING_YOUR_OWN_MODEL`.

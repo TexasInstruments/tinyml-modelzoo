@@ -10,6 +10,10 @@ Instead of editing YAML and running scripts by hand, you describe what you want
 builds the config, runs training and compilation, and deploys the result to a
 CCStudio project.
 
+.. note::
+  Currently we make the tinyml-workflow skill available via only the TI CCStudio Edge AI Toolkit. 
+  Future releases will aim to make a generic version available that is accessible via the terminal as well.
+
 What the Skill Does
 -------------------
 

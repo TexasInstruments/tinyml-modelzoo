@@ -15,6 +15,7 @@ and explains what every file in the run folder means.
    understanding_config
    /CONFIG_YAML_GUIDE
    understanding_run_output
+   ti-ccstudio-tinyml-workflow
 
 5-Minute Quickstart
 -------------------

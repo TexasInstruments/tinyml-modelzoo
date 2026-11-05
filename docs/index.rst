@@ -83,6 +83,16 @@ Quick Links
       +++
       :bdg-info:`On-Device`
 
+   .. grid-item-card:: TinyML Agent Skills
+      :link: getting_started/ti-ccstudio-tinyml-workflow
+      :link-type: doc
+      :class-card: sd-border-0 sd-shadow-sm
+
+      Let an AI agent in CCStudio or VS Code take you from dataset to a model flashed on your device.
+
+      +++
+      :bdg-danger:`Beta Feature`
+
 ----
 
 What is Tiny ML ModelZoo?

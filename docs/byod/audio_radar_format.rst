@@ -2,8 +2,8 @@
 Audio and Radar Dataset Format
 ==============================
 
-Tiny ML ModelZoo 1.5.0 adds two new task types, ``audio_classification`` and
-``radar_classification``. Both read datasets with the same ``classes/`` layout used for
+Tiny ML ModelZoo 1.5.0 added the ``audio_classification`` task type and radar tasks
+(``radar_point_cloud_classification``; 1.6.0 adds ``radar_surface_classification``). They read datasets with the same ``classes/`` layout used for
 time series classification, so the folder name of each class becomes its label.
 Read this page together with :doc:`data_splitting`, which applies unchanged.
 
@@ -121,35 +121,35 @@ Directory structure
   narrowest one (a warning is logged).
 * Class names are the folder names, sorted alphabetically.
 
-Preparing the public dataset
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Preparing your own radar data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``examples/radar_pose_and_fall_detection/pose_and_fall_dataset.py`` is an optional preprocessing step
-(point-count and height/distance filtering, train split). You only need it if you do not use the public
-``radar_human_pose_detection`` dataset referenced in the example config. See
-:doc:`/examples/radar_pose_and_fall_detection`.
+``examples/radar_posture_and_fall_detection/annotate_radar_dataset.py`` annotates radar recordings into the
+``classes/<class_name>/`` layout. Column names must match the radar signal chain output (``point_x*``,
+``track_velocity_*``, ``bin*`` and so on); see :doc:`/RADAR_PROCESSING_PIPELINE`. Full examples:
+:doc:`/examples/radar_posture_and_fall_detection` and :doc:`/examples/radar_surface_classification`.
 
 Config
 ^^^^^^
 
-This is the configuration of ``examples/radar_pose_and_fall_detection/config.yaml``:
+This is the configuration of ``examples/radar_posture_and_fall_detection/config.yaml``:
 
 .. code-block:: yaml
 
    common:
-     task_type: radar_classification
-     target_device: IWRL6432
+     task_type: radar_point_cloud_classification
+     target_module: radar
+     target_device: xWRL6432
 
    dataset:
-     dataset_name: radar_human_pose_detection
-     input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/radar_human_pose_detection.zip
+     dataset_name: radar_point_cloud_classification
+     input_data_path: https://software-dl.ti.com/C2000/esd/mcu_ai/datasets/posture_and_fall_detection_dataset.zip
      split_type: within_files
-     split_factor: [0.8, 0.1, 0.1]
+     split_factor: [0.7, 0.2, 0.1]
 
    data_processing_feature_extraction:
-     data_proc_transforms: [SimpleWindow]
-     frame_size: 8
-     stride_size: 0.5
+     feature_extraction_name: "Generic_248Input_Posture_and_Fall_Detection"
+     data_proc_transforms: ['Radar Point Cloud Data', 'Radar Track Data', 'Simple Window', 'Scaling']
 
 See Also
 --------

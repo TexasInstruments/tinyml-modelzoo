@@ -39,7 +39,7 @@ Target Applications
 
 **Sensor processing and sensing**
    Activity and fall detection, PIR and Wi-Fi CSI presence detection, gas classification,
-   radar point cloud classification.
+   radar point cloud and surface classification.
 
 **Audio and vision**
    Keyword and wake word detection, cough and glass break detection, image classification.
@@ -64,8 +64,8 @@ Key Capabilities
      - Classify audio from MFCC features
    * - Image Classification
      - Categorize images into classes
-   * - Radar Point Cloud Classification
-     - Classify point-cloud frames from radar sensors
+   * - Radar Classification
+     - Classify point-cloud frames or FFT range profiles from radar sensors
 
 **Device support**
 
@@ -79,13 +79,13 @@ families. See :doc:`/devices/index` for details.
 * **AM13**: AM13E2 (with NPU)
 * **AM26x**: AM263, AM263P, AM261
 * **Connectivity**: CC2755, CC2745, CC1312, CC1314, CC1352, CC1354, CC35X1
-* **Radar**: IWRL6432
+* **Radar**: xWRL6432
 
 **Example applications and models**
 
 The ``examples/`` folder ships ready-to-run applications (the generic ones for each task
 plus dedicated applications such as arc fault, motor bearing fault, ECG, wake word and
-Wi-Fi presence detection), and the model zoo contains 83 models. See
+Wi-Fi presence detection), and the model zoo contains 85 models. See
 :doc:`/examples/index` and :doc:`/appendix/model_zoo_reference`.
 
 **Model optimization**
@@ -99,6 +99,13 @@ Wi-Fi presence detection), and the model zoo contains 83 models. See
 Select devices (F28P55, MSPM0G5187, AM13E2) include TI's TinyEngine NPU for
 hardware-accelerated inference with faster execution and lower power. See
 :doc:`/NPU_CONFIGURATION_GUIDELINES`.
+
+What's New in 1.6.0
+-------------------
+
+* Radar surface classification example (``radar_surface_classification``) and two new radar models, ``RF_MLP_3L_11K`` and ``RF_DualStream_PointCloud_19K``
+* ``radar_pose_and_fall_detection`` renamed to ``radar_posture_and_fall_detection``, with a new radar processing pipeline guide
+* 85 models (was 83)
 
 What's New in 1.5.0
 -------------------

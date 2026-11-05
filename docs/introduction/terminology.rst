@@ -131,7 +131,7 @@ Configuration Terms
       The ML task, for example ``generic_timeseries_classification``,
       ``generic_timeseries_regression``, ``generic_timeseries_forecasting``,
       ``generic_timeseries_anomalydetection``, ``arc_fault``, ``audio_classification``,
-      ``image_classification`` or ``radar_classification``.
+      ``image_classification``, ``radar_point_cloud_classification`` or ``radar_surface_classification``.
 
    target_device
       The deployment MCU, for example ``F28P55``, ``MSPM0G3507`` or ``AM263``.

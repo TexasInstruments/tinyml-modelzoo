@@ -198,8 +198,10 @@ Radar
 
    * - Example
      - Description
-   * - :doc:`radar_pose_and_fall_detection`
-     - Pose and fall classification from radar point clouds (new in 1.5.0).
+   * - :doc:`radar_posture_and_fall_detection`
+     - Posture and fall classification from radar point cloud and track data (1.5.0, reworked in 1.6.0).
+   * - :doc:`radar_surface_classification`
+     - Surface/material classification from FFT range profiles (new in 1.6.0).
 
 .. toctree::
    :hidden:
@@ -243,4 +245,5 @@ Radar
    machine_readable_code_classification
    coffee_bean_classification
    image_classification_example
-   radar_pose_and_fall_detection
+   radar_posture_and_fall_detection
+   radar_surface_classification

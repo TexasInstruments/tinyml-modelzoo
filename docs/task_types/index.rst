@@ -16,6 +16,7 @@ for deployment on resource-constrained microcontrollers.
    image_classification
    audio_classification
    radar_classification
+   /RADAR_PROCESSING_PIPELINE
 
 Task Overview
 -------------
@@ -46,7 +47,7 @@ Task Overview
      - Categorize short audio clips (new in 1.5.0)
      - Keyword spotting, wake word, cough and glass break detection
    * - :doc:`radar_classification`
-     - Categorize windows of radar point-cloud features (new in 1.5.0)
+     - Categorize windows of radar point-cloud or range-profile features (new in 1.5.0; surface classification in 1.6.0)
      - Human pose and fall detection
 
 Task Type Strings and Modules
@@ -80,11 +81,11 @@ Task Type Strings and Modules
    * - ``audio_classification``
      - ``audio``
      - ``classes/``
-   * - ``radar_classification``
+   * - ``radar_point_cloud_classification``, ``radar_surface_classification``
      - ``radar``
      - ``classes/``
 
-Dataset layouts are described in :doc:`/byod/index`. Early stopping is on by default for all tasks in
+Dataset layouts are described in :doc:`/byod/index`. Early stopping is on by default for all tasks since
 1.5.0 (:doc:`/features/early_stopping`).
 
 Choosing the Right Task

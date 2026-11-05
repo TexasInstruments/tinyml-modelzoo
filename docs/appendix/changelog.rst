@@ -4,10 +4,23 @@ Changelog
 
 Version history and release notes for Tiny ML ModelZoo (until 1.4.0 published as Tiny ML Tensorlab).
 
+Version 1.6.0
+-------------
+
+*Current Release (2026-Oct)*
+
+**Radar:**
+
+* New example ``radar_surface_classification``: surface/material classification from 1-D FFT range-profile data (preset ``Generic_130Input_Radar_SurfaceClassification``, task type ``radar_surface_classification``)
+* ``radar_pose_and_fall_detection`` renamed to ``radar_posture_and_fall_detection`` (task type ``radar_point_cloud_classification``, preset ``Generic_248Input_Posture_and_Fall_Detection``) with an annotation script and a detailed README
+* New models: ``RF_MLP_3L_11K`` (10,982 parameters at 130 inputs), ``RF_MLP_4L_19K`` (19,298 at 248 inputs) and ``RF_DualStream_PointCloud_19K`` (about 18.9K at 248 inputs), replacing ``Pose_and_Fall_model``; all target xWRL6432
+* New guide ``docs/RADAR_PROCESSING_PIPELINE.md`` covering the radar pre-processing presets and parameters
+* Radar models total 3; enabled models total 85 (was 83)
+
 Version 1.5.0
 -------------
 
-*Current Release (2026-Sep)*
+*Released 2026-Sep*
 
 **Packaging and entry point:**
 

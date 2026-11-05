@@ -2,7 +2,7 @@
 Model Zoo Reference
 ===================
 
-Models available in Tiny ML ModelZoo 1.5.0. The tables were generated from the model descriptions in the
+Models available in Tiny ML ModelZoo 1.6.0. The tables were generated from the model descriptions in the
 source (only models listed in each ``enabled_models_list``), so they match what ``model_name`` accepts in a
 config YAML. Set ``training.model_name`` to one of the names below.
 
@@ -13,14 +13,14 @@ config YAML. Set ``training.model_name`` to one of the names below.
      ``estimate_memory`` or look at the training log for exact numbers.
    * **NPU** is "yes" when the model name or description says the model is NPU-compliant (see
      :doc:`/NPU_CONFIGURATION_GUIDELINES`). It does not mean every listed device has an NPU.
-   * **Target devices** are the devices the description lists for the model. Radar classification reuses the
-     timeseries classification models; its task-level device list is derived from the models' device support.
+   * **Target devices** are the devices the description lists for the model. Radar models are part of the
+     classification list and target xWRL6432 only.
    * ``MY_CLS_2k_NPU`` is the demo model of the :doc:`/BRING_YOUR_OWN_MODEL` guide. It is defined in the
      classification descriptions but is not in ``enabled_models_list``, so it is not selectable until you follow
      that guide to enable it. It is not counted below.
 
-Count: 39 classification + 11 regression + 12 forecasting + 13 anomaly detection = 75 timeseries models, plus
-5 audio and 3 image classification models, 83 enabled models in total (the README lists the same 83).
+Count: 41 classification (38 timeseries + 3 radar) + 11 regression + 12 forecasting + 13 anomaly detection = 77 models, plus
+5 audio and 3 image classification models, 85 enabled models in total (the README lists the same 85).
 
 Timeseries classification (also used by radar classification)
 -------------------------------------------------------------
@@ -171,10 +171,18 @@ Source: ``tinyml_modelzoo/model_descriptions/classification.py`` (39 models).
      - 1k
      - no
      - F280013, F2807x, F28002x, F28P551x, F2837xS, F2838x, F280015, F28003, F28004, F2837, F28P65, F28P55, F29H85, MSPM33C32, AM13E2, AM263
-   * - ``Pose_and_Fall_model``
-     - -
+   * - ``RF_MLP_3L_11K``
+     - ~11k (10,982 at 130 inputs)
      - no
-     - IWRL6432
+     - xWRL6432
+   * - ``RF_MLP_4L_19K``
+     - ~19k (19,298 at 248 inputs)
+     - no
+     - xWRL6432
+   * - ``RF_DualStream_PointCloud_19K``
+     - ~19k (18,941 at 248 inputs)
+     - no
+     - xWRL6432
    * - ``ElectricalFault_model_40k_t``
      - ~40k
      - yes
@@ -446,8 +454,8 @@ Model counts
 
    * - Group
      - Enabled models
-   * - Timeseries classification (shared with radar)
-     - 39
+   * - Classification (38 timeseries + 3 radar)
+     - 41
    * - Timeseries regression
      - 11
    * - Timeseries forecasting
@@ -459,10 +467,9 @@ Model counts
    * - Image classification
      - 3
    * - Total
-     - 83
+     - 85
 
-The total is the number of entries in the enabled model lists of the 1.5.0 source: 83. (An earlier draft of the
-release notes said 78, which was the number of rows in an out-of-date model table.)
+The total is the number of entries in the enabled model lists of the 1.6.0 source: 85.
 
 See also :doc:`/BRING_YOUR_OWN_MODEL` to add your own model, and :doc:`config_reference` for the
 ``training`` section keys.

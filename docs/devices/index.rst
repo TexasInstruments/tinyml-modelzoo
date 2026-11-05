@@ -66,7 +66,7 @@ Device Families at a Glance
      - Arm Cortex-M33 / Cortex-M4
      - None (CC2755, CC2745, CC35X1 use the Arm Custom Datapath Extension)
    * - :doc:`Radar <connectivity_devices>`
-     - IWRL6432
+     - xWRL6432
      - Arm Cortex-M4
      - None
 
@@ -80,7 +80,7 @@ What's New for Devices in 1.5.0
 * **AM13E2 image classification.** MobileNet-style image classifiers were compressed
   to fit the AM13 memory budget, and AM13E2 is now a target for
   ``image_classification``.
-* **Radar.** The new ``radar_classification`` task targets the IWRL6432 radar sensor.
+* **Radar.** The radar tasks (point cloud and surface classification) target the xWRL6432 radar sensor.
 * **Feature-extraction memory estimation.** For AM13E2, MSPM0G3507, MSPM0G5187,
   F29H85 and many C28x devices, ModelMaker compiles the SDK feature-extraction library and reports its
   Code/RO/RW memory next to the model memory. See :doc:`device_overview`.

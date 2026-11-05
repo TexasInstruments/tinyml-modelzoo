@@ -243,8 +243,8 @@ purpose-built config for that specific use case.
 
 | Example | Data Type | Description |
 |---------|-----------|--------------|
-| [radar_posture_and_fall_detection](examples/radar_posture_and_fall_detection/) | Radar point cloud | Human posture and fall detection from radar point-cloud frames. |
-| [radar_surface_classification](examples/radar_surface_classification/) | Radar range profile | Classify surface/material type from 1-D FFT range-profile data using xWRL6432. |
+| [radar_posture_and_fall_detection](examples/radar_posture_and_fall_detection/) | Radar point cloud + track | Classify 5 postures (falling, laying, sitting, standing, walking) with `RF_DualStream_PointCloud_19K` on xWRL6432. |
+| [radar_surface_classification](examples/radar_surface_classification/) | Radar range profile | Classify surface/material (e.g. grass vs not grass) from 1-D FFT range-profile data (130 inputs) with `RF_MLP_3L_11K` on xWRL6432. |
 
 ---
 
@@ -400,9 +400,9 @@ Note: LSTM models are not NPU-supported.
 
 | Model Name | Parameters | Architecture | NPU | Description |
 |------------|------------|--------------|-----|-------------|
-| `RF_MLP_3L_11K` | ~11K | Linear (3-layer) | No | Surface/material classification and posture detection from radar range-profile data |
-| `RF_MLP_4L_19K` | ~19K | Linear (4-layer) | No | Human posture and fall detection from radar point-cloud data |
-| `RF_DualStream_PointCloud_19K` | ~19K | Dual-stream MLP | No | Pose and fall detection — splits velocity and position features from radar point-cloud frames |
+| `RF_MLP_3L_11K` | ~11K (10,982 at 130 inputs) | Linear (3-layer MLP) | No | Surface classification (default for `radar_surface_classification`); also usable for posture detection. xWRL6432 |
+| `RF_MLP_4L_19K` | ~19K (19,298 at 248 inputs; 11,510 at 130) | Linear (4-layer MLP) | No | Flat-vector MLP for posture/fall detection or surface classification; size scales with input features. xWRL6432 |
+| `RF_DualStream_PointCloud_19K` | ~19K (19,421 at frame_size 4; 18,941 at 8, 248 inputs, 5 classes) | Dual-stream MLP (position + velocity) | No | Default for `radar_posture_and_fall_detection`; splits velocity and position features. xWRL6432 |
 
 ---
 
@@ -454,10 +454,8 @@ These categories can look similar from a distance, so here's how to tell them ap
 
   - Radar:
     - Added `radar_surface_classification` example — classify floor/terrain type from 1-D FFT range-profile data on xWRL6432
-    - Renamed `radar_pose_and_fall_detection` → `radar_posture_and_fall_detection`; updated README and config
     - Added two new radar models: `RF_MLP_3L_11K` (surface + posture classification) and `RF_DualStream_PointCloud_19K` (dual-stream velocity/position split for pose and fall detection)
     - Added `docs/RADAR_PROCESSING_PIPELINE.md` covering the end-to-end radar pre-processing and inference pipeline
-    - Added `examples/radar_posture_and_fall_detection/annotate_radar_dataset.py` for dataset annotation
   - Models: 85 total (up from 83 in 1.5.0)
 
   </details>

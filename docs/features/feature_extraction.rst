@@ -413,9 +413,37 @@ See :doc:`/task_types/audio_classification`, :doc:`/examples/wake_word_detection
 Radar and image inputs
 ======================
 
-Radar classification uses image-style parameters instead of the transforms above. The ``Mnist_Default`` preset
-sets ``image_height``, ``image_width``, ``image_num_channel``, ``image_mean`` and ``image_scale``. See
-:doc:`/task_types/radar_classification`.
+**Radar** classification does use the ``data_proc_transforms`` mechanism, but with its own radar stages instead of
+the time series transforms above. The stages run in this order, and a preset or your YAML selects the ones it needs:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - ``data_proc_transforms`` entry
+     - What it does
+   * - ``Radar Range Data``
+     - Selects FFT range bins (``bin*`` columns), optionally limited with ``radar_range_bins_bounds``. Used for
+       surface classification.
+   * - ``Radar Point Cloud Data``
+     - Selects and filters point-cloud fields (``radar_point_cloud_data_selector``, coordinate system, spatial and
+       non-spatial filter bounds).
+   * - ``Radar Track Data``
+     - Selects and filters tracker fields (``radar_track_data_selector``, velocity, acceleration and spatial bounds).
+   * - ``Simple Window``
+     - Stacks ``frame_size`` radar frames into one sample (``stride_size`` sets the overlap) and applies the frame
+       quality checks (``radar_frames_quality_index``, ``radar_min_points_per_window``) and feature ordering
+       (``radar_feature_ordering``).
+   * - ``Scaling``
+     - Scales values such as track velocity (``radar_data_scaling_track_velocity``).
+
+The radar presets are ``Generic_248Input_Posture_and_Fall_Detection``, ``Generic_130Input_Radar_SurfaceClassification``,
+``Generic_392Input_PointCloudWithTrack_SimpleWindow`` and ``Generic_Radar_SimpleWindowOnly``. See
+:doc:`/task_types/radar_classification` and the full parameter reference in :doc:`/RADAR_PROCESSING_PIPELINE`.
+
+**Image** classification is the one that uses image-style parameters: its presets (for example ``Mnist_Default``) set
+``image_height``, ``image_width``, ``image_num_channel``, ``image_mean`` and ``image_scale``. See
+:doc:`/task_types/image_classification`.
 
 Evaluating feature extraction quality
 =====================================

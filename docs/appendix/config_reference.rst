@@ -410,16 +410,16 @@ Training defaults are overridden per model by the model description (for example
      - Run only the quantization training step.
    * - ``ondevice_training``
      - ``False``
-     - Mark the model as trainable on device. See :doc:`/ondevice_training/readme`.
+     - Enable the on-device training export (frozen model plus trainable model configuration and data files). Float ODT uses ``quantization: 0``, integer ODT requires ``quantization: 2``. See :doc:`/features/ondevice_training`.
    * - ``trainable_layers_from_last``
      - ``1``
-     - Number of trainable layers from the end for on-device training.
+     - Number of main layers (Linear/Conv) from the end that are trainable on device. Activation and reshape layers do not count.
    * - ``target_device_flash_kb``
      - ``100``
      - Flash size of the target in KB.
    * - ``export_samples_per_class``
      - ``(10, 10, 10)``
-     - Samples exported per class for (train, val, test), used for the golden vectors.
+     - Samples exported per class for (train, val, test), embedded as C arrays in the on-device training data files (``ondevice_training_data.c`` for float ODT, ``train_data.c`` for integer ODT).
    * - ``nas_enabled``
      - ``False``
      - Neural architecture search.

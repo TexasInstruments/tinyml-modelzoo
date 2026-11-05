@@ -26,7 +26,7 @@ Use it when:
 Two frameworks
 ==============
 
-Tiny ML ModelZoo 1.5.0 has two ODT frameworks. Each has a full Markdown guide.
+Tiny ML ModelZoo has two ODT frameworks. Each has a full Markdown guide.
 
 .. grid:: 1 1 2 2
    :gutter: 3
@@ -97,7 +97,7 @@ device SDK example project in Code Composer Studio. The guides describe each fil
 .. note::
 
    The ``tinyml-tensorlab`` ModelMaker environment mentioned in a few places of the integer ODT guide is the 1.4.0 way
-   to run; in 1.5.0 you run ModelZoo as described in :doc:`/installation/index`.
+   to run; since 1.5.0 you run ModelZoo as described in :doc:`/installation/index`.
 
 Documentation
 =============

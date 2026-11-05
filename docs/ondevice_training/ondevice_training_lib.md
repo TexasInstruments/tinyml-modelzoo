@@ -606,7 +606,7 @@ Before writing the training loop, it helps to understand how data flows from raw
     Raw sensor data (e.g., accelerometer samples)
             │
             ▼
-    Feature Extraction (FE)  ← User must implement if they need additional ones that are not offered by Tinyml-Tensorlab
+    Feature Extraction (FE)  ← User must implement if they need additional ones that are not offered by Tiny ML ModelZoo
             │
             ▼
     feature_input [FE_NN_OUT_SIZE]  (extracted features)

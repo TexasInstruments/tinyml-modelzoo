@@ -289,8 +289,8 @@ Contributing
 
 Tiny ML Tensorlab welcomes contributions:
 
-* Report issues: https://github.com/TexasInstruments/tinyml-tensorlab/issues
-* Submit PRs: https://github.com/TexasInstruments/tinyml-tensorlab/pulls
+* Report issues: https://github.com/TexasInstruments/tinyml-modelzoo/issues
+* Submit PRs: https://github.com/TexasInstruments/tinyml-modelzoo/pulls
 * Join discussions: TI E2E Forums
 
 See CONTRIBUTING.md for guidelines.

@@ -38,7 +38,7 @@ Ensure you have a TI LaunchPad for your target device. The following devices are
 
 ### Software
 
-1. **TinyML ModelZoo**: Latest version from [TinyML Tensorlab GitHub Repository](https://github.com/TexasInstruments/tinyml-tensorlab) Current version: 1.3.0.
+1. **TinyML ModelZoo**: Latest version from the [TinyML ModelZoo GitHub Repository](https://github.com/TexasInstruments/tinyml-modelzoo). Current version: 1.6.0.
 
 After running an anomaly detection example, ModelZoo generates the following files required for deploying the model on MCUs (Refer to the [Generic Anomaly Detection Example](https://github.com/TexasInstruments/tinyml-modelzoo/blob/main/examples/generic_timeseries_anomalydetection/readme.md) to learn how to run anomaly detection applications on ModelZoo ):
 

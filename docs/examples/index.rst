@@ -203,6 +203,9 @@ Radar
    * - :doc:`radar_surface_classification`
      - Surface/material classification from FFT range profiles (new in 1.6.0).
 
+All Example Pages
+-----------------
+
 .. toctree::
    :hidden:
    :maxdepth: 1
